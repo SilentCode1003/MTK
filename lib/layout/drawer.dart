@@ -2,49 +2,34 @@ import 'package:flutter/material.dart';
 import 'package:eportal/main.dart';
 import 'package:eportal/layout/home.dart';
 import 'package:eportal/layout/cashadvance.dart';
-import 'package:eportal/layout/coop.dart';
 import 'package:eportal/layout/requestleave.dart';
+import 'package:eportal/layout/notification.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(DrawerApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
+class DrawerApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: '5L SOLUTION',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const notice(),
+      debugShowCheckedModeBanner: false,
+      home: DrawerPage(),
     );
   }
 }
 
-class notice extends StatefulWidget {
-  const notice({Key? key}) : super(key: key);
-
-  @override
-  _noticeState createState() => _noticeState();
-}
-
-class _noticeState extends State<notice> {
+class DrawerPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          '5L SOLUTION',
+          '5L SOLUTIONS',
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.red, // Set the app bar color to red
-      ),
-      body: Center(
-        child: Text('Notice!'),
+        backgroundColor: const Color.fromARGB(
+            255, 215, 36, 24), // Set the app bar color to red
       ),
       drawer: Drawer(
         child: ListView(
@@ -82,11 +67,19 @@ class _noticeState extends State<notice> {
               leading: Icon(Icons.home),
               title: Text('Home'),
               onTap: () {
-                Navigator.pushReplacement(
+                Navigator.push(
                   context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          MyHomePage()), // Replace Login() with your actual login page class
+                  MaterialPageRoute(builder: (context) => DrawerPage()),
+                );
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.calendar_month),
+              title: const Text('Leaves'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => RequestLeave()),
                 );
               },
             ),
@@ -94,43 +87,27 @@ class _noticeState extends State<notice> {
               leading: Icon(Icons.attach_money),
               title: Text('Cash Advance'),
               onTap: () {
-                Navigator.pushReplacement(
+                Navigator.push(
                   context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          cashadvance()), // Replace Login() with your actual login page class
+                  MaterialPageRoute(builder: (context) => Cashpage()),
                 );
               },
             ),
             ListTile(
               leading: Icon(Icons.business),
-              title: Text('Coop'),
+              title: const Text('Coop'),
               onTap: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          Coop()), // Replace Login() with your actual login page class
-                );
+                Navigator.pop(context);
               },
             ),
             ListTile(
-              leading: Icon(Icons.request_page),
-              title: Text('Request Leave'),
+              leading: Icon(Icons.notification_add),
+              title: const Text('Notications'),
               onTap: () {
-                Navigator.pushReplacement(
+                Navigator.push(
                   context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          requestleave()), // Replace Login() with your actual login page class
+                  MaterialPageRoute(builder: (context) => Notications()),
                 );
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.warning),
-              title: Text('Deviation Notice'),
-              onTap: () {
-// Close the drawer
               },
             ),
             ListTile(
@@ -169,8 +146,12 @@ class _noticeState extends State<notice> {
                 );
               },
             ),
+            // Add more list items as needed
           ],
         ),
+      ),
+      body: Center(
+        child: Homepage(),
       ),
     );
   }
