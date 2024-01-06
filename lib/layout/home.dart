@@ -1,8 +1,8 @@
+
 import 'package:flutter/material.dart';
 import 'package:eportal/layout/attendance.dart';
 import 'package:eportal/layout/index.dart';
 import 'package:eportal/layout/salary.dart';
-
 
 void main() {
   runApp(const Homepage());
@@ -47,7 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
       case 1:
         return Attendance();
       case 2:
-         return Salary();
+        return Salary();
       default:
         return Container();
     }
