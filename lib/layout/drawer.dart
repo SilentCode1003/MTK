@@ -4,6 +4,7 @@ import 'package:eportal/layout/home.dart';
 import 'package:eportal/layout/cashadvance.dart';
 import 'package:eportal/layout/requestleave.dart';
 import 'package:eportal/layout/notification.dart';
+import 'package:eportal/layout/coop.dart';
 
 void main() {
   runApp(DrawerApp());
@@ -97,7 +98,10 @@ class DrawerPage extends StatelessWidget {
               leading: Icon(Icons.business),
               title: const Text('Coop'),
               onTap: () {
-                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Coop()),
+                );
               },
             ),
             ListTile(
@@ -106,7 +110,7 @@ class DrawerPage extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Notications()),
+                  MaterialPageRoute(builder: (context) => Notifications()),
                 );
               },
             ),
