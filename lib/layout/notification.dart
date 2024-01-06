@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:eportal/layout/drawer.dart';
 
 void main() {
-  runApp(const Notications());
+  runApp(const Notifications());
 }
 
-class Notications extends StatelessWidget {
-  const Notications({super.key});
+class Notifications extends StatelessWidget {
+  const Notifications({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -35,22 +35,26 @@ class Notications extends StatelessWidget {
         ),
         body: ListView(
           children: [
-            _buildListTile(
+            _buildDismissibleListTile(
+              key: UniqueKey(),
               title: 'Christmas & Year End Party',
               subtitle: 'Christmas & Year End Party @ Pacita Astrodom',
               trailing: 'Dec 16',
             ),
-            _buildListTile(
+            _buildDismissibleListTile(
+              key: UniqueKey(),
               title: 'Christmas for Children',
               subtitle: 'Christmas for Children @ 5L Solution Office',
               trailing: 'Dec 23',
             ),
-            _buildListTile(
+            _buildDismissibleListTile(
+              key: UniqueKey(),
               title: 'Verbal Warning',
               subtitle: '1st Offense',
               trailing: 'Jan 5',
             ),
-            _buildListTile(
+            _buildDismissibleListTile(
+              key: UniqueKey(),
               title: 'Leave Application',
               subtitle: 'Approved',
               trailing: 'Jan 5',
@@ -61,39 +65,63 @@ class Notications extends StatelessWidget {
     );
   }
 
-  Widget _buildListTile({
+  Widget _buildDismissibleListTile({
+    required Key key,
     required String title,
     required String subtitle,
     required String trailing,
   }) {
-    return Padding(
-      padding: EdgeInsets.only(
-          left: 8.0, top: 8.0),
-      child: Container(
-        margin: EdgeInsets.only(top: 8.0),
-        decoration: BoxDecoration(
-          border: Border(
-            left: BorderSide(
-              color: const Color.fromARGB(255, 215, 36, 24),
-              width: 5.0,
+    return Dismissible(
+      key: key,
+      background: Container(
+        color: Colors.red,
+        child: Align(
+          alignment: Alignment.centerRight,
+          child: Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: Icon(
+              Icons.delete,
+              color: Colors.white,
+              size: 50,
             ),
           ),
         ),
-        child: ListTile(
-          title: Text(
-            title,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 20.0,
+      ),
+      onDismissed: (direction) {
+        // Implement the delete action here if needed
+        // For now, just print a message
+        print('Item dismissed: $title');
+      },
+      child: Padding(
+        padding: EdgeInsets.only(left: 8.0, top: 8.0),
+        child: Container(
+          margin: EdgeInsets.only(top: 8.0),
+          decoration: BoxDecoration(
+            border: Border(
+              left: BorderSide(
+                color: const Color.fromARGB(255, 215, 36, 24),
+                width: 5.0,
+              ),
             ),
           ),
-          subtitle: Text(subtitle),
-          trailing: Text(trailing,
-            style: TextStyle(
-              fontWeight: FontWeight.normal,
-              fontSize: 14.0,
-            ),),
-          contentPadding: EdgeInsets.all(9.0),
+          child: ListTile(
+            title: Text(
+              title,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20.0,
+              ),
+            ),
+            subtitle: Text(subtitle),
+            trailing: Text(
+              trailing,
+              style: TextStyle(
+                fontWeight: FontWeight.normal,
+                fontSize: 14.0,
+              ),
+            ),
+            contentPadding: EdgeInsets.all(9.0),
+          ),
         ),
       ),
     );
