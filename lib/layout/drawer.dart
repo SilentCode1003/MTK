@@ -5,6 +5,8 @@ import 'package:eportal/layout/cashadvance.dart';
 import 'package:eportal/layout/requestleave.dart';
 import 'package:eportal/layout/notification.dart';
 import 'package:eportal/layout/coop.dart';
+import 'package:eportal/model/userinfo.dart';
+import 'package:eportal/repository/helper.dart';
 
 void main() {
   runApp(DrawerApp());
@@ -21,8 +23,26 @@ class DrawerApp extends StatelessWidget {
 }
 
 class DrawerPage extends StatelessWidget {
+  String fullname = '';
+  String employeeid = '';
+
+  Helper helper = Helper();
+
+  DrawerPage({super.key});
+
+  Future<void> _getUserInfo() async {
+    Map<String, dynamic> userinfo =
+        await helper.readJsonToFile('assets/metadata.json');
+    UserInfoModel user = UserInfoModel(userinfo['image'],
+        userinfo['employeeid'], userinfo['fullname'], userinfo['accesstype']);
+
+    fullname = user.fullname;
+    employeeid = user.employeeid;
+  }
+
   @override
   Widget build(BuildContext context) {
+    _getUserInfo();
     return Scaffold(
       appBar: AppBar(
         title: const Text(

@@ -1,47 +1,79 @@
+import 'package:eportal/repository/geolocation.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:slider_button/slider_button.dart';
 
-void main() {
-  runApp(MaterialApp(
-    home: const Index(),
-  ));
-}
+// void main() {
+//   runApp(MaterialApp(
+//     home: Index(
+//       fullname: '',
+//       employeeid: '',
+//     ),
+//   ));
+// }
 
 class Index extends StatefulWidget {
-  const Index({Key? key}) : super(key: key);
+  const Index({
+    Key? key,
+  }) : super(key: key);
 
   @override
   _IndexState createState() => _IndexState();
 }
 
 class _IndexState extends State<Index> {
-  late String currentLocation = '';
+  String currentLocation = '';
   bool isInPressed = false;
+
+  double _latitude = 0;
+  double _longitude = 0;
 
   @override
   void initState() {
+    getCurrentLocation().then((Position position) {
+      double latitude = position.latitude;
+      double longitude = position.longitude;
+
+      setState(() {
+        _latitude = latitude;
+        _longitude = longitude;
+      });
+
+      getGeolocationName(latitude, longitude)
+          .then((locationname) => {
+                setState(() {
+                  currentLocation = locationname;
+                })
+              })
+          .catchError((onError) {
+        if (kDebugMode) {
+          print(onError);
+        }
+      });
+    });
+
+    // fetchLocation();
     super.initState();
-    fetchLocation();
   }
 
-  Future<void> fetchLocation() async {
-    try {
-      Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
-      );
-      setState(() {
-        currentLocation =
-            'Lat: ${position.latitude}, Long: ${position.longitude}';
-      });
-    } catch (e) {
-      print('Error fetching location: $e');
-      setState(() {
-        currentLocation = 'Location unavailable';
-      });
-    }
-  }
+  // Future<void> fetchLocation() async {
+  //   try {
+  //     Position position = await Geolocator.getCurrentPosition(
+  //       desiredAccuracy: LocationAccuracy.high,
+  //     );
+  //     setState(() {
+  //       currentLocation =
+  //           'Lat: ${position.latitude}, Long: ${position.longitude}';
+  //     });
+  //   } catch (e) {
+  //     print('Error fetching location: $e');
+  //     setState(() {
+  //       currentLocation = 'Location unavailable';
+  //     });
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -168,7 +200,7 @@ class _IndexState extends State<Index> {
                 SizedBox(height: 20),
                 Center(
                   child: Text(
-                    '$currentLocation',
+                    currentLocation,
                     style: TextStyle(
                       fontSize: 18,
                       color: Colors.black,
