@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:eportal/main.dart';
 import 'package:eportal/layout/home.dart';
@@ -22,13 +24,25 @@ class DrawerApp extends StatelessWidget {
   }
 }
 
-class DrawerPage extends StatelessWidget {
+class DrawerPage extends StatefulWidget {
+  DrawerPage({super.key});
+
+  @override
+  State<DrawerPage> createState() => _DrawerPageState();
+}
+
+class _DrawerPageState extends State<DrawerPage> {
   String fullname = '';
   String employeeid = '';
+  String image = '';
 
   Helper helper = Helper();
 
-  DrawerPage({super.key});
+  @override
+  void initState() {
+    _getUserInfo();
+    super.initState();
+  }
 
   Future<void> _getUserInfo() async {
     Map<String, dynamic> userinfo =
@@ -36,13 +50,15 @@ class DrawerPage extends StatelessWidget {
     UserInfoModel user = UserInfoModel(userinfo['image'],
         userinfo['employeeid'], userinfo['fullname'], userinfo['accesstype']);
 
-    fullname = user.fullname;
-    employeeid = user.employeeid;
+    setState(() {
+      fullname = user.fullname;
+      employeeid = user.employeeid;
+      image = user.image;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    _getUserInfo();
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -66,8 +82,8 @@ class DrawerPage extends StatelessWidget {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(40.0),
-                    child: Image.asset(
-                      'assets/toy.jpg',
+                    child: Image.memory(
+                      base64Decode(image),
                       fit: BoxFit.cover,
                       width: 80.0,
                       height: 80.0,
@@ -75,7 +91,7 @@ class DrawerPage extends StatelessWidget {
                   ),
                   SizedBox(height: 15),
                   Text(
-                    'Mark Anasarias',
+                    '$fullname ($employeeid)',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,
