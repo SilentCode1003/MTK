@@ -16,7 +16,7 @@ class Login {
     final responseData = json.decode(response.body);
     final status = response.statusCode;
     final message = responseData['msg'];
-    final result = responseData['data'];
+    final result = responseData['data'] ?? [];
 
     ResponceModel data = ResponceModel(message, status, result);
     return data;
