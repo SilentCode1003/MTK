@@ -45,6 +45,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   http: ^1.1.0
   flutter_multi_formatter: ^2.12.3
+  flutter_map: ^6.1.0
+  geodesy: ^0.10.2
   
 dev_dependencies:
   flutter_test:

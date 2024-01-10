@@ -19,7 +19,7 @@ class Helper {
     // String jsonString = File(filePath).readAsStringSync();
     String jsonString = await rootBundle.loadString(filePath);
     Map<String, dynamic> jsonData = jsonDecode(jsonString);
-    print('Loaded JSON data: $jsonData');
+    // print('Loaded JSON data: $jsonData');
     return jsonData;
   }
 
@@ -55,6 +55,7 @@ class Helper {
     try {
       String assetPath = 'assets/$filePath';
       File file = File(assetPath);
+      file.writeAsStringSync(jsonEncode({}));
 
       String jsonString = jsonEncode(jsnonData);
 
