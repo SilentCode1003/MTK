@@ -50,6 +50,8 @@ class _DrawerPageState extends State<DrawerPage> {
     UserInfoModel user = UserInfoModel(userinfo['image'],
         userinfo['employeeid'], userinfo['fullname'], userinfo['accesstype']);
 
+
+
     setState(() {
       fullname = user.fullname;
       employeeid = user.employeeid;
@@ -116,7 +118,7 @@ class _DrawerPageState extends State<DrawerPage> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => RequestLeave()),
+                  MaterialPageRoute(builder: (context) => RequestLeave(employeeid: employeeid,)),
                 );
               },
             ),
@@ -126,7 +128,7 @@ class _DrawerPageState extends State<DrawerPage> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Cashpage()),
+                  MaterialPageRoute(builder: (context) => RequestCash(employeeid: employeeid,)),
                 );
               },
             ),

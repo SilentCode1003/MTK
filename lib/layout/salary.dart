@@ -173,6 +173,7 @@ class Salary extends StatelessWidget {
                         ],
                       ),
                     ),
+                    SizedBox(height: 10.0),
                     Container(
                       height: MediaQuery.of(context).size.height * 0.15,
                       width: double.infinity,
@@ -270,6 +271,7 @@ class Salary extends StatelessWidget {
                         ],
                       ),
                     ),
+                    SizedBox(height: 10.0),
                     Container(
                       height: MediaQuery.of(context).size.height * 0.15,
                       width: double.infinity,
@@ -367,6 +369,7 @@ class Salary extends StatelessWidget {
                         ],
                       ),
                     ),
+                    SizedBox(height: 10.0),
                     Container(
                       height: MediaQuery.of(context).size.height * 0.15,
                       width: double.infinity,
@@ -464,6 +467,7 @@ class Salary extends StatelessWidget {
                         ],
                       ),
                     ),
+                    SizedBox(height: 10.0),
                     Container(
                       height: MediaQuery.of(context).size.height * 0.15,
                       width: double.infinity,
@@ -561,6 +565,7 @@ class Salary extends StatelessWidget {
                         ],
                       ),
                     ),
+                    SizedBox(height: 10.0),
                     Container(
                       height: MediaQuery.of(context).size.height * 0.15,
                       width: double.infinity,
@@ -658,9 +663,11 @@ class Salary extends StatelessWidget {
                         ],
                       ),
                     ),
+                    SizedBox(height: 10.0),
                   ],
                 ),
               ),
+              
             ),
           ],
         ),
