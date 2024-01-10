@@ -88,8 +88,6 @@ class Notifications extends StatelessWidget {
         ),
       ),
       onDismissed: (direction) {
-        // Implement the delete action here if needed
-        // For now, just print a message
         print('Item dismissed: $title');
       },
       child: Padding(

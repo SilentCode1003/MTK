@@ -101,7 +101,7 @@ class _IndexState extends State<Index> {
                         fontFamily: 'NexaRegular',
                       ),
                     ),
-                    SizedBox(height: 25),
+                    SizedBox(height: 10),
                     Container(
                       height: 150,
                       width: double.infinity,
@@ -133,11 +133,11 @@ class _IndexState extends State<Index> {
                                   color: Colors.black,
                                 ),
                               ),
-                              SizedBox(height: 8, width: 40),
+                              SizedBox(height: 8, width: 50),
                               Align(
                                 alignment: Alignment.bottomCenter,
                                 child: Padding(
-                                  padding: const EdgeInsets.only(left: 18),
+                                  padding: const EdgeInsets.only(left: 35),
                                   child: Text(
                                     '--/--',
                                     style: TextStyle(
@@ -197,17 +197,18 @@ class _IndexState extends State<Index> {
                     ),
                   ],
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 10),
                 Center(
                   child: Text(
                     currentLocation,
+                    textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 18,
+                      fontSize: 15,
                       color: Colors.black,
                     ),
                   ),
                 ),
-                SizedBox(height: 30),
+                SizedBox(height: 15),
                 Center(
                   child: GestureDetector(
                     onTap: () {

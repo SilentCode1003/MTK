@@ -5,7 +5,7 @@ void main() {
 }
 
 class Attendance extends StatelessWidget {
-  const Attendance({super.key});
+  const Attendance({Key? key});
 
   @override
   Widget build(BuildContext context) {
@@ -76,125 +76,154 @@ class Attendance extends StatelessWidget {
                 child: ListView(
                   padding: const EdgeInsets.all(8.0),
                   children: [
-                    SizedBox(
-                      height: 120, // Set your desired height
-                      child: Card(
-                        color: Colors.white,
-                        elevation: 3,
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 120,
-                              decoration: const BoxDecoration(
-                                color: Colors.red,
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(8.0),
-                                  bottomLeft: Radius.circular(8.0),
+                    GestureDetector(
+                      onTap: () {
+                        showModalBottomSheet(
+                          context: context,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(25),
+                            ),
+                          ),
+                          builder: (BuildContext context) {
+                            return Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(25),
                                 ),
                               ),
-                              child: const Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.fromLTRB(
-                                        8.0, 20.0, 8.0, 1.0),
-                                    child: Text(
-                                      "21",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 40,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
+                              child: Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Text(
+                                    'Attendance',
+                                    style: TextStyle(fontSize: 18),
                                   ),
-                                  Padding(
-                                    padding: EdgeInsets.fromLTRB(
-                                        8.0, 5.0, 8.0, 10.0),
-                                    child: Text(
-                                      "Dec",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 20,
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                                ),
                               ),
-                            ),
-                           const Expanded(
-                              child: Padding(
-                                padding: EdgeInsets.all(16.0),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                            );
+                          },
+                        );
+                      },
+                      child: SizedBox(
+                        height: 120,
+                        child: Card(
+                          color: Colors.white,
+                          elevation: 3,
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 120,
+                                decoration: const BoxDecoration(
+                                  color: Colors.red,
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(8.0),
+                                    bottomLeft: Radius.circular(8.0),
+                                  ),
+                                ),
+                                child: const Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        SizedBox(height: 15),
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                              bottom: 8.0),
-                                          child: Text(
-                                            'Time In',
-                                            style: TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.normal,
-                                              color: Colors.black,
-                                            ),
-                                          ),
+                                    Padding(
+                                      padding: EdgeInsets.fromLTRB(
+                                          8.0, 20.0, 8.0, 1.0),
+                                      child: Text(
+                                        "21",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 40,
+                                          fontWeight: FontWeight.bold,
                                         ),
-                                        Align(
-                                          alignment: Alignment.bottomCenter,
-                                          child: Padding(
-                                            padding:
-                                                 EdgeInsets.only(left: 10),
-                                            child: Text(
-                                              '--/--',
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                                      ),
                                     ),
-                                    SizedBox(width: 40),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        SizedBox(height: 15),
-                                        Padding(
-                                          padding:  EdgeInsets.only(
-                                              bottom: 8.0),
-                                          child: Text(
-                                            'Time Out',
-                                            style: TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.normal,
-                                              color: Colors.black,
-                                            ),
-                                          ),
+                                    Padding(
+                                      padding: EdgeInsets.fromLTRB(
+                                          8.0, 5.0, 8.0, 10.0),
+                                      child: Text(
+                                        "Dec",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 20,
                                         ),
-                                        Text(
-                                          '--/--',
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                      ],
+                                      ),
                                     ),
                                   ],
                                 ),
                               ),
-                            ),
-                          ],
+                              const Expanded(
+                                child: Padding(
+                                  padding: EdgeInsets.all(16.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          SizedBox(height: 15),
+                                          Padding(
+                                            padding:
+                                                EdgeInsets.only(bottom: 8.0),
+                                            child: Text(
+                                              'Time In',
+                                              style: TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.normal,
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                          ),
+                                          Align(
+                                            alignment: Alignment.bottomCenter,
+                                            child: Padding(
+                                              padding:
+                                                  EdgeInsets.only(left: 10),
+                                              child: Text(
+                                                '--/--',
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(width: 40),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          SizedBox(height: 15),
+                                          Padding(
+                                            padding:
+                                                EdgeInsets.only(bottom: 8.0),
+                                            child: Text(
+                                              'Time Out',
+                                              style: TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.normal,
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                          ),
+                                          Text(
+                                            '--/--',
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                      
                     ),
                   ],
                 ),
@@ -219,7 +248,7 @@ Future<void> _showDateRangePicker(BuildContext context) async {
         data: ThemeData.light().copyWith(
           primaryColor: const Color.fromARGB(255, 215, 36, 24),
           colorScheme: const ColorScheme.light(
-              primary:  Color.fromARGB(255, 215, 36, 24)),
+              primary: Color.fromARGB(255, 215, 36, 24)),
           buttonTheme:
               const ButtonThemeData(textTheme: ButtonTextTheme.primary),
         ),
