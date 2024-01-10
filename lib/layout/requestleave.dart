@@ -27,13 +27,13 @@ class _RequestLeaveState extends State<RequestLeave> {
   }
 
   String leaveid = '';
-  String employeeid = '';
   String leavestartdate = '';
   String leaveenddate = '';
-  String leavetype = '';
+  String? leavetype = '';
   String reason = '';
   String status = '';
   String applieddate = '';
+  String _leavetype = '';
 
   Helper helper = Helper();
 
@@ -316,6 +316,69 @@ class _RequestLeaveState extends State<RequestLeave> {
   ///MODAL
 
   Future<void> _showLeaveApplicationForm(BuildContext context) async {
+    TextEditingController _startDateController = TextEditingController();
+    TextEditingController _endDateController = TextEditingController();
+    TextEditingController _reasonController = TextEditingController();
+    String? selectedLeaveType;
+
+    Future<void> _requestleave() async {
+      String startdate = _startDateController.text;
+      String enddate = _endDateController.text;
+      String reason = _reasonController.text;
+
+      print('$startdate $enddate $reason $leavetype');
+
+      try {
+        final response = await Leave().request(widget.employeeid, startdate,
+            enddate, selectedLeaveType.toString(), reason);
+
+        if (response.status == 200) {
+          showDialog(
+            context: context,
+            builder: (ctx) => AlertDialog(
+              title: const Text('Success'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(ctx);
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            ),
+          );
+        } else {
+          showDialog(
+            context: context,
+            builder: (ctx) => AlertDialog(
+              title: const Text('Error'),
+              content: Text(response.message),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(ctx),
+                  child: const Text('OK'),
+                ),
+              ],
+            ),
+          );
+        }
+      } catch (e) {
+        showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: const Text('Error'),
+            content: const Text('An error occurred'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(ctx),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+    }
+
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
@@ -334,8 +397,7 @@ class _RequestLeaveState extends State<RequestLeave> {
                     'Maternity Leave',
                     'Paternity Leave',
                     'Solo Parent Leave'
-                  ] // Add your leave types here
-                      .map<DropdownMenuItem<String>>((String value) {
+                  ].map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
                       child: Text(value),
@@ -344,23 +406,49 @@ class _RequestLeaveState extends State<RequestLeave> {
                   onChanged: (String? value) {
                     setState(() {
                       selectedLeaveType = value;
+                      leavetype = value;
                     });
                   },
                 ),
                 const SizedBox(height: 10),
                 TextFormField(
-                  controller: leaveDateFromController,
-                  decoration:
-                      const InputDecoration(labelText: 'Leave Date From'),
+                  controller: _startDateController,
+                  decoration: const InputDecoration(labelText: 'Start Date'),
+                  onTap: () async {
+                    DateTime? pickedDate = await showDatePicker(
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime.now(),
+                      lastDate: DateTime(2101),
+                    );
+
+                    if (pickedDate != null && pickedDate != DateTime.now()) {
+                      _startDateController.text =
+                          DateFormat('yyyy-MM-dd').format(pickedDate);
+                    }
+                  },
                 ),
                 const SizedBox(height: 10),
                 TextFormField(
-                  controller: leaveDateToController,
-                  decoration: const InputDecoration(labelText: 'Leave Date To'),
+                  controller: _endDateController,
+                  decoration: const InputDecoration(labelText: 'End Date'),
+                  onTap: () async {
+                    DateTime? pickedDate = await showDatePicker(
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime.now(),
+                      lastDate: DateTime(2101),
+                    );
+
+                    if (pickedDate != null && pickedDate != DateTime.now()) {
+                      _endDateController.text =
+                          DateFormat('yyyy-MM-dd').format(pickedDate);
+                    }
+                  },
                 ),
                 const SizedBox(height: 10),
                 TextFormField(
-                  controller: reasonController,
+                  controller: _reasonController,
                   decoration: const InputDecoration(labelText: 'Reason'),
                   maxLines: 3,
                 ),
@@ -370,15 +458,20 @@ class _RequestLeaveState extends State<RequestLeave> {
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                // Handle submit logic here
-                Navigator.of(context).pop();
+                _requestleave();
               },
+              style: TextButton.styleFrom(
+                primary: Colors.black,
+              ),
               child: const Text('Submit'),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
+              style: TextButton.styleFrom(
+                primary: Colors.black,
+              ),
               child: const Text('Cancel'),
             ),
           ],

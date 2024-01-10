@@ -16,6 +16,35 @@ class UserInfoModel {
   }
 }
 
+//ATTENDANCEMODEL
+
+class AttendanceModel {
+  final String employeeid;
+  final String attendancedate;
+  final String clockin;
+  final String clockout;
+  final String devicein;
+  final String deviceout;
+  final String totalhours;
+
+  AttendanceModel(this.employeeid, this.attendancedate, this.clockin, this.clockout, this.devicein, this.deviceout, this.totalhours,);
+
+  factory AttendanceModel.fromJson(Map<String, dynamic> json) {
+    return AttendanceModel(
+
+      json['employeeid'],
+      json['attendancedate'],
+      json['clockin'],
+      json['clockout'],
+      json['devicein'],
+      json['deviceout'],
+      json['totalhours'],
+    );
+  }
+}
+
+//LEVEMODEL
+
 class LeaveModel {
   final int leaveid;
   final String employeeid;
@@ -44,6 +73,9 @@ class LeaveModel {
   }
 }
 
+
+//CASHMODEL
+
 class CashModel {
   final int cashadvanceid;
   final String employeeid;
@@ -70,6 +102,33 @@ class CashModel {
   }
 }
 
+//NOTIFICATIONMODEL
+
+class NotificationModal {
+  final int cashadvanceid;
+  final String employeeid;
+  final String requestdate;
+  final String amount;
+  final String purpose;
+  final String status;
+  final String approvaldate;
+
+
+  NotificationModal(this.cashadvanceid, this.employeeid, this.requestdate, this.amount, this.purpose, this.status, this.approvaldate,);
+
+  factory NotificationModal.fromJson(Map<String, dynamic> json) {
+    return NotificationModal(
+
+      json['cashadvanceid'],
+      json['employeeid'],
+      json['requestdate'],
+      json['amount'],
+      json['purpose'],
+      json['status'],
+      json['approvaldate'],
+    );
+  }
+}
 
 
 

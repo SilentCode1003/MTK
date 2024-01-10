@@ -1,8 +1,11 @@
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:eportal/layout/attendance.dart';
 import 'package:eportal/layout/index.dart';
 import 'package:eportal/layout/salary.dart';
+import 'package:eportal/model/userinfo.dart';
+import 'package:eportal/repository/helper.dart';
 
 void main() {
   runApp(const Homepage());
@@ -27,6 +30,33 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
+   String fullname = '';
+  String employeeid = '';
+  String image = '';
+
+  Helper helper = Helper();
+
+  
+  @override
+  void initState() {
+    _getUserInfo();
+    super.initState();
+  }
+
+    Future<void> _getUserInfo() async {
+    Map<String, dynamic> userinfo =
+        await helper.readJsonToFile('assets/metadata.json');
+    UserInfoModel user = UserInfoModel(userinfo['image'],
+        userinfo['employeeid'], userinfo['fullname'], userinfo['accesstype']);
+
+
+
+    setState(() {
+      fullname = user.fullname;
+      employeeid = user.employeeid;
+      image = user.image;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
       case 0:
         return Index();
       case 1:
-        return Attendance();
+        return Attendance(employeeid: employeeid,);
       case 2:
         return Salary();
       default:
