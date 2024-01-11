@@ -5,9 +5,14 @@ void main() {
   runApp(const Notifications());
 }
 
-class Notifications extends StatelessWidget {
-  const Notifications({super.key});
+class Notifications extends StatefulWidget {
+  const Notifications({Key? key}) : super(key: key);
 
+  @override
+  _NotificationsState createState() => _NotificationsState();
+}
+
+class _NotificationsState extends State<Notifications> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -16,53 +21,68 @@ class Notifications extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text(
-            'Notifications',
-            style: TextStyle(color: Colors.white),
+      home: DefaultTabController(
+        length: 3,
+        child: Scaffold(
+          appBar: AppBar(
+            title: const Text(
+              'Notifications',
+              style: TextStyle(color: Colors.white),
+            ),
+            backgroundColor: const Color.fromARGB(255, 215, 36, 24),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back, color: Colors.white),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => DrawerApp()),
+                );
+              },
+            ),
+            bottom: const TabBar(
+              tabs: [
+                Tab(text: 'All'),
+                Tab(text: 'Announcements'),
+                Tab(text: 'Offenses'),
+                Tab(text: 'Leaves'),
+                Tab(text: 'Cash Advance'),
+              ],
+            ),
           ),
-          backgroundColor: const Color.fromARGB(255, 215, 36, 24),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => DrawerApp()),
-              );
-            },
+          body: TabBarView(
+            children: [
+              _buildNotificationList(),
+              _buildAnnouncementList(),
+              _buildOffensesList(),
+            ],
           ),
-        ),
-        body: ListView(
-          children: [
-            _buildDismissibleListTile(
-              key: UniqueKey(),
-              title: 'Christmas & Year End Party',
-              subtitle: 'Christmas & Year End Party @ Pacita Astrodom',
-              trailing: 'Dec 16',
-            ),
-            _buildDismissibleListTile(
-              key: UniqueKey(),
-              title: 'Christmas for Children',
-              subtitle: 'Christmas for Children @ 5L Solution Office',
-              trailing: 'Dec 23',
-            ),
-            _buildDismissibleListTile(
-              key: UniqueKey(),
-              title: 'Verbal Warning',
-              subtitle: '1st Offense',
-              trailing: 'Jan 5',
-            ),
-            _buildDismissibleListTile(
-              key: UniqueKey(),
-              title: 'Leave Application',
-              subtitle: 'Approved',
-              trailing: 'Jan 5',
-            ),
-          ],
         ),
       ),
     );
+  }
+
+  Widget _buildNotificationList() {
+    return ListView(
+      children: [
+        _buildDismissibleListTile(
+          key: UniqueKey(),
+          title: 'Christmas & Year End Party',
+          subtitle: 'Christmas & Year End Party @ Pacita Astrodom',
+          trailing: 'Dec 16',
+        ),
+        // Add more notification items as needed
+      ],
+    );
+  }
+
+  Widget _buildAnnouncementList() {
+    // Implement the list of announcements
+    return Container();
+  }
+
+  Widget _buildOffensesList() {
+    // Implement the list of offenses
+    return Container();
   }
 
   Widget _buildDismissibleListTile({
