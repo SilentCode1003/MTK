@@ -1,24 +1,15 @@
 import 'dart:convert';
-
+import 'package:eportal/api/attendance.dart';
 import 'package:eportal/api/geofence.dart';
-import 'package:eportal/layout/attendance.dart';
 import 'package:eportal/model/userinfo.dart';
 import 'package:eportal/repository/geolocation.dart';
+import 'package:eportal/repository/helper.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:intl/intl.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geodesy/geodesy.dart';
-
-// void main() {
-//   runApp(MaterialApp(
-//     home: Index(
-//       fullname: '',
-//       employeeid: '',
-//     ),
-//   ));
-// }
 
 class Index extends StatefulWidget {
   final String employeeid;
@@ -45,18 +36,20 @@ class _IndexState extends State<Index> {
   double _latitudeFence = 14.3379337;
   double _longitudeFence = 121.0604765;
 
-  final double _radius = 100;
-
   List<Widget> notifications = [];
   bool showNotifications = false;
 
-  LatLng manuallySelectedLocation = LatLng(14.3390743, 121.0610688);
+  LatLng manuallySelectedLocation = const LatLng(14.3390743, 121.0610688);
   MapController mapController = MapController();
   ZoomLevel zoomLevel = ZoomLevel(17.5);
   bool isStatusButtonEnabled = false;
 
   List<GeofenceModel> geofence = [];
   List<Widget> geofencemarker = [];
+  List<AttendanceLog> attendancelogs = [];
+
+  String employeeid = '';
+  int department = 0;
 
   @override
   void initState() {
@@ -75,8 +68,6 @@ class _IndexState extends State<Index> {
           .then((locationname) => {
                 setState(() {
                   currentLocation = locationname;
-
-                  _getGeofence();
                 })
               })
           .catchError((onError) {
@@ -85,63 +76,86 @@ class _IndexState extends State<Index> {
         }
       });
     });
+    _getUserInfo();
+
     // fetchLocation();
     super.initState();
   }
 
-  // Future<void> fetchLocation() async {
-  //   try {
-  //     Position position = await Geolocator.getCurrentPosition(
-  //       desiredAccuracy: LocationAccuracy.high,
-  //     );
-  //     setState(() {
-  //       currentLocation =
-  //           'Lat: ${position.latitude}, Long: ${position.longitude}';
-  //     });
-  //   } catch (e) {
-  //     print('Error fetching location: $e');
-  //     setState(() {
-  //       currentLocation = 'Location unavailable';
-  //     });
-  //   }
-  // }
+  Future<void> _getUserInfo() async {
+    Map<String, dynamic> userinfo =
+        await Helper().readJsonToFile('assets/metadata.json');
+    UserInfoModel user = UserInfoModel(
+        userinfo['image'],
+        userinfo['employeeid'],
+        userinfo['fullname'],
+        userinfo['accesstype'],
+        userinfo['department']);
+
+    setState(() {
+      employeeid = user.employeeid;
+      department = user.department;
+
+      _getGeofence();
+      _getLatesLog();
+    });
+  }
+
+  Future<void> _getLatesLog() async {
+    try {
+      final results = await UserAttendance().getlateslog(employeeid);
+      final jsonData = json.encode(results.result);
+      setState(() {
+        for (var log in json.decode(jsonData)) {
+          attendancelogs.add(AttendanceLog(
+              log['logid'],
+              log['attendanceid'],
+              log['employeeid'],
+              log['longdatetime'],
+              log['logtype'],
+              log['latitude'],
+              log['longitude'],
+              log['device']));
+        }
+
+        for (AttendanceLog attendance in attendancelogs) {
+          if (attendance.logtype == Helper().getLogtype(Logtype.clockin)) {
+            isLoggedIn = true;
+            timestatus = 'Time Out';
+          } else {
+            isLoggedIn = false;
+            timestatus = 'Time In';
+          }
+        }
+      });
+
+      print(isLoggedIn);
+    } catch (e) {
+      print('Latest Log $e');
+    }
+  }
 
   Future<void> _getGeofence() async {
-    final results = await Geofence().getfence('${widget.department}');
-    final jsonData = json.encode(results.result);
-    setState(() {
-      for (var setting in json.decode(jsonData)) {
-        geofence.add(GeofenceModel(
-          setting['geofenceid'],
-          setting['geofencename'],
-          setting['departmentid'],
-          setting['latitude'],
-          setting['longitude'],
-          setting['radius'],
-          setting['location'],
-          setting['status'],
-        ));
-      }
-
-      // for (GeofenceModel fence in geofence) {
-      //   LatLng circledomain = LatLng(fence.latitude, fence.longitude);
-      //   geofencemarker = List<Widget>.generate(
-      //     geofence.length,
-      //     (index) => CircleLayer(
-      //       circles: [
-      //         CircleMarker(
-      //           point: circledomain,
-      //           color: Colors.green.withOpacity(0.5), // Fill color
-      //           borderColor: Colors.blue, // Border color
-      //           borderStrokeWidth: 2, // Border width
-      //           useRadiusInMeter: true,
-      //           radius: geofence[index].radius, // Radius in meters
-      //         ),
-      //       ],
-      //     ),
-      //   );
-      // }
-    });
+    try {
+      final results = await Geofence().getfence('$department');
+      final jsonData = json.encode(results.result);
+      setState(() {
+        for (var setting in json.decode(jsonData)) {
+          geofence.add(GeofenceModel(
+            setting['geofenceid'],
+            setting['geofencename'],
+            setting['departmentid'],
+            setting['latitude'],
+            setting['longitude'],
+            setting['radius'],
+            setting['location'],
+            setting['status'],
+          ));
+        }
+      });
+    } catch (e) {
+      print('Geofence $e');
+    }
   }
 
   Future<void> _getCurrentLocation() async {
@@ -217,40 +231,14 @@ class _IndexState extends State<Index> {
                   child: const Text('Cancel')),
               TextButton(
                   onPressed: () {
-                    Navigator.of(context).pop();
+                    _clockout(widget.employeeid, _latitude, _longitude);
                     setState(() {
                       isLoggedIn = false;
                       timestatus = 'Time In';
                     });
 
-                    addNotification(
-                      NotificationCard(
-                        message: 'You are logged out!',
-                        type: NotificationType.info,
-                        onDismiss: () {
-                          removeNotification(
-                            NotificationCard(
-                              message: 'You are logged out!',
-                              type: NotificationType.info,
-                              onDismiss: () {},
-                            ),
-                          );
-                        },
-                      ),
-                    );
-
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: const Text('You are logged out!'),
-                        duration: const Duration(seconds: 2),
-                        action: SnackBarAction(
-                          label: 'Dismiss',
-                          onPressed: () {
-                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                          },
-                        ),
-                      ),
-                    );
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pop();
                   },
                   child: const Text('Log Out'))
             ],
@@ -262,22 +250,17 @@ class _IndexState extends State<Index> {
     await _getCurrentLocation();
 
     LatLng activelocation = LatLng(_latitude, _longitude);
-    LatLng circledomain = LatLng(_latitudeFence, _longitudeFence);
-    final distanceToDomain =
-        const Distance().as(LengthUnit.Meter, circledomain, activelocation);
-
-    if (distanceToDomain <= _radius) {
-      // Enable the "Status" button
-      setState(() {
-        print('true');
-        isStatusButtonEnabled = true;
-      });
-    } else {
-      // Disable the "Status" button
-      setState(() {
-        print('false');
-        isStatusButtonEnabled = false;
-      });
+    for (GeofenceModel fence in geofence) {
+      LatLng circledomain = LatLng(fence.latitude, fence.longitude);
+      final distanceToDomain =
+          const Distance().as(LengthUnit.Meter, circledomain, activelocation);
+      if (distanceToDomain <= fence.radius) {
+        // Enable the "Status" button
+        setState(() {
+          print('true');
+          isStatusButtonEnabled = true;
+        });
+      }
     }
 
     showDialog(
@@ -333,43 +316,15 @@ class _IndexState extends State<Index> {
               ElevatedButton(
                   onPressed: isStatusButtonEnabled
                       ? () {
+                          print('isLogin $isLoggedIn');
                           if (isLoggedIn) {
                             showLogoutDialog();
                           } else {
+                            _clockin(widget.employeeid, _latitude, _longitude);
                             setState(() {
                               isLoggedIn = true;
                               timestatus = 'Time Out';
-
-                              addNotification(
-                                NotificationCard(
-                                  message: 'You are logged in!',
-                                  type: NotificationType.success,
-                                  onDismiss: () {
-                                    removeNotification(
-                                      NotificationCard(
-                                        message: 'You are logged in!',
-                                        type: NotificationType.success,
-                                        onDismiss: () {},
-                                      ),
-                                    );
-                                  },
-                                ),
-                              );
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: const Text('You are logged in!'),
-                                  duration: const Duration(seconds: 2),
-                                  action: SnackBarAction(
-                                    label: 'Dismiss',
-                                    onPressed: () {
-                                      ScaffoldMessenger.of(context)
-                                          .hideCurrentSnackBar();
-                                    },
-                                  ),
-                                ),
-                              );
                             });
-
                             Navigator.of(context).pop();
                           }
                         }
@@ -383,6 +338,86 @@ class _IndexState extends State<Index> {
             ],
           );
         });
+  }
+
+  Future<void> _clockin(employeeid, latitude, longitude) async {
+    try {
+      final results = await UserAttendance()
+          .clockin(employeeid, latitude.toString(), longitude.toString());
+
+      print(results);
+
+      if (results.message == Helper().getStatusString(APIStatus.success)) {
+      } else {
+        showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: Text('$timestatus'),
+            content: const Text('Already exist'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(ctx),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+    } catch (e) {
+      showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Error'),
+              content: Text('Clock IN $e'),
+              actions: [
+                TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text('OK'))
+              ],
+            );
+          });
+    }
+  }
+
+  Future<void> _clockout(employeeid, latitude, longitude) async {
+    try {
+      final results = await UserAttendance()
+          .clockout(employeeid, latitude.toString(), longitude.toString());
+      if (results.message == Helper().getStatusString(APIStatus.success)) {
+      } else {
+        Navigator.of(context).pop();
+        showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: const Text('Access'),
+            content: const Text('Incorrect username and password'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(ctx),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+    } catch (e) {
+      showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Error'),
+              content: Text('Clock Out $e'),
+              actions: [
+                TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text('OK'))
+              ],
+            );
+          });
+    }
   }
 
   @override

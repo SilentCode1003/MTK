@@ -30,18 +30,25 @@ class AttendanceModel {
   final String deviceout;
   final String totalhours;
 
-  AttendanceModel(this.employeeid, this.attendancedate, this.clockin, this.clockout, this.devicein, this.deviceout, this.totalhours,);
+  AttendanceModel(
+    this.employeeid,
+    this.attendancedate,
+    this.clockin,
+    this.clockout,
+    this.devicein,
+    this.deviceout,
+    this.totalhours,
+  );
 
   factory AttendanceModel.fromJson(Map<String, dynamic> json) {
     return AttendanceModel(
-
       json['employeeid'],
       json['attendancedate'],
       json['clockin'],
-      json['clockout'],
+      json['clockout'] ?? '',
       json['devicein'],
-      json['deviceout'],
-      json['totalhours'],
+      json['deviceout'] ?? '',
+      json['totalhours'] ?? '',
     );
   }
 }
@@ -82,7 +89,6 @@ class LeaveModel {
     );
   }
 }
-
 
 //CASHMODEL
 
@@ -129,12 +135,18 @@ class NotificationModal {
   final String status;
   final String approvaldate;
 
-
-  NotificationModal(this.cashadvanceid, this.employeeid, this.requestdate, this.amount, this.purpose, this.status, this.approvaldate,);
+  NotificationModal(
+    this.cashadvanceid,
+    this.employeeid,
+    this.requestdate,
+    this.amount,
+    this.purpose,
+    this.status,
+    this.approvaldate,
+  );
 
   factory NotificationModal.fromJson(Map<String, dynamic> json) {
     return NotificationModal(
-
       json['cashadvanceid'],
       json['employeeid'],
       json['requestdate'],
@@ -146,7 +158,6 @@ class NotificationModal {
   }
 }
 
-
 class GeofenceModel {
   final int geofenceid;
   final String geofencename;
@@ -156,7 +167,7 @@ class GeofenceModel {
   final double radius;
   final String location;
   final String status;
-  
+
   GeofenceModel(
     this.geofenceid,
     this.geofencename,
@@ -178,6 +189,41 @@ class GeofenceModel {
       json['radius'],
       json['location'],
       json['status'],
+    );
+  }
+}
+
+class AttendanceLog {
+  final int logid;
+  final int attendanceid;
+  final String employeeid;
+  final String longdatetime;
+  final String logtype;
+  final double latitude;
+  final double longitude;
+  final String device;
+
+  AttendanceLog(
+    this.logid,
+    this.attendanceid,
+    this.employeeid,
+    this.longdatetime,
+    this.logtype,
+    this.latitude,
+    this.longitude,
+    this.device,
+  );
+
+  factory AttendanceLog.fromJson(Map<String, dynamic> json) {
+    return AttendanceLog(
+      json['logid'],
+      json['attendanceid'],
+      json['employeeid'],
+      json['longdatetime'],
+      json['logtype'],
+      json['latitude'],
+      json['longitude'],
+      json['device'],
     );
   }
 }

@@ -33,7 +33,6 @@ class _RequestLeaveState extends State<RequestLeave> {
   String reason = '';
   String status = '';
   String applieddate = '';
-  String _leavetype = '';
 
   Helper helper = Helper();
 

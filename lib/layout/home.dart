@@ -1,74 +1,20 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:eportal/layout/attendance.dart';
 import 'package:eportal/layout/index.dart';
 import 'package:eportal/layout/salary.dart';
-import 'package:eportal/model/userinfo.dart';
-import 'package:eportal/repository/helper.dart';
 
-// void main() {
-//   runApp(const Homepage());
-// }
-
-class Homepage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   final String employeeid;
   final int department;
-  const Homepage({Key? key, required this.employeeid, required this.department})
-      : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: MyHomePage(
-        employeeid: employeeid,
-        department: department,
-      ),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  final String employeeid;
-  final int department;
-  const MyHomePage(
-      {Key? key, required this.employeeid, required this.department})
+  const HomePage({Key? key, required this.employeeid, required this.department})
       : super(key: key);
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _HomePageState createState() => _HomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
-   String fullname = '';
-  String employeeid = '';
-  String image = '';
-
-  Helper helper = Helper();
-
-  
-  @override
-  void initState() {
-    _getUserInfo();
-    super.initState();
-  }
-
-    Future<void> _getUserInfo() async {
-    Map<String, dynamic> userinfo =
-        await helper.readJsonToFile('assets/metadata.json');
-    UserInfoModel user = UserInfoModel(userinfo['image'],
-        userinfo['employeeid'], userinfo['fullname'], userinfo['accesstype']);
-
-
-
-    setState(() {
-      fullname = user.fullname;
-      employeeid = user.employeeid;
-      image = user.image;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -82,6 +28,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget _getBody(int index) {
+    print(widget.employeeid);
     switch (index) {
       case 0:
         return Index(
@@ -89,9 +36,11 @@ class _MyHomePageState extends State<MyHomePage> {
           department: widget.department,
         );
       case 1:
-        return Attendance(employeeid: employeeid,);
+        return Attendance(
+          employeeid: widget.employeeid,
+        );
       case 2:
-        return Salary();
+        return const Salary();
       default:
         return Container();
     }
@@ -109,7 +58,8 @@ class MyBottomNavBar extends StatelessWidget {
   final Function(int) onTap;
   final Color activeColor;
 
-  MyBottomNavBar({
+  const MyBottomNavBar({
+    super.key,
     required this.currentIndex,
     required this.onTap,
     required this.activeColor,

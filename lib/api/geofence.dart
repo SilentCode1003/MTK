@@ -12,12 +12,11 @@ class Geofence {
       'department': department,
     });
 
+    print(response.body);
     final responseData = json.decode(response.body);
     final status = response.statusCode;
     final message = responseData['msg'];
     final result = responseData['data'] ?? [];
-
-    print(result);
 
     ResponceModel data = ResponceModel(message, status, result);
     return data;
