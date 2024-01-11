@@ -35,6 +35,7 @@ class _DrawerPageState extends State<DrawerPage> {
   String fullname = '';
   String employeeid = '';
   String image = '';
+  int department = 0;
 
   Helper helper = Helper();
 
@@ -47,15 +48,18 @@ class _DrawerPageState extends State<DrawerPage> {
   Future<void> _getUserInfo() async {
     Map<String, dynamic> userinfo =
         await helper.readJsonToFile('assets/metadata.json');
-    UserInfoModel user = UserInfoModel(userinfo['image'],
-        userinfo['employeeid'], userinfo['fullname'], userinfo['accesstype']);
-
-
+    UserInfoModel user = UserInfoModel(
+        userinfo['image'],
+        userinfo['employeeid'],
+        userinfo['fullname'],
+        userinfo['accesstype'],
+        userinfo['department']);
 
     setState(() {
       fullname = user.fullname;
       employeeid = user.employeeid;
       image = user.image;
+      department = user.department;
     });
   }
 
@@ -118,7 +122,10 @@ class _DrawerPageState extends State<DrawerPage> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => RequestLeave(employeeid: employeeid,)),
+                  MaterialPageRoute(
+                      builder: (context) => RequestLeave(
+                            employeeid: employeeid,
+                          )),
                 );
               },
             ),
@@ -128,7 +135,10 @@ class _DrawerPageState extends State<DrawerPage> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => RequestCash(employeeid: employeeid,)),
+                  MaterialPageRoute(
+                      builder: (context) => RequestCash(
+                            employeeid: employeeid,
+                          )),
                 );
               },
             ),
@@ -193,7 +203,10 @@ class _DrawerPageState extends State<DrawerPage> {
         ),
       ),
       body: Center(
-        child: Homepage(),
+        child: Homepage(
+          employeeid: employeeid,
+          department: department,
+        ),
       ),
     );
   }

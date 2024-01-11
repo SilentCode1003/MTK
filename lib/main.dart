@@ -53,7 +53,7 @@ class _LoginPageState extends State<LoginPage> {
 
     final response = await Login().login(username, password);
 
-    print(response.message);
+    // print(response.message);
 
     if (helper.getStatusString(APIStatus.success) == response.message) {
       final jsonData = json.encode(response.result);

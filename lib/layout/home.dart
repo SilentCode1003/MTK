@@ -7,23 +7,34 @@ import 'package:eportal/layout/salary.dart';
 import 'package:eportal/model/userinfo.dart';
 import 'package:eportal/repository/helper.dart';
 
-void main() {
-  runApp(const Homepage());
-}
+// void main() {
+//   runApp(const Homepage());
+// }
 
 class Homepage extends StatelessWidget {
-  const Homepage({Key? key}) : super(key: key);
+  final String employeeid;
+  final int department;
+  const Homepage({Key? key, required this.employeeid, required this.department})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: MyHomePage(),
+      home: MyHomePage(
+        employeeid: employeeid,
+        department: department,
+      ),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
+  final String employeeid;
+  final int department;
+  const MyHomePage(
+      {Key? key, required this.employeeid, required this.department})
+      : super(key: key);
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -73,7 +84,10 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget _getBody(int index) {
     switch (index) {
       case 0:
-        return Index();
+        return Index(
+          employeeid: widget.employeeid,
+          department: widget.department,
+        );
       case 1:
         return Attendance(employeeid: employeeid,);
       case 2:
