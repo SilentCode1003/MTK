@@ -1,8 +1,8 @@
 import 'dart:convert';
 
+import 'package:eportal/layout/home.dart';
 import 'package:flutter/material.dart';
 import 'package:eportal/main.dart';
-import 'package:eportal/layout/home.dart';
 import 'package:eportal/layout/cashadvance.dart';
 import 'package:eportal/layout/requestleave.dart';
 import 'package:eportal/layout/notification.dart';
@@ -25,7 +25,7 @@ class DrawerApp extends StatelessWidget {
 }
 
 class DrawerPage extends StatefulWidget {
-  DrawerPage({super.key});
+  const DrawerPage({super.key});
 
   @override
   State<DrawerPage> createState() => _DrawerPageState();
@@ -79,8 +79,8 @@ class _DrawerPageState extends State<DrawerPage> {
           padding: EdgeInsets.zero,
           children: [
             DrawerHeader(
-              decoration: BoxDecoration(
-                color: const Color.fromARGB(
+              decoration: const BoxDecoration(
+                color: Color.fromARGB(
                     255, 215, 36, 24), // Set the sidebar header color to red
               ),
               child: Column(
@@ -95,7 +95,7 @@ class _DrawerPageState extends State<DrawerPage> {
                       height: 80.0,
                     ),
                   ),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   Text(
                     '$fullname ($employeeid)',
                     style: TextStyle(
@@ -107,8 +107,8 @@ class _DrawerPageState extends State<DrawerPage> {
               ),
             ),
             ListTile(
-              leading: Icon(Icons.home),
-              title: Text('Home'),
+              leading: const Icon(Icons.home),
+              title: const Text('Home'),
               onTap: () {
                 Navigator.push(
                   context,
@@ -203,10 +203,7 @@ class _DrawerPageState extends State<DrawerPage> {
         ),
       ),
       body: Center(
-        child: Homepage(
-          employeeid: employeeid,
-          department: department,
-        ),
+        child: HomePage(employeeid: employeeid, department: department),
       ),
     );
   }

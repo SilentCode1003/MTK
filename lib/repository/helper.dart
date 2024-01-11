@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:flutter/services.dart' show rootBundle;
 
 enum APIStatus { success, error }
+enum Logtype {clockin, clockout}
 
 class Helper {
   String GetCurrentDatetime() {
@@ -73,6 +74,17 @@ class Helper {
         return 'success';
       case APIStatus.error:
         return 'error';
+      default:
+        return "";
+    }
+  }
+
+  String getLogtype(Logtype type) {
+    switch (type) {
+      case Logtype.clockin:
+        return 'ClockIn';
+      case Logtype.clockout:
+        return 'ClockOut';
       default:
         return "";
     }

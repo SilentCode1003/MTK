@@ -40,10 +40,10 @@ class _AttendanceState extends State<Attendance> {
             attendanceinfo['employeeid'],
             _formatDate(attendanceinfo['attendancedate']),
             attendanceinfo['clockin'],
-            attendanceinfo['clockout'],
+            attendanceinfo['clockout'] ?? '--',
             attendanceinfo['devicein'],
-            attendanceinfo['deviceout'],
-            attendanceinfo['totalhours'],
+            attendanceinfo['deviceout'] ?? '--',
+            attendanceinfo['totalhours'] ?? '--',
           );
           usersattendance.add(userattendance);
         });
