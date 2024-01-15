@@ -116,7 +116,7 @@ class _IndexState extends State<Index> {
 
   Future<void> _getUserInfo() async {
     Map<String, dynamic> userinfo =
-        await Helper().readJsonToFile('assets/metadata.json');
+        await Helper().readJsonToFile('metadata.json');
     UserInfoModel user = UserInfoModel(
         userinfo['image'],
         userinfo['employeeid'],

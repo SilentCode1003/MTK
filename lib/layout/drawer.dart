@@ -47,7 +47,7 @@ class _DrawerPageState extends State<DrawerPage> {
 
   Future<void> _getUserInfo() async {
     Map<String, dynamic> userinfo =
-        await helper.readJsonToFile('assets/metadata.json');
+        await helper.readJsonToFile('metadata.json');
     UserInfoModel user = UserInfoModel(
         userinfo['image'],
         userinfo['employeeid'],
@@ -192,11 +192,7 @@ class _DrawerPageState extends State<DrawerPage> {
                           child: Text("Logout"),
                           onPressed: () {
                             // Perform logout and navigate to LoginPage
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => LoginPage()),
-                            );
+                            Navigator.pushReplacementNamed(context, '/login');
                           },
                         ),
                       ],
