@@ -154,19 +154,26 @@ class NotificationModel {
 
 class TodayModel {
   final String employeeid;
-  final String ma_clockin;
-  final String ma_clockout;
+  final String attendanceid;
+  final String logtimein;
+  final String logtimeout;
+  final String logdatein;
+  final String logdateout;
 
 
 
-  TodayModel(this.employeeid, this.ma_clockin, this.ma_clockout,);
+  TodayModel(this.employeeid, this.attendanceid, this.logtimein, this.logtimeout, this.logdatein, this.logdateout,);
 
   factory TodayModel.fromJson(Map<String, dynamic> json) {
     return TodayModel(
 
       json['employeeid'],
+      json['attendanceid'],
       json['logtimein'],
       json['logtimeout'],
+      json['logdatein'],
+      json['logdateout'],
+  
     );
   }
 }

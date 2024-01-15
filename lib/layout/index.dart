@@ -265,10 +265,10 @@ class _IndexState extends State<Index> {
               TextButton(
                   onPressed: () {
                     _clockout(widget.employeeid, _latitude, _longitude);
-                    setState(() {
-                      isLoggedIn = false;
-                      timestatus = 'Time In';
-                    });
+                    // setState(() {
+                    //   isLoggedIn = false;
+                    //   timestatus = 'Time In';
+                    // });
 
                     Navigator.of(context).pop();
                     Navigator.of(context).pop();
@@ -354,10 +354,10 @@ class _IndexState extends State<Index> {
                             showLogoutDialog();
                           } else {
                             _clockin(widget.employeeid, _latitude, _longitude);
-                            setState(() {
-                              isLoggedIn = true;
-                              timestatus = 'Time Out';
-                            });
+                            // setState(() {
+                            //   isLoggedIn = true;
+                            //   timestatus = 'Time Out';
+                            // });
                             Navigator.of(context).pop();
                           }
                         }
@@ -390,7 +390,11 @@ class _IndexState extends State<Index> {
               TextButton(
                 onPressed: () {
                   Navigator.pop(ctx);
-                   _getStatus(); // Close the dialog
+                   _getStatus();
+                   setState(() {
+                      isLoggedIn = true;
+                      timestatus = 'Time Out';
+                    });
                 },
                 child: const Text('OK'),
               ),
@@ -402,10 +406,17 @@ class _IndexState extends State<Index> {
           context: context,
           builder: (ctx) => AlertDialog(
             title: Text('$timestatus'),
-            content: const Text('Already exist'),
+            content: const Text('Tama kana may bukas pa!'),
             actions: [
               TextButton(
-                onPressed: () => Navigator.pop(ctx),
+                onPressed: () {
+                  Navigator.pop(ctx);
+                   _getStatus();
+                   setState(() {
+                      isLoggedIn = false;
+                      timestatus = 'Time In';
+                    });
+                },
                 child: const Text('OK'),
               ),
             ],
@@ -487,7 +498,12 @@ class _IndexState extends State<Index> {
                   child: TextButton(
                     onPressed: () {
                       Navigator.pop(ctx); // Close the dialog
+                      setState(() {
+                      isLoggedIn = false;
+                      timestatus = 'Time In';
+                    });
                       _getStatus();
+
                     },
                     child: Text(
                       'OK',
