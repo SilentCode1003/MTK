@@ -47,6 +47,8 @@ dependencies:
   flutter_multi_formatter: ^2.12.3
   flutter_map: ^6.1.0
   geodesy: ^0.10.2
+  permission_handler: ^11.0.1
+  path_provider: ^2.1.2
   
 dev_dependencies:
   flutter_test:

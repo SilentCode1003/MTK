@@ -4,9 +4,11 @@ import 'package:flutter_multi_formatter/formatters/formatter_utils.dart';
 import 'package:intl/intl.dart';
 import 'dart:io';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:path_provider/path_provider.dart';
 
 enum APIStatus { success, error }
-enum Logtype {clockin, clockout}
+
+enum Logtype { clockin, clockout }
 
 class Helper {
   String GetCurrentDatetime() {
@@ -17,10 +19,22 @@ class Helper {
   }
 
   Future<Map<String, dynamic>> readJsonToFile(String filePath) async {
-    // String jsonString = File(filePath).readAsStringSync();
-    String jsonString = await rootBundle.loadString(filePath);
+    final directory = await getApplicationDocumentsDirectory();
+    final file = File('${directory.path}/$filePath');
+
+    print(file);
+
+    // Check if the file exists
+    if (!file.existsSync()) {
+      print('File does not exist.');
+    }
+
+    // Read the contents of the file
+    String jsonString = await file.readAsString();
+
+    // Parse the JSON string into a Map
     Map<String, dynamic> jsonData = jsonDecode(jsonString);
-    // print('Loaded JSON data: $jsonData');
+
     return jsonData;
   }
 
@@ -52,17 +66,21 @@ class Helper {
     }
   }
 
-  void writeJsonToFile(Map<String, dynamic> jsnonData, String filePath) {
+  Future<void> writeJsonToFile(
+      Map<String, dynamic> jsnonData, String filePath) async {
     try {
-      String assetPath = 'assets/$filePath';
-      File file = File(assetPath);
-      file.writeAsStringSync(jsonEncode({}));
+      final directory = await getApplicationDocumentsDirectory();
+      final file = File('${directory.path}/$filePath');
 
+        print(file);
+
+      // Convert the data to a JSON string
       String jsonString = jsonEncode(jsnonData);
 
-      file.writeAsStringSync(jsonString);
+      // Write the JSON string to the file
+      await file.writeAsString(jsonString);
 
-      print('JSON data written to file: $filePath');
+      print('Data written to ${file.path}');
     } catch (e) {
       print(e);
     }
@@ -89,10 +107,10 @@ class Helper {
         return "";
     }
   }
-    String GetCurrentDate() {
+
+  String GetCurrentDate() {
     DateTime currentDateTime = DateTime.now();
-    String formattedDateTime =
-        DateFormat('yyyy-MM-dd').format(currentDateTime);
+    String formattedDateTime = DateFormat('yyyy-MM-dd').format(currentDateTime);
     return formattedDateTime;
   }
 }

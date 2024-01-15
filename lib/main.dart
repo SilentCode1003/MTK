@@ -5,8 +5,9 @@ import 'package:eportal/component/loadingspinner.dart';
 import 'package:eportal/repository/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:eportal/layout/drawer.dart';
+import 'package:permission_handler/permission_handler.dart';
 
-void main() {
+void main() async {
   runApp(const MyApp());
 }
 
@@ -23,6 +24,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: LoginPage(),
+      routes: {'logout': ((context) => LoginPage())},
     );
   }
 }
