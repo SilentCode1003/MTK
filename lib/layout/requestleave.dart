@@ -7,10 +7,6 @@ import 'package:eportal/model/userinfo.dart';
 import 'package:eportal/repository/helper.dart';
 import 'package:intl/intl.dart';
 
-// void main() {
-//   runApp(RequestLeave());
-// }
-
 class RequestLeave extends StatefulWidget {
   final String employeeid;
 
@@ -98,203 +94,218 @@ class _RequestLeaveState extends State<RequestLeave> {
       body: Column(
         children: <Widget>[
           Expanded(
-            child: ListView.builder(
-              itemCount: userleaves.length,
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () {
-                    showModalBottomSheet(
-                      context: context,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(25),
-                        ),
-                      ),
-                      builder: (BuildContext context) {
-                        return Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.vertical(
-                              top: Radius.circular(25),
+            child: userleaves.isEmpty
+                ? Center(
+                    child: Text(
+                      'No leave applications',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  )
+                : ListView.builder(
+                    itemCount: userleaves.length,
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: () {
+                          showModalBottomSheet(
+                            context: context,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(
+                                top: Radius.circular(25),
+                              ),
                             ),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Center(
-                                  child: const Text(
-                                    'Leave Details',
-                                    style: TextStyle(
-                                      fontSize: 28,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                            builder: (BuildContext context) {
+                              return Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(25),
                                   ),
                                 ),
-                                const SizedBox(height: 30.0),
-                                Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    '${userleaves[index].leavetype}',
-                                    style: TextStyle(
-                                      fontSize: 25,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: 10.0),
-                                Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    'Start Date:     ${userleaves[index].leavestartdate}',
-                                    style: TextStyle(
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.normal,
-                                    ),
-                                  ),
-                                ),
-                                Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    'End Date:     ${userleaves[index].leaveenddate}',
-                                    style: TextStyle(
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.normal,
-                                    ),
-                                  ),
-                                ),
-                                Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    'Applied Date: ${userleaves[index].applieddate}',
-                                    style: TextStyle(
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.normal,
-                                    ),
-                                  ),
-                                ),
-                                Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    'Reason: ${userleaves[index].reason}',
-                                    style: TextStyle(
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.normal,
-                                    ),
-                                  ),
-                                ),
-                                Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    'Status: ${userleaves[index].status}',
-                                    style: TextStyle(
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.bold,
-                                      color: userleaves[index].status ==
-                                              'Pending'
-                                          ? Colors.orange
-                                          : userleaves[index].status ==
-                                                  'Approved'
-                                              ? Colors.green
-                                              : userleaves[index].status ==
-                                                      'Rejected'
-                                                  ? Colors.red
-                                                  : userleaves[index].status ==
-                                                          'Cancel'
-                                                      ? Colors.red
-                                                      : Colors.black,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(height: 50), // Add some space
-
-                                // Conditionally show the button based on the status
-                                if (userleaves[index].status == 'Pending')
-                                  Center(
-                                    child: ElevatedButton(
-                                      onPressed: () {
-                                        // Add your button functionality here
-                                        Navigator.pop(
-                                            context); // Close the bottom sheet
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                        primary: Colors.red,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Center(
+                                        child: const Text(
+                                          'Leave Details',
+                                          style: TextStyle(
+                                            fontSize: 28,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
-                                        minimumSize: Size(250, 50),
                                       ),
-                                      child: Text(
-                                        'Cancel Leave Application',
-                                        style: TextStyle(fontSize: 18),
+                                      const SizedBox(height: 30.0),
+                                      Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                          '${userleaves[index].leavetype}',
+                                          style: TextStyle(
+                                            fontSize: 25,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 10.0),
+                                      Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                          'Start Date:     ${userleaves[index].leavestartdate}',
+                                          style: TextStyle(
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.normal,
+                                          ),
+                                        ),
+                                      ),
+                                      Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                          'End Date:     ${userleaves[index].leaveenddate}',
+                                          style: TextStyle(
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.normal,
+                                          ),
+                                        ),
+                                      ),
+                                      Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                          'Applied Date: ${userleaves[index].applieddate}',
+                                          style: TextStyle(
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.normal,
+                                          ),
+                                        ),
+                                      ),
+                                      Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                          'Reason: ${userleaves[index].reason}',
+                                          style: TextStyle(
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.normal,
+                                          ),
+                                        ),
+                                      ),
+                                      Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                          'Status: ${userleaves[index].status}',
+                                          style: TextStyle(
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.bold,
+                                            color: userleaves[index].status ==
+                                                    'Pending'
+                                                ? Colors.orange
+                                                : userleaves[index].status ==
+                                                        'Approved'
+                                                    ? Colors.green
+                                                    : userleaves[index]
+                                                                .status ==
+                                                            'Rejected'
+                                                        ? Colors.red
+                                                        : userleaves[index]
+                                                                    .status ==
+                                                                'Cancel'
+                                                            ? Colors.red
+                                                            : Colors.black,
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(height: 50), // Add some space
+
+                                      // Conditionally show the button based on the status
+                                      if (userleaves[index].status == 'Pending')
+                                        Center(
+                                          child: ElevatedButton(
+                                            onPressed: () {
+                                              // Add your button functionality here
+                                              Navigator.pop(
+                                                  context); // Close the bottom sheet
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                              primary: Colors.red,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                              ),
+                                              minimumSize: Size(250, 50),
+                                            ),
+                                            child: Text(
+                                              'Cancel Leave Application',
+                                              style: TextStyle(fontSize: 18),
+                                            ),
+                                          ),
+                                        ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        },
+                        child: Card(
+                          elevation: 3,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              children: <Widget>[
+                                const SizedBox(height: 10.0),
+                                Expanded(
+                                  child: ListTile(
+                                    title: Text(
+                                      userleaves[index].leavetype,
+                                      style: TextStyle(
+                                        fontSize: 22.0,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    subtitle: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        SizedBox(height: 7.0),
+                                        Text(
+                                          '${userleaves[index].leavestartdate} to ${userleaves[index].leaveenddate}',
+                                        ),
+                                        SizedBox(height: 5.0),
+                                        Text(
+                                          'Applied Date: ${userleaves[index].applieddate}',
+                                        )
+                                      ],
+                                    ),
+                                    trailing: Text(
+                                      (userleaves[index].status),
+                                      style: TextStyle(
+                                        fontSize: 20.0,
+                                        fontWeight: FontWeight.bold,
+                                        color: userleaves[index].status ==
+                                                'Pending'
+                                            ? Colors.orange
+                                            : userleaves[index].status ==
+                                                    'Approved'
+                                                ? Colors.green
+                                                : userleaves[index].status ==
+                                                        'Rejected'
+                                                    ? Colors.red
+                                                    : userleaves[index]
+                                                                .status ==
+                                                            'Cancel'
+                                                        ? Colors.red
+                                                        : Colors.black,
                                       ),
                                     ),
                                   ),
+                                )
                               ],
                             ),
                           ),
-                        );
-                      },
-                    );
-                  },
-                  child: Card(
-                    elevation: 3,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: <Widget>[
-                          const SizedBox(height: 10.0),
-                          Expanded(
-                            child: ListTile(
-                              title: Text(
-                                userleaves[index].leavetype,
-                                style: TextStyle(
-                                  fontSize: 22.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              subtitle: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SizedBox(height: 7.0),
-                                  Text(
-                                    '${userleaves[index].leavestartdate} to ${userleaves[index].leaveenddate}',
-                                  ),
-                                  SizedBox(height: 5.0),
-                                  Text(
-                                    'Applied Date: ${userleaves[index].applieddate}',
-                                  )
-                                ],
-                              ),
-                              trailing: Text(
-                                (userleaves[index].status),
-                                style: TextStyle(
-                                  fontSize: 20.0,
-                                  fontWeight: FontWeight.bold,
-                                  color: userleaves[index].status == 'Pending'
-                                      ? Colors.orange
-                                      : userleaves[index].status == 'Approved'
-                                          ? Colors.green
-                                          : userleaves[index].status ==
-                                                  'Rejected'
-                                              ? Colors.red
-                                              : userleaves[index].status ==
-                                                      'Cancel'
-                                                  ? Colors.red
-                                                  : Colors.black,
-                                ),
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
+                        ),
+                      );
+                    },
                   ),
-                );
-              },
-            ),
           )
         ],
       ),
@@ -339,7 +350,15 @@ class _RequestLeaveState extends State<RequestLeave> {
               actions: [
                 TextButton(
                   onPressed: () {
-                    Navigator.pop(ctx);
+                    Navigator.pop(ctx); // Close the success dialog
+                    Navigator.pop(context); // Pop the current page
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            RequestLeave(employeeid: widget.employeeid),
+                      ),
+                    );
                   },
                   child: const Text('OK'),
                 ),
@@ -381,6 +400,16 @@ class _RequestLeaveState extends State<RequestLeave> {
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
+        // Validate function
+        bool _validateFields() {
+          // Add your validation logic here.
+          // For example, check if the selectedLeaveType, startDate, endDate, and reason are not empty.
+          return selectedLeaveType != null &&
+              _startDateController.text.isNotEmpty &&
+              _endDateController.text.isNotEmpty &&
+              _reasonController.text.isNotEmpty;
+        }
+
         return AlertDialog(
           title: const Text('Leave Application'),
           content: SingleChildScrollView(
@@ -457,7 +486,29 @@ class _RequestLeaveState extends State<RequestLeave> {
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                _requestleave();
+                if (_validateFields()) {
+                  _requestleave();
+                } else {
+                  // Show an alert indicating that all fields must be filled.
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Incomplete Form'),
+                        content: Text(
+                            'Please fill up all the required fields before submitting.'),
+                        actions: <Widget>[
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('OK'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                }
               },
               style: TextButton.styleFrom(
                 primary: Colors.black,

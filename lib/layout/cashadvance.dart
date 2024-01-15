@@ -82,7 +82,14 @@ class _RequestCashState extends State<RequestCash> {
       body: Column(
         children: <Widget>[
           Expanded(
-            child: ListView.builder(
+            child: userscash.isEmpty
+                ? Center(
+                    child: Text(
+                      'No Cash Advance applications',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  )
+                : ListView.builder(
               itemCount: userscash.length,
               itemBuilder: (context, index) {
                 return GestureDetector(

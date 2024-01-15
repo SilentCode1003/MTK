@@ -126,7 +126,7 @@ class CashModel {
 
 //NOTIFICATIONMODEL
 
-class NotificationModal {
+class NotificationModel {
   final int cashadvanceid;
   final String employeeid;
   final String requestdate;
@@ -135,18 +135,12 @@ class NotificationModal {
   final String status;
   final String approvaldate;
 
-  NotificationModal(
-    this.cashadvanceid,
-    this.employeeid,
-    this.requestdate,
-    this.amount,
-    this.purpose,
-    this.status,
-    this.approvaldate,
-  );
 
-  factory NotificationModal.fromJson(Map<String, dynamic> json) {
-    return NotificationModal(
+  NotificationModel(this.cashadvanceid, this.employeeid, this.requestdate, this.amount, this.purpose, this.status, this.approvaldate,);
+
+  factory NotificationModel.fromJson(Map<String, dynamic> json) {
+    return NotificationModel(
+
       json['cashadvanceid'],
       json['employeeid'],
       json['requestdate'],
@@ -154,6 +148,25 @@ class NotificationModal {
       json['purpose'],
       json['status'],
       json['approvaldate'],
+    );
+  }
+}
+
+class TodayModel {
+  final String employeeid;
+  final String ma_clockin;
+  final String ma_clockout;
+
+
+
+  TodayModel(this.employeeid, this.ma_clockin, this.ma_clockout,);
+
+  factory TodayModel.fromJson(Map<String, dynamic> json) {
+    return TodayModel(
+
+      json['employeeid'],
+      json['logtimein'],
+      json['logtimeout'],
     );
   }
 }

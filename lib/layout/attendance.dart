@@ -24,6 +24,8 @@ class _AttendanceState extends State<Attendance> {
   Helper helper = Helper();
   List<AttendanceModel> usersattendance = [];
 
+  DateTimeRange? selectedDateRange;
+
   @override
   void initState() {
     _getAttendance();
@@ -39,8 +41,8 @@ class _AttendanceState extends State<Attendance> {
           AttendanceModel userattendance = AttendanceModel(
             attendanceinfo['employeeid'],
             _formatDate(attendanceinfo['attendancedate']),
-            attendanceinfo['clockin'],
-            attendanceinfo['clockout'] ?? '--',
+            attendanceinfo['clockin'] ?? '--/--', 
+            attendanceinfo['clockout'] ?? '--/--',
             attendanceinfo['devicein'],
             attendanceinfo['deviceout'] ?? '--',
             attendanceinfo['totalhours'] ?? '--',
@@ -142,9 +144,31 @@ class _AttendanceState extends State<Attendance> {
                               child: Center(
                                 child: Padding(
                                   padding: const EdgeInsets.all(16.0),
-                                  child: Text(
-                                    'Attendance',
-                                    style: TextStyle(fontSize: 18),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Attendance',
+                                        style: TextStyle(
+                                          fontSize: 28,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      SizedBox(height: 10),
+                                      Text(
+                                          'Date: ${usersattendance[index].attendancedate}'),
+                                      Text(
+                                          'Clock In: ${usersattendance[index].clockin}'),
+                                      Text(
+                                          'Clock Out: ${usersattendance[index].clockout}'),
+                                      Text(
+                                          'Device In: ${usersattendance[index].devicein}'),
+                                      Text(
+                                          'Device Out: ${usersattendance[index].deviceout}'),
+                                      Text(
+                                          'Total Hours: ${usersattendance[index].totalhours}'),
+                                    ],
                                   ),
                                 ),
                               ),
@@ -236,7 +260,7 @@ class _AttendanceState extends State<Attendance> {
                                                 '${userAttendance.clockin}',
                                                 style: TextStyle(
                                                   fontSize: 16,
-                                                  color: Colors.black,
+                                                  color: Colors.green,
                                                 ),
                                               ),
                                             ),
@@ -265,7 +289,7 @@ class _AttendanceState extends State<Attendance> {
                                             '${userAttendance.clockout}',
                                             style: TextStyle(
                                               fontSize: 16,
-                                              color: Colors.black,
+                                              color: Colors.red,
                                             ),
                                           ),
                                         ],
