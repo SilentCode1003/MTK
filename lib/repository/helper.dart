@@ -89,4 +89,10 @@ class Helper {
         return "";
     }
   }
+    String GetCurrentDate() {
+    DateTime currentDateTime = DateTime.now();
+    String formattedDateTime =
+        DateFormat('yyyy-MM-dd').format(currentDateTime);
+    return formattedDateTime;
+  }
 }

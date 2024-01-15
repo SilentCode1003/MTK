@@ -3,6 +3,9 @@ import 'package:eportal/layout/attendance.dart';
 import 'package:eportal/layout/index.dart';
 import 'package:eportal/layout/salary.dart';
 
+import '../model/userinfo.dart';
+import '../repository/helper.dart';
+
 class HomePage extends StatefulWidget {
   final String employeeid;
   final int department;
@@ -15,6 +18,34 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
+   String fullname = '';
+  String employeeid = '';
+  String image = '';
+
+  Helper helper = Helper();
+
+  
+  @override
+  void initState() {
+    _getUserInfo();
+    super.initState();
+  }
+
+    Future<void> _getUserInfo() async {
+    Map<String, dynamic> userinfo =
+        await helper.readJsonToFile('assets/metadata.json');
+    UserInfoModel user = UserInfoModel(userinfo['image'],
+        userinfo['employeeid'], userinfo['fullname'], userinfo['accesstype'], userinfo['department']);
+
+
+
+    setState(() {
+      fullname = user.fullname;
+      employeeid = user.employeeid;
+      image = user.image;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

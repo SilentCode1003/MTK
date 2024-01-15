@@ -13,6 +13,8 @@ class Notifications extends StatefulWidget {
 }
 
 class _NotificationsState extends State<Notifications> {
+  int _currentIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -39,17 +41,21 @@ class _NotificationsState extends State<Notifications> {
                 );
               },
             ),
-            bottom: const TabBar(
+            bottom: TabBar(
               tabs: [
                 Tab(text: 'All'),
                 Tab(text: 'Announcements'),
                 Tab(text: 'Offenses'),
-                Tab(text: 'Leaves'),
-                Tab(text: 'Cash Advance'),
               ],
+              onTap: (index) {
+                setState(() {
+                  _currentIndex = index;
+                });
+              },
             ),
           ),
-          body: TabBarView(
+          body: IndexedStack(
+            index: _currentIndex,
             children: [
               _buildNotificationList(),
               _buildAnnouncementList(),
@@ -76,14 +82,24 @@ class _NotificationsState extends State<Notifications> {
   }
 
   Widget _buildAnnouncementList() {
-    // Implement the list of announcements
-    return Container();
+    return ListView(
+      children: [
+        _buildDismissibleListTile(
+          key: UniqueKey(),
+          title: 'Christmas & Year End Party',
+          subtitle: 'Christmas & Year End Party @ Pacita Astrodom',
+          trailing: 'Dec 16',
+        ),
+        // Add more notification items as needed
+      ],
+    );
   }
 
   Widget _buildOffensesList() {
-    // Implement the list of offenses
     return Container();
   }
+
+  // ... other methods
 
   Widget _buildDismissibleListTile({
     required Key key,

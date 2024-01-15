@@ -10,6 +10,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:intl/intl.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geodesy/geodesy.dart';
+import 'package:eportal/api/todaystatus.dart';
 
 class Index extends StatefulWidget {
   final String employeeid;
@@ -25,6 +26,15 @@ class Index extends StatefulWidget {
 }
 
 class _IndexState extends State<Index> {
+  String ma_clockin = '';
+  String ma_clockout = '';
+  DateTime clockOutDate = DateTime.now();
+  DateTime clockOutDateTime = DateTime.now();
+
+  Helper helper = Helper();
+
+  List<TodayModel> todaystatus = [];
+
   String currentLocation = '';
   String timestatus = 'Time In';
   bool isInPressed = false;
@@ -53,6 +63,7 @@ class _IndexState extends State<Index> {
 
   @override
   void initState() {
+      
     getCurrentLocation().then((Position position) {
       double latitude = position.latitude;
       double longitude = position.longitude;
@@ -77,9 +88,30 @@ class _IndexState extends State<Index> {
       });
     });
     _getUserInfo();
+ 
 
     // fetchLocation();
     super.initState();
+  }
+
+  Future<void> _getStatus() async {
+    final response = await Status().getstatus(employeeid, helper.GetCurrentDate());
+    if (helper.getStatusString(APIStatus.success) == response.message) {
+      final jsondata = json.encode(response.result);
+      if (jsondata.length == 2){
+         setState(() {
+          ma_clockin = '--/--';
+          ma_clockout = '--/--';
+        });
+      }
+      for (var statusinfo in json.decode(jsondata)) {
+        print(statusinfo);
+        setState(() {
+          ma_clockin = statusinfo['logtimein'] ?? '--/--';
+          ma_clockout = statusinfo['logtimeout'] ?? '--/--';
+        });
+      }
+    }
   }
 
   Future<void> _getUserInfo() async {
@@ -98,6 +130,7 @@ class _IndexState extends State<Index> {
 
       _getGeofence();
       _getLatesLog();
+       _getStatus();
     });
   }
 
@@ -348,6 +381,22 @@ class _IndexState extends State<Index> {
       print(results);
 
       if (results.message == Helper().getStatusString(APIStatus.success)) {
+        showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: const Text('Success'),
+            content: const Text('Clock-in successful!'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(ctx);
+                   _getStatus(); // Close the dialog
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
       } else {
         showDialog(
           context: context,
@@ -365,19 +414,23 @@ class _IndexState extends State<Index> {
       }
     } catch (e) {
       showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('Error'),
-              content: Text('Clock IN $e'),
-              actions: [
-                TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: const Text('OK'))
-              ],
-            );
-          });
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Error'),
+            content: Text('Clock IN $e'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context); // Close the dialog
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
     }
   }
 
@@ -385,7 +438,69 @@ class _IndexState extends State<Index> {
     try {
       final results = await UserAttendance()
           .clockout(employeeid, latitude.toString(), longitude.toString());
+
       if (results.message == Helper().getStatusString(APIStatus.success)) {
+        showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(height: 10),
+                Center(
+                  child: Text(
+                    'Clock out successful!',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Center(
+                  child: Text(
+                    '${DateFormat('MMM dd, yyyy').format(clockOutDateTime)}',
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 5),
+                Center(
+                  child: Text(
+                    '${DateFormat('HH:mm:ss').format(clockOutDateTime)}',
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            actions: [
+              Center(
+                child: Container(
+                  width: 200,
+                  decoration: BoxDecoration(
+                    color: Colors.red,
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.pop(ctx); // Close the dialog
+                      _getStatus();
+                    },
+                    child: Text(
+                      'OK',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
       } else {
         Navigator.of(context).pop();
         showDialog(
@@ -404,20 +519,38 @@ class _IndexState extends State<Index> {
       }
     } catch (e) {
       showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('Error'),
-              content: Text('Clock Out $e'),
-              actions: [
-                TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: const Text('OK'))
-              ],
-            );
-          });
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Error'),
+            content: Text('Clock Out $e'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context); // Close the dialog
+                 _getStatus();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
     }
+  }
+
+  void _reloadPage() {
+    Navigator.pop(context); // Pop the current page
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) => Index(
+          employeeid: widget.employeeid,
+          department: widget.department,
+        ),
+      ),
+    );
   }
 
   @override
@@ -473,9 +606,9 @@ class _IndexState extends State<Index> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              SizedBox(height: 30),
+                              SizedBox(height: 20),
                               Text(
                                 'Time In',
                                 style: TextStyle(
@@ -484,18 +617,12 @@ class _IndexState extends State<Index> {
                                   color: Colors.black,
                                 ),
                               ),
-                              SizedBox(height: 8, width: 50),
-                              Align(
-                                alignment: Alignment.bottomCenter,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 35),
-                                  child: Text(
-                                    '--/--',
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      color: Colors.black,
-                                    ),
-                                  ),
+                              SizedBox(height: 8),
+                              Text(
+                                '$ma_clockin',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.green,
                                 ),
                               ),
                             ],
@@ -504,7 +631,7 @@ class _IndexState extends State<Index> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              SizedBox(height: 30),
+                              SizedBox(height: 20),
                               Text(
                                 'Time Out',
                                 style: TextStyle(
@@ -515,10 +642,10 @@ class _IndexState extends State<Index> {
                               ),
                               SizedBox(height: 8),
                               Text(
-                                '--/--',
+                                '$ma_clockout',
                                 style: TextStyle(
                                   fontSize: 20,
-                                  color: Colors.black,
+                                  color: Colors.red,
                                 ),
                               ),
                             ],
