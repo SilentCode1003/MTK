@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: LoginPage(),
-      routes: {'logout': ((context) => LoginPage())},
+      routes: {'/logout': ((context) => LoginPage())},
     );
   }
 }
@@ -90,7 +90,6 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(),
       body: isLoading
           ? Center(
               child: CircularProgressIndicator(),

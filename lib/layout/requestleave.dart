@@ -351,14 +351,7 @@ class _RequestLeaveState extends State<RequestLeave> {
                 TextButton(
                   onPressed: () {
                     Navigator.pop(ctx); // Close the success dialog
-                    Navigator.pop(context); // Pop the current page
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            RequestLeave(employeeid: widget.employeeid),
-                      ),
-                    );
+                    _getLeave();
                   },
                   child: const Text('OK'),
                 ),
