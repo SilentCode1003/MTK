@@ -13,5 +13,6 @@ class Config {
   static const String getlateslogAPI = 'eportalindex/latestlog';
   static const String notifAPI = 'announcement/getnotif';
   static const String todaystatusAPI = 'attendance/gethomestatus2';
+  static const String LogsAPI = 'attendance/logs';
 
 }
