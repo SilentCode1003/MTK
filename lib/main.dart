@@ -1,11 +1,9 @@
 import 'dart:convert';
 
 import 'package:eportal/api/login.dart';
-import 'package:eportal/component/loadingspinner.dart';
 import 'package:eportal/repository/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:eportal/layout/drawer.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 void main() async {
   runApp(const MyApp());
@@ -44,18 +42,11 @@ class _LoginPageState extends State<LoginPage> {
     String username = _usernameController.text;
     String password = _passwordController.text;
 
-    showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return const LoadingSpinner(
-            message: 'Loading...',
-          );
-        });
+    setState(() {
+      isLoading = true;
+    });
 
     final response = await Login().login(username, password);
-
-    // print(response.message);
 
     if (helper.getStatusString(APIStatus.success) == response.message) {
       final jsonData = json.encode(response.result);
@@ -63,13 +54,10 @@ class _LoginPageState extends State<LoginPage> {
         helper.writeJsonToFile(userinfo, 'metadata.json');
       }
 
-      Navigator.of(context).pop();
-      Navigator.push(
-        context,
+      Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (_) => DrawerApp()),
       );
     } else {
-      Navigator.of(context).pop();
       showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
@@ -77,7 +65,12 @@ class _LoginPageState extends State<LoginPage> {
           content: const Text('Incorrect username and password'),
           actions: [
             TextButton(
-              onPressed: () => Navigator.pop(ctx),
+              onPressed: () {
+                Navigator.pop(ctx);
+                setState(() {
+                  isLoading = false;
+                });
+              },
               child: const Text('OK'),
             ),
           ],
@@ -86,100 +79,109 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  bool _isPasswordObscured = true;
+
+  void _togglePasswordVisibility() {
+    setState(() {
+      _isPasswordObscured = !_isPasswordObscured;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: isLoading
-          ? Center(
-              child: CircularProgressIndicator(),
-            )
-          : SingleChildScrollView(
-              child: Column(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(top: 60.0),
-                    child: Center(
-                      child: Container(
-                        width: 200,
-                        height: 150,
-                        child: Image.asset('assets/5L.png'),
-                      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(top: 60.0),
+              child: Center(
+                child: Container(
+                  width: 200,
+                  height: 150,
+                  child: Image.asset('assets/5L.png'),
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15),
+              child: TextField(
+                controller: _usernameController,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Username',
+                  hintText: 'Enter valid Username',
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 15.0,
+                right: 15.0,
+                top: 15,
+                bottom: 15,
+              ),
+              child: TextField(
+                controller: _passwordController,
+                obscureText: _isPasswordObscured,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Password',
+                  hintText: 'Enter secure password',
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _isPasswordObscured
+                          ? Icons.visibility
+                          : Icons.visibility_off,
                     ),
+                    onPressed: () {
+                      _togglePasswordVisibility();
+                    },
                   ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 15),
-                    child: TextField(
-                      controller: _usernameController,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Username',
-                        hintText: 'Enter valid Username',
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      left: 15.0,
-                      right: 15.0,
-                      top: 15,
-                      bottom: 15,
-                    ),
-                    child: TextField(
-                      controller: _passwordController,
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Password',
-                        hintText: 'Enter secure password',
-                      ),
-                    ),
-                  ),
-                  Container(
-                    height: 50,
-                    width: 250,
-                    decoration: BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        // Show loading screen
-                        // setState(() {
-                        //   isLoading = true;
-                        // });
-
-                        // Simulate a delay (replace this with your authentication logic)
-                        Future.delayed(Duration(seconds: 2), () {
-                          // Navigate to the next screen
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(builder: (_) => DrawerApp()),
-                          // );
-                          _login();
-                        });
-                      },
-                      style: ElevatedButton.styleFrom(
-                        primary: const Color.fromARGB(255, 215, 36, 24),
-                      ),
-                      child: Text(
+                ),
+              ),
+            ),
+            Container(
+              height: 50,
+              width: 250,
+              decoration: BoxDecoration(
+                color: Colors.red,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: ElevatedButton(
+                onPressed: () {
+                  _login();
+                },
+                style: ElevatedButton.styleFrom(
+                  primary: const Color.fromARGB(255, 215, 36, 24),
+                ),
+                child: isLoading
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CircularProgressIndicator(color: Colors.white),
+                          const SizedBox(width: 10),
+                        ],
+                      )
+                    : Text(
                         'Login',
                         style: TextStyle(color: Colors.white, fontSize: 25),
                       ),
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      // TODO: FORGOT PASSWORD SCREEN GOES HERE
-                    },
-                    child: Text(
-                      'Forgot Password',
-                      style: TextStyle(color: Colors.red, fontSize: 15),
-                    ),
-                  ),
-                ],
               ),
             ),
+            TextButton(
+              onPressed: () {
+                // TODO: FORGOT PASSWORD SCREEN GOES HERE
+              },
+              child: Text(
+                'Forgot Password',
+                style: TextStyle(color: Colors.red, fontSize: 15),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

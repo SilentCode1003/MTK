@@ -17,6 +17,11 @@ class Helper {
         DateFormat('yyyy-MM-dd HH:mm').format(currentDateTime);
     return formattedDateTime;
   }
+  String GetYesterdayDatetime() {
+  DateTime yesterday = DateTime.now().subtract(Duration(days: 1));
+  String formattedDateTime = DateFormat('yyyy-MM-dd HH:mm').format(yesterday);
+  return formattedDateTime;
+  }
 
   Future<Map<String, dynamic>> readJsonToFile(String filePath) async {
     final directory = await getApplicationDocumentsDirectory();

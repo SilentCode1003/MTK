@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:eportal/layout/home.dart';
+import 'package:eportal/layout/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:eportal/main.dart';
 import 'package:eportal/layout/cashadvance.dart';
@@ -36,6 +37,8 @@ class _DrawerPageState extends State<DrawerPage> {
   String employeeid = '';
   String image = '';
   int department = 0;
+  String departmentname = '';
+  String position = '';
 
   Helper helper = Helper();
 
@@ -53,13 +56,17 @@ class _DrawerPageState extends State<DrawerPage> {
         userinfo['employeeid'],
         userinfo['fullname'],
         userinfo['accesstype'],
-        userinfo['department']);
+        userinfo['department'],
+        userinfo['departmentname'],
+        userinfo['position']);
 
     setState(() {
       fullname = user.fullname;
       employeeid = user.employeeid;
       image = user.image;
       department = user.department;
+      departmentname = user.departmentname;
+      position = user.position;
     });
   }
 
@@ -104,7 +111,7 @@ class _DrawerPageState extends State<DrawerPage> {
                     ),
                   ),
                   Text(
-                    'Software Developer',
+                    '$departmentname',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 12,
@@ -119,7 +126,7 @@ class _DrawerPageState extends State<DrawerPage> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => DrawerPage()),
+                  MaterialPageRoute(builder: (context) => Profile(employeeid: employeeid,)),
                 );
               },
             ),
@@ -165,7 +172,7 @@ class _DrawerPageState extends State<DrawerPage> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Notifications()),
+                  MaterialPageRoute(builder: (context) => Notifications(employeeid: employeeid,)),
                 );
               },
             ),

@@ -4,9 +4,11 @@ class UserInfoModel {
   final String accesstype;
   final String image;
   final int department;
+  final String departmentname;
+  final String position;
 
   UserInfoModel(this.image, this.employeeid, this.fullname, this.accesstype,
-      this.department);
+      this.department, this.departmentname, this.position);
 
   factory UserInfoModel.fromJson(Map<String, dynamic> json) {
     return UserInfoModel(
@@ -15,6 +17,8 @@ class UserInfoModel {
       json['accesstype'],
       json['image'],
       json['department'],
+      json['deparmentname'],
+      json['position'],
     );
   }
 }
@@ -249,4 +253,134 @@ class AttendanceLog {
       json['device'],
     );
   }
+}
+
+class Basicinfo {
+  final String employeeid;
+  final String firstname;
+  final String lastname;
+  final String middlename;
+  final String gender;
+  final String civilstatus;
+  final String address;
+  final String birthday;
+  final String phone;
+  final String email;
+  final String ercontactname;
+  final String ercontactphone;
+
+  Basicinfo(
+    this.employeeid,
+    this.firstname,
+    this.lastname,
+    this.middlename,
+    this.gender,
+    this.civilstatus,
+    this.address,
+    this.birthday,
+    this.phone,
+    this.email,
+    this.ercontactname,
+    this.ercontactphone,
+    );
+
+    factory Basicinfo.fromJson(Map<String, dynamic> json) {
+      return Basicinfo(
+        json['employeeid'],
+        json['firstname'],
+        json['lastname'],
+        json['middlename'],
+        json['gender'],
+        json['civilstatus'],
+        json['address'],
+        json['birthday'],
+        json['phone'],
+        json['email'],
+        json['ercontactname'],
+        json['ercontactphone'],
+      );
+    }
+}
+class ProfileWorkinfo {
+  final String employeeid;
+  final String department;
+  final String position;
+  final String departmenthead;
+  final String jobstatus;
+  final String hiredate;
+  final String tenure;
+
+  ProfileWorkinfo(
+    this.employeeid,
+    this.department,
+    this.position,
+    this.departmenthead,
+    this.jobstatus,
+    this.hiredate,
+    this.tenure,
+    );
+
+    factory ProfileWorkinfo.fromJson(Map<String, dynamic> json) {
+      return ProfileWorkinfo(
+        json['employeeid'],
+        json['department'],
+        json['position'],
+        json['departmenthead'],
+        json['jobstatus'],
+        json['hiredate'],
+        json['tenure'],
+      );
+    }
+}
+class ProfileGovinfo {
+  final String employeeid;
+  final String idtype;
+  final String idnumber;
+
+
+  ProfileGovinfo(
+    this.employeeid,
+    this.idtype,
+    this.idnumber,
+    );
+
+    factory ProfileGovinfo.fromJson(Map<String, dynamic> json) {
+      return ProfileGovinfo(
+        json['employeeid'],
+        json['idtype'],
+        json['idnumber'],
+      );
+    }
+}
+class OffensesModel {
+  final String employeeid;
+  final String disciplinaryid;
+  final String offenseid;
+  final String actionid;
+  final String violation;
+  final String date;
+  final String createby;
+
+
+  OffensesModel(
+    this.employeeid,
+    this.disciplinaryid,
+    this.offenseid,
+    this.actionid,
+    this.violation,
+    this.date,
+    this.createby,
+    );
+
+    factory OffensesModel.fromJson(Map<String, dynamic> json) {
+      return OffensesModel(
+        json['employeeid'],
+        json['disciplinaryid'],
+        json['offenseid'],
+        json['actionid'],
+        json['violation'],
+        json['date'],
+        json['createby'],
+      );
+    }
 }

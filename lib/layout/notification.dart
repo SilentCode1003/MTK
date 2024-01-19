@@ -1,19 +1,68 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:eportal/layout/drawer.dart';
-
-void main() {
-  runApp(const Notifications());
-}
+import 'package:eportal/repository/helper.dart';
+import 'package:eportal/model/userinfo.dart';
+import 'package:eportal/api/notification.dart';
+import 'package:intl/intl.dart';
 
 class Notifications extends StatefulWidget {
-  const Notifications({Key? key}) : super(key: key);
+  final String employeeid;
+
+  const Notifications({super.key, required this.employeeid});
 
   @override
   _NotificationsState createState() => _NotificationsState();
 }
 
 class _NotificationsState extends State<Notifications> {
+    String _formatDate(String? date) {
+    print(date);
+    if (date == "" || date == null) return '';
+    DateTime dateTime = DateTime.parse(date);
+    return DateFormat('MMM dd', 'en_US').format(dateTime);
+  }
+  String employeeid = '';
+  String disciplinaryid = '';
+  String offenseid = '';
+  String actionid = '';
+  String violation = '';
+  String date = '';
+  String createby = '';
+
   int _currentIndex = 0;
+
+  Helper helper = Helper();
+
+  List<OffensesModel> offenses = [];
+
+  @override
+  void initState() {
+    _getoffenses();
+    super.initState();
+  }
+
+  Future<void> _getoffenses() async {
+    final response = await UserNotifications().getoffenses(widget.employeeid);
+    if (helper.getStatusString(APIStatus.success) == response.message) {
+      final jsondata = json.encode(response.result);
+      for (var offenseinfo in json.decode(jsondata)) {
+        setState(() {
+          OffensesModel offense = OffensesModel(
+            offenseinfo['employeeid'].toString(),
+            offenseinfo['disciplinaryid'].toString(),
+            offenseinfo['offenseid'].toString(),
+            offenseinfo['actionid'].toString(),
+            offenseinfo['violation'],
+            _formatDate(offenseinfo['date']),
+            offenseinfo['createby'].toString(),
+          );
+          offenses.add(offense);
+        });
+      }
+      print(offenses[0].employeeid);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +108,9 @@ class _NotificationsState extends State<Notifications> {
             children: [
               _buildNotificationList(),
               _buildAnnouncementList(),
-              _buildOffensesList(),
+              _buildOffensesList(
+                employeeid: widget.employeeid,
+              ),
             ],
           ),
         ),
@@ -95,8 +146,18 @@ class _NotificationsState extends State<Notifications> {
     );
   }
 
-  Widget _buildOffensesList() {
-    return Container();
+  Widget _buildOffensesList({required String employeeid}) {
+    return ListView.builder(
+      itemCount: offenses.length,
+      itemBuilder: (BuildContext context, int index) {
+        return _buildDismissibleListTile(
+          key: UniqueKey(),
+          title: offenses[index].actionid,
+          subtitle: offenses[index].violation,
+          trailing: offenses[index].date,
+        );
+      },
+    );
   }
 
   // ... other methods
