@@ -23,7 +23,8 @@ class UserInfoModel {
 
 class AttendanceModel {
   final String employeeid;
-  final String attendancedate;
+  final String attendancedateIn;
+  final String attendancedateOut;
   final String clockin;
   final String clockout;
   final String devicein;
@@ -32,7 +33,8 @@ class AttendanceModel {
 
   AttendanceModel(
     this.employeeid,
-    this.attendancedate,
+    this.attendancedateIn,
+    this.attendancedateOut,
     this.clockin,
     this.clockout,
     this.devicein,
@@ -43,7 +45,8 @@ class AttendanceModel {
   factory AttendanceModel.fromJson(Map<String, dynamic> json) {
     return AttendanceModel(
       json['employeeid'],
-      json['attendancedate'],
+      json['attendancedateIn'],
+      json['attendancedateOut'],
       json['clockin'],
       json['clockout'] ?? '',
       json['devicein'],

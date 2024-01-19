@@ -16,7 +16,9 @@ class Attendance extends StatefulWidget {
 }
 
 class _AttendanceState extends State<Attendance> {
-  String _formatDate(String date) {
+  String _formatDate(String? date) {
+    print(date);
+    if (date == "" || date == null) return '--/--';
     DateTime dateTime = DateTime.parse(date);
     return DateFormat('dd MMM yyyy', 'en_US').format(dateTime);
   }
@@ -37,11 +39,13 @@ class _AttendanceState extends State<Attendance> {
     if (helper.getStatusString(APIStatus.success) == response.message) {
       final jsondata = json.encode(response.result);
       for (var attendanceinfo in json.decode(jsondata)) {
+        print(attendanceinfo);
         setState(() {
           AttendanceModel userattendance = AttendanceModel(
             attendanceinfo['employeeid'],
-            _formatDate(attendanceinfo['attendancedate']),
-            attendanceinfo['clockin'] ?? '--/--', 
+            _formatDate(attendanceinfo['attendancedatein']),
+            _formatDate(attendanceinfo['attendancedateout']),
+            attendanceinfo['clockin'] ?? '--/--',
             attendanceinfo['clockout'] ?? '--/--',
             attendanceinfo['devicein'],
             attendanceinfo['deviceout'] ?? '--',
@@ -50,7 +54,6 @@ class _AttendanceState extends State<Attendance> {
           usersattendance.add(userattendance);
         });
       }
-      print(usersattendance[0].employeeid);
     }
   }
 
@@ -120,191 +123,210 @@ class _AttendanceState extends State<Attendance> {
                     ),
                   ],
                 ),
-                child: ListView.builder(
-                  itemCount: usersattendance.length,
-                  itemBuilder: (context, index) {
-                    AttendanceModel userAttendance = usersattendance[index];
+                child: usersattendance.isEmpty
+                    ? Center(
+                        child: Text(
+                          'No Attendance',
+                          style: TextStyle(fontSize: 20),
+                        ),
+                      )
+                    : ListView.builder(
+                        itemCount: usersattendance.length,
+                        itemBuilder: (context, index) {
+                          AttendanceModel userAttendance =
+                              usersattendance[index];
 
-                    return GestureDetector(
-                      onTap: () {
-                        showModalBottomSheet(
-                          context: context,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.vertical(
-                              top: Radius.circular(25),
-                            ),
-                          ),
-                          builder: (BuildContext context) {
-                            return Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(25),
+                          return GestureDetector(
+                            onTap: () {
+                              showModalBottomSheet(
+                                context: context,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(25),
+                                  ),
                                 ),
-                              ),
-                              child: Center(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Attendance',
-                                        style: TextStyle(
-                                          fontSize: 28,
-                                          fontWeight: FontWeight.bold,
+                                builder: (BuildContext context) {
+                                  return Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.vertical(
+                                        top: Radius.circular(25),
+                                      ),
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        Container(
+                                          padding: EdgeInsets.all(16),
+                                          child: Text(
+                                            'Time Tracking',
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                        ListTile(
+                                          leading: Icon(Icons.timer),
+                                          title: Text('Clock In:  ${usersattendance[index].clockin} ${usersattendance[index].attendancedateIn}'),
+                                        ),
+                                        ListTile(
+                                          leading: Icon(Icons.timer_off),
+                                          title: Text('Clock Out:  ${usersattendance[index].clockout} ${usersattendance[index].attendancedateOut}'),
+                                        ),
+
+                                        ListTile(
+                                          leading: Icon(Icons.phone_android),
+                                          title: Text('Device In:  ${usersattendance[index].devicein}'),
+                                        ),
+                                        ListTile(
+                                          leading: Icon(Icons.phone_android),
+                                          title: Text('Device Out:  ${usersattendance[index].deviceout}'),
+                                        ),
+                                        ListTile(
+                                          leading: Icon(Icons.access_time),
+                                          title: Text('Total Hours:  ${usersattendance[index].totalhours}s'),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                            child: SizedBox(
+                              height: 120,
+                              child: Card(
+                                color: Colors.white,
+                                elevation: 3,
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      width: 120,
+                                      decoration: BoxDecoration(
+                                        color: Colors.red,
+                                        borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(8.0),
+                                          bottomLeft: Radius.circular(8.0),
                                         ),
                                       ),
-                                      SizedBox(height: 10),
-                                      Text(
-                                          'Date: ${usersattendance[index].attendancedate}'),
-                                      Text(
-                                          'Clock In: ${usersattendance[index].clockin}'),
-                                      Text(
-                                          'Clock Out: ${usersattendance[index].clockout}'),
-                                      Text(
-                                          'Device In: ${usersattendance[index].devicein}'),
-                                      Text(
-                                          'Device Out: ${usersattendance[index].deviceout}'),
-                                      Text(
-                                          'Total Hours: ${usersattendance[index].totalhours}'),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                        );
-                      },
-                      child: SizedBox(
-                        height: 120,
-                        child: Card(
-                          color: Colors.white,
-                          elevation: 3,
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 120,
-                                decoration: BoxDecoration(
-                                  color: Colors.red,
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(8.0),
-                                    bottomLeft: Radius.circular(8.0),
-                                  ),
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.fromLTRB(
-                                          8.0, 20.0, 8.0, 1.0),
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.center,
                                         children: [
-                                          Text(
-                                            userAttendance.attendancedate
-                                                    .split(' ')[
-                                                0], // Extracting the day part
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 40,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          Text(
-                                            userAttendance.attendancedate
-                                                    .split(' ')[
-                                                1], // Extracting the month part
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize:
-                                                  20, // You can adjust the font size for the month
+                                          Padding(
+                                            padding: EdgeInsets.fromLTRB(
+                                                8.0, 20.0, 8.0, 1.0),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  userAttendance
+                                                          .attendancedateIn
+                                                          .split(' ')[
+                                                      0], // Extracting the day part
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 40,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  userAttendance
+                                                          .attendancedateIn
+                                                          .split(' ')[
+                                                      1], // Extracting the month part
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize:
+                                                        20, // You can adjust the font size for the month
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ),
                                         ],
                                       ),
                                     ),
+                                    Expanded(
+                                      child: Padding(
+                                        padding: EdgeInsets.all(16.0),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                SizedBox(height: 15),
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                      bottom: 8.0),
+                                                  child: Text(
+                                                    'Time In',
+                                                    style: TextStyle(
+                                                      fontSize: 20,
+                                                      fontWeight:
+                                                          FontWeight.normal,
+                                                      color: Colors.black,
+                                                    ),
+                                                  ),
+                                                ),
+                                                Align(
+                                                  alignment:
+                                                      Alignment.bottomCenter,
+                                                  child: Padding(
+                                                    padding: EdgeInsets.only(
+                                                        left: 10),
+                                                    child: Text(
+                                                      '${userAttendance.clockin}',
+                                                      style: TextStyle(
+                                                        fontSize: 16,
+                                                        color: Colors.green,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(width: 40),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                SizedBox(height: 15),
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                      bottom: 8.0),
+                                                  child: Text(
+                                                    'Time Out',
+                                                    style: TextStyle(
+                                                      fontSize: 20,
+                                                      fontWeight:
+                                                          FontWeight.normal,
+                                                      color: Colors.black,
+                                                    ),
+                                                  ),
+                                                ),
+                                                Text(
+                                                  '${userAttendance.clockout}',
+                                                  style: TextStyle(
+                                                    fontSize: 16,
+                                                    color: Colors.red,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),
-                              Expanded(
-                                child: Padding(
-                                  padding: EdgeInsets.all(16.0),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          SizedBox(height: 15),
-                                          Padding(
-                                            padding:
-                                                EdgeInsets.only(bottom: 8.0),
-                                            child: Text(
-                                              'Time In',
-                                              style: TextStyle(
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.normal,
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.bottomCenter,
-                                            child: Padding(
-                                              padding:
-                                                  EdgeInsets.only(left: 10),
-                                              child: Text(
-                                                '${userAttendance.clockin}',
-                                                style: TextStyle(
-                                                  fontSize: 16,
-                                                  color: Colors.green,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(width: 40),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          SizedBox(height: 15),
-                                          Padding(
-                                            padding:
-                                                EdgeInsets.only(bottom: 8.0),
-                                            child: Text(
-                                              'Time Out',
-                                              style: TextStyle(
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.normal,
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                          ),
-                                          Text(
-                                            '${userAttendance.clockout}',
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              color: Colors.red,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                            ),
+                          );
+                        },
                       ),
-                    );
-                  },
-                ),
               ),
             ),
           ],

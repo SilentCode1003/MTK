@@ -192,7 +192,7 @@ class _DrawerPageState extends State<DrawerPage> {
                           child: Text("Logout"),
                           onPressed: () {
                             // Perform logout and navigate to LoginPage
-                            Navigator.pushReplacementNamed(context, '/login');
+                            Navigator.pushReplacementNamed(context, '/logout');
                           },
                         ),
                       ],
