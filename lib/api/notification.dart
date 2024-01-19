@@ -5,11 +5,11 @@ import 'package:eportal/model/responce.dart';
 import '../config.dart';
 import 'package:http/http.dart' as http;
 
-class Cash {
-  Future<ResponceModel> getcash(String bulletinid) async {
-    final url = Uri.parse('${Config.apiUrl}${Config.notificationAPI}');
+class UserNotifications {
+  Future<ResponceModel> getoffenses(String employeeid) async {
+    final url = Uri.parse('${Config.apiUrl}${Config.offensesAPI}');
     final response = await http.post(url, body: {
-      'bulletinid': bulletinid,
+      'employeeid': employeeid,
     });
 
     final responseData = json.decode(response.body);

@@ -18,10 +18,17 @@ class Attendance extends StatefulWidget {
 class _AttendanceState extends State<Attendance> {
   String _formatDate(String? date) {
     print(date);
-    if (date == "" || date == null) return '--/--';
+    if (date == "" || date == null) return '';
     DateTime dateTime = DateTime.parse(date);
     return DateFormat('dd MMM yyyy', 'en_US').format(dateTime);
   }
+String _formatTime(String? time) {
+  print(time);
+  if (time == "" || time == null) return '--:--';
+  DateTime dateTime = DateFormat("HH:mm:ss").parse(time);
+  String formattedTime = DateFormat.jm().format(dateTime); // Format time as 4:00 PM
+  return formattedTime;
+}
 
   Helper helper = Helper();
   List<AttendanceModel> usersattendance = [];
@@ -45,15 +52,79 @@ class _AttendanceState extends State<Attendance> {
             attendanceinfo['employeeid'],
             _formatDate(attendanceinfo['attendancedatein']),
             _formatDate(attendanceinfo['attendancedateout']),
-            attendanceinfo['clockin'] ?? '--/--',
-            attendanceinfo['clockout'] ?? '--/--',
+            _formatTime(attendanceinfo['clockin']),
+            _formatTime(attendanceinfo['clockout']),
             attendanceinfo['devicein'],
-            attendanceinfo['deviceout'] ?? '--',
-            attendanceinfo['totalhours'] ?? '--',
+            attendanceinfo['deviceout'] ?? '--:--',
+            attendanceinfo['totalhours'] ?? '--:--',
           );
           usersattendance.add(userattendance);
         });
       }
+    }
+  }
+
+  Future<void> _filterAttendance() async {
+    final response = await UserAttendance().filterattendance(widget.employeeid);
+
+    if (helper.getStatusString(APIStatus.success) == response.message) {
+      final jsondata = json.encode(response.result);
+
+      usersattendance.clear(); // Clear existing data
+
+      for (var attendanceinfo in json.decode(jsondata)) {
+        DateTime attendanceDate =
+            DateTime.parse(attendanceinfo['attendancedatein']);
+
+        if (selectedDateRange == null ||
+            (attendanceDate.isAfter(
+                    selectedDateRange!.start.subtract(Duration(days: 1))) &&
+                attendanceDate
+                    .isBefore(selectedDateRange!.end.add(Duration(days: 1))))) {
+          setState(() {
+            AttendanceModel userattendance = AttendanceModel(
+              attendanceinfo['employeeid'],
+              _formatDate(attendanceinfo['attendancedatein']),
+              _formatDate(attendanceinfo['attendancedateout']),
+              attendanceinfo['clockin'] ?? '--:--',
+              attendanceinfo['clockout'] ?? '--:--',
+              attendanceinfo['devicein'],
+              attendanceinfo['deviceout'] ?? '--:--',
+              attendanceinfo['totalhours'] ?? '--:--',
+            );
+            usersattendance.add(userattendance);
+          });
+        }
+      }
+    }
+  }
+
+  Future<void> _showDateRangePicker(BuildContext context) async {
+    DateTimeRange? picked = await showDateRangePicker(
+        context: context,
+        firstDate: DateTime.now().subtract(const Duration(days: 365)),
+        lastDate: DateTime.now(),
+        builder: (BuildContext context, Widget? child) {
+          return Theme(
+            data: ThemeData.light().copyWith(
+              primaryColor: const Color.fromARGB(255, 215, 36, 24),
+              colorScheme: const ColorScheme.light(
+                  primary: Color.fromARGB(255, 215, 36, 24)),
+              buttonTheme:
+                  const ButtonThemeData(textTheme: ButtonTextTheme.primary),
+            ),
+            child: child!,
+          );
+        });
+
+    if (picked?.start != null && picked?.end != null) {
+      setState(() {
+        selectedDateRange = picked;
+        usersattendance.clear(); // Clear the existing data
+      });
+
+      _filterAttendance();
+      print('Selected date range: ${picked!.start} to ${picked.end}');
     }
   }
 
@@ -146,46 +217,51 @@ class _AttendanceState extends State<Attendance> {
                                   ),
                                 ),
                                 builder: (BuildContext context) {
-                                  return Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.vertical(
-                                        top: Radius.circular(25),
+                                  return SingleChildScrollView(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.vertical(
+                                          top: Radius.circular(25),
+                                        ),
                                       ),
-                                    ),
-                                    child: Column(
-                                      children: [
-                                        Container(
-                                          padding: EdgeInsets.all(16),
-                                          child: Text(
-                                            'Time Tracking',
-                                            style: TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold,
+                                      child: Column(
+                                        children: [
+                                          Container(
+                                            padding: EdgeInsets.all(16),
+                                            child: Text(
+                                              'Time Tracking',
+                                              style: TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                        ListTile(
-                                          leading: Icon(Icons.timer),
-                                          title: Text('Clock In:  ${usersattendance[index].clockin} ${usersattendance[index].attendancedateIn}'),
-                                        ),
-                                        ListTile(
-                                          leading: Icon(Icons.timer_off),
-                                          title: Text('Clock Out:  ${usersattendance[index].clockout} ${usersattendance[index].attendancedateOut}'),
-                                        ),
-
-                                        ListTile(
-                                          leading: Icon(Icons.phone_android),
-                                          title: Text('Device In:  ${usersattendance[index].devicein}'),
-                                        ),
-                                        ListTile(
-                                          leading: Icon(Icons.phone_android),
-                                          title: Text('Device Out:  ${usersattendance[index].deviceout}'),
-                                        ),
-                                        ListTile(
-                                          leading: Icon(Icons.access_time),
-                                          title: Text('Total Hours:  ${usersattendance[index].totalhours}s'),
-                                        ),
-                                      ],
+                                          ListTile(
+                                            leading: Icon(Icons.timer),
+                                            title: Text(
+                                              'Clock In:  ${usersattendance[index].clockin} ${usersattendance[index].attendancedateIn}',
+                                            ),
+                                          ),
+                                          ListTile(
+                                            leading: Icon(Icons.timer_off),
+                                            title: Text(
+                                              'Clock Out:  ${usersattendance[index].clockout} ${usersattendance[index].attendancedateOut}',
+                                            ),
+                                          ),
+                                          ListTile(
+                                            leading: Icon(Icons.phone_android),
+                                            title: Text(
+                                              'Device:  ${usersattendance[index].devicein}',
+                                            ),
+                                          ),
+                                          ListTile(
+                                            leading: Icon(Icons.access_time),
+                                            title: Text(
+                                              'Total Hours:  ${usersattendance[index].totalhours}',
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   );
                                 },
@@ -255,7 +331,7 @@ class _AttendanceState extends State<Attendance> {
                                           children: [
                                             Column(
                                               crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+                                                  CrossAxisAlignment.center,
                                               children: [
                                                 SizedBox(height: 15),
                                                 Padding(
@@ -271,19 +347,12 @@ class _AttendanceState extends State<Attendance> {
                                                     ),
                                                   ),
                                                 ),
-                                                Align(
-                                                  alignment:
-                                                      Alignment.bottomCenter,
-                                                  child: Padding(
-                                                    padding: EdgeInsets.only(
-                                                        left: 10),
-                                                    child: Text(
-                                                      '${userAttendance.clockin}',
-                                                      style: TextStyle(
-                                                        fontSize: 16,
-                                                        color: Colors.green,
-                                                      ),
-                                                    ),
+                                                Text(
+                                                  '${userAttendance.clockin}',
+                                                  style: TextStyle(
+                                                    fontSize: 16,
+                                                    color: Colors.green,
+                                                    fontWeight: FontWeight.bold,
                                                   ),
                                                 ),
                                               ],
@@ -312,6 +381,7 @@ class _AttendanceState extends State<Attendance> {
                                                   style: TextStyle(
                                                     fontSize: 16,
                                                     color: Colors.red,
+                                                    fontWeight: FontWeight.bold,
                                                   ),
                                                 ),
                                               ],
@@ -333,28 +403,5 @@ class _AttendanceState extends State<Attendance> {
         ),
       ),
     );
-  }
-
-  Future<void> _showDateRangePicker(BuildContext context) async {
-    DateTimeRange? picked = await showDateRangePicker(
-      context: context,
-      firstDate: DateTime.now().subtract(const Duration(days: 365)),
-      lastDate: DateTime.now(),
-      builder: (BuildContext context, Widget? child) {
-        return Theme(
-          data: ThemeData.light().copyWith(
-            primaryColor: const Color.fromARGB(255, 215, 36, 24),
-            colorScheme: const ColorScheme.light(
-                primary: Color.fromARGB(255, 215, 36, 24)),
-            buttonTheme:
-                const ButtonThemeData(textTheme: ButtonTextTheme.primary),
-          ),
-          child: child!,
-        );
-      },
-    );
-    if (picked?.start != null && picked?.end != null) {
-      print('Selected date range: ${picked!.start} to ${picked.end}');
-    }
   }
 }

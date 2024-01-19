@@ -30,6 +30,15 @@ class _IndexState extends State<Index> {
   String ma_clockout = '';
   DateTime clockOutDate = DateTime.now();
   DateTime clockOutDateTime = DateTime.now();
+  DateTime clockInDateTime = DateTime.now();
+
+  String _formatTime(String? time) {
+  print(time);
+  if (time == "" || time == null) return '--:--';
+  DateTime dateTime = DateFormat("HH:mm:ss").parse(time);
+  String formattedTime = DateFormat.jm().format(dateTime); // Format time as 4:00 PM
+  return formattedTime;
+}
 
   Helper helper = Helper();
 
@@ -107,8 +116,8 @@ class _IndexState extends State<Index> {
       for (var statusinfo in json.decode(jsondata)) {
         print(statusinfo);
         setState(() {
-          ma_clockin = statusinfo['logtimein'] ?? '--/--';
-          ma_clockout = statusinfo['logtimeout'] ?? '--/--';
+          ma_clockin = _formatTime(statusinfo['logtimein']);
+          ma_clockout = _formatTime(statusinfo['logtimeout']);
         });
       }
     }
@@ -122,7 +131,10 @@ class _IndexState extends State<Index> {
         userinfo['employeeid'],
         userinfo['fullname'],
         userinfo['accesstype'],
-        userinfo['department']);
+        userinfo['department'],
+        userinfo['departmentname'],
+        userinfo['position']);
+  
 
     setState(() {
       employeeid = user.employeeid;
@@ -384,19 +396,65 @@ class _IndexState extends State<Index> {
         showDialog(
           context: context,
           builder: (ctx) => AlertDialog(
-            title: const Text('Success'),
-            content: const Text('Clock-in successful!'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(height: 10),
+                Center(
+                  child: Text(
+                    'Clock In successful!',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Center(
+                  child: Text(
+                    '${DateFormat('MMM dd, yyyy').format(clockInDateTime)}',
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 5),
+                Center(
+                  child: Text(
+                    '${DateFormat('HH:mm:ss').format(clockInDateTime)}',
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+              ],
+            ),
             actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(ctx);
-                   _getStatus();
-                   setState(() {
+              Center(
+                child: Container(
+                  width: 200,
+                  decoration: BoxDecoration(
+                    color: Colors.red,
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.pop(ctx); // Close the dialog
+                      setState(() {
                       isLoggedIn = true;
                       timestatus = 'Time Out';
                     });
-                },
-                child: const Text('OK'),
+                      _getStatus();
+
+                    },
+                    child: Text(
+                      'OK',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
               ),
             ],
           ),
@@ -580,8 +638,15 @@ class _IndexState extends State<Index> {
       final now = DateTime.now();
       return "${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}:${now.second.toString().padLeft(2, '0')}";
     });
-
-    return Scaffold(
+    
+     return WillPopScope(
+      onWillPop: () async {
+        // Show the logout confirmation dialog when the back button is pressed
+        showLogoutDialog();
+        // Return false to prevent the default behavior (pop the route)
+        return false;
+      },
+    child: Scaffold(
       body: SingleChildScrollView(
         child: Container(
           child: Padding(
@@ -772,6 +837,7 @@ class _IndexState extends State<Index> {
           ),
         ),
       ),
+    ),
     );
   }
 }
