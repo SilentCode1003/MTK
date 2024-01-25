@@ -6,17 +6,19 @@ import 'package:eportal/layout/drawer.dart';
 import 'package:eportal/model/userinfo.dart';
 import 'package:eportal/repository/helper.dart';
 import 'package:intl/intl.dart';
+import 'package:shimmer/shimmer.dart';
 
 class RequestLeave extends StatefulWidget {
   final String employeeid;
 
-  const RequestLeave({super.key, required this.employeeid});
+  const RequestLeave({Key? key, required this.employeeid}) : super(key: key);
 
   @override
   State<RequestLeave> createState() => _RequestLeaveState();
 }
 
 class _RequestLeaveState extends State<RequestLeave> {
+  String jobstatus = ''; // Add this line to define jobstatus
   String _formatDate(String date) {
     DateTime dateTime = DateTime.parse(date);
     return DateFormat.yMMMd('en_US').format(dateTime);
@@ -29,6 +31,14 @@ class _RequestLeaveState extends State<RequestLeave> {
   String reason = '';
   String status = '';
   String applieddate = '';
+  String fullname = '';
+  String employeeid = '';
+  String image = '';
+  int department = 0;
+  String departmentname = '';
+  String position = '';
+  Map<String, dynamic> userinfo = {};
+  bool isLoading = true;
 
   Helper helper = Helper();
 
@@ -42,6 +52,7 @@ class _RequestLeaveState extends State<RequestLeave> {
   @override
   void initState() {
     selectedLeaveType = 'Service Incentive Leave';
+    _getUserInfo();
     _getLeave();
     super.initState();
     leaveDateFromController = TextEditingController();
@@ -67,22 +78,71 @@ class _RequestLeaveState extends State<RequestLeave> {
           userleaves.add(userleave);
         });
       }
-
-      print(userleaves[0].employeeid);
     }
+  }
+
+  Future<void> _getUserInfo() async {
+    userinfo = await helper.readJsonToFile('metadata.json');
+    UserInfoModel user = UserInfoModel(
+      userinfo['image'],
+      userinfo['employeeid'],
+      userinfo['fullname'],
+      userinfo['accesstype'],
+      userinfo['department'],
+      userinfo['departmentname'],
+      userinfo['position'],
+      userinfo['jobstatus'],
+    );
+
+    setState(() {
+      fullname = user.fullname;
+      employeeid = user.employeeid;
+      image = user.image;
+      department = user.department;
+      departmentname = user.departmentname;
+      position = user.position;
+      jobstatus = user.jobstatus;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    if (jobstatus == 'probitionary') {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            'Leaves',
+            style: TextStyle(color: Colors.black),
+          ),
+          backgroundColor: Color.fromARGB(255, 255, 255, 255),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.black),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => DrawerApp()),
+              );
+            },
+          ),
+        ),
+        body: Center(
+          child: Text(
+            'No leave assignment for probationary employees.',
+            style: TextStyle(fontSize: 20),
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
           'Leaves',
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.black),
         ),
-        backgroundColor: const Color.fromARGB(255, 215, 36, 24),
+        backgroundColor: Color.fromARGB(255, 255, 255, 255),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
             Navigator.push(
               context,
@@ -217,26 +277,31 @@ class _RequestLeaveState extends State<RequestLeave> {
                                       // Conditionally show the button based on the status
                                       if (userleaves[index].status == 'Pending')
                                         Center(
-                                          child: ElevatedButton(
-                                            onPressed: () {
-                                              // Add your button functionality here
-                                              Navigator.pop(
-                                                  context); // Close the bottom sheet
-                                            },
-                                            style: ElevatedButton.styleFrom(
-                                              primary: Colors.red,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
+                                          child: Container(
+                                            margin: EdgeInsets.only(
+                                                bottom:
+                                                    20), // Adjust the margin value as needed
+                                            child: ElevatedButton(
+                                              onPressed: () {
+                                                // Add your button functionality here
+                                                Navigator.pop(
+                                                    context); // Close the bottom sheet
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                primary: Colors.red,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                ),
+                                                minimumSize: Size(250, 50),
                                               ),
-                                              minimumSize: Size(250, 50),
-                                            ),
-                                            child: Text(
-                                              'Cancel Leave Application',
-                                              style: TextStyle(fontSize: 18),
+                                              child: Text(
+                                                'Cancel Leave Application',
+                                                style: TextStyle(fontSize: 18),
+                                              ),
                                             ),
                                           ),
-                                        ),
+                                        )
                                     ],
                                   ),
                                 ),
@@ -306,7 +371,7 @@ class _RequestLeaveState extends State<RequestLeave> {
                       );
                     },
                   ),
-          )
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -520,6 +585,32 @@ class _RequestLeaveState extends State<RequestLeave> {
           ],
         );
       },
+    );
+  }
+}
+
+class ShimmerLoading extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[300]!,
+      highlightColor: Colors.grey[100]!,
+      child: ListView.builder(
+        itemCount: 6,
+        itemBuilder: (BuildContext context, int index) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 5),
+            child: Container(
+              width: 400,
+              height: 100,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 }

@@ -20,11 +20,11 @@ class Coop extends StatelessWidget {
         appBar: AppBar(
           title: const Text(
             'Coop',
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(color: Colors.black),
           ),
-          backgroundColor: const Color.fromARGB(255, 215, 36, 24),
+          backgroundColor: Color.fromARGB(255, 255, 255, 255),
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            icon: const Icon(Icons.arrow_back, color: Colors.black),
             onPressed: () {
               Navigator.push(
                 context,

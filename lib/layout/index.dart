@@ -11,6 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geodesy/geodesy.dart';
 import 'package:eportal/api/todaystatus.dart';
+import 'package:shimmer/shimmer.dart';
 
 class Index extends StatefulWidget {
   final String employeeid;
@@ -33,12 +34,13 @@ class _IndexState extends State<Index> {
   DateTime clockInDateTime = DateTime.now();
 
   String _formatTime(String? time) {
-  print(time);
-  if (time == "" || time == null) return '--:--';
-  DateTime dateTime = DateFormat("HH:mm:ss").parse(time);
-  String formattedTime = DateFormat.jm().format(dateTime); // Format time as 4:00 PM
-  return formattedTime;
-}
+    print(time);
+    if (time == "" || time == null) return '--:--';
+    DateTime dateTime = DateFormat("HH:mm:ss").parse(time);
+    String formattedTime =
+        DateFormat.jm().format(dateTime); // Format time as 4:00 PM
+    return formattedTime;
+  }
 
   Helper helper = Helper();
 
@@ -72,7 +74,6 @@ class _IndexState extends State<Index> {
 
   @override
   void initState() {
-      
     getCurrentLocation().then((Position position) {
       double latitude = position.latitude;
       double longitude = position.longitude;
@@ -97,20 +98,20 @@ class _IndexState extends State<Index> {
       });
     });
     _getUserInfo();
- 
 
     // fetchLocation();
     super.initState();
   }
 
   Future<void> _getStatus() async {
-    final response = await Status().getstatus(employeeid, helper.GetCurrentDate());
+    final response =
+        await Status().getstatus(employeeid, helper.GetCurrentDate());
     if (helper.getStatusString(APIStatus.success) == response.message) {
       final jsondata = json.encode(response.result);
-      if (jsondata.length == 2){
-         setState(() {
-          ma_clockin = '--/--';
-          ma_clockout = '--/--';
+      if (jsondata.length == 2) {
+        setState(() {
+          ma_clockin = '--:--';
+          ma_clockout = '--:--';
         });
       }
       for (var statusinfo in json.decode(jsondata)) {
@@ -133,8 +134,8 @@ class _IndexState extends State<Index> {
         userinfo['accesstype'],
         userinfo['department'],
         userinfo['departmentname'],
-        userinfo['position']);
-  
+        userinfo['position'],
+        userinfo['jobstatus'],);
 
     setState(() {
       employeeid = user.employeeid;
@@ -142,7 +143,7 @@ class _IndexState extends State<Index> {
 
       _getGeofence();
       _getLatesLog();
-       _getStatus();
+      _getStatus();
     });
   }
 
@@ -290,6 +291,30 @@ class _IndexState extends State<Index> {
           );
         });
   }
+    void showExitDialog() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Log Out'),
+            content: const Text('Are you sure you want to logout?'),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Cancel')),
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Log Out'))
+            ],
+          );
+        });
+  }
+  
 
   void verifylocation() async {
     await _getCurrentLocation();
@@ -421,10 +446,14 @@ class _IndexState extends State<Index> {
                 const SizedBox(height: 5),
                 Center(
                   child: Text(
-                    '${DateFormat('HH:mm:ss').format(clockInDateTime)}',
+                    '${DateFormat('h:mm:ss a').format(clockInDateTime)}',
                     style: TextStyle(
                       color: Colors.black,
                     ),
+                  ),
+                ),Center(
+                  child: Text(
+                    'Time in Main Office'
                   ),
                 ),
               ],
@@ -441,11 +470,10 @@ class _IndexState extends State<Index> {
                     onPressed: () {
                       Navigator.pop(ctx); // Close the dialog
                       setState(() {
-                      isLoggedIn = true;
-                      timestatus = 'Time Out';
-                    });
+                        isLoggedIn = true;
+                        timestatus = 'Time Out';
+                      });
                       _getStatus();
-
                     },
                     child: Text(
                       'OK',
@@ -469,11 +497,11 @@ class _IndexState extends State<Index> {
               TextButton(
                 onPressed: () {
                   Navigator.pop(ctx);
-                   _getStatus();
-                   setState(() {
-                      isLoggedIn = false;
-                      timestatus = 'Time In';
-                    });
+                  _getStatus();
+                  setState(() {
+                    isLoggedIn = false;
+                    timestatus = 'Time In';
+                  });
                 },
                 child: const Text('OK'),
               ),
@@ -537,7 +565,7 @@ class _IndexState extends State<Index> {
                 const SizedBox(height: 5),
                 Center(
                   child: Text(
-                    '${DateFormat('HH:mm:ss').format(clockOutDateTime)}',
+                    '${DateFormat('h:mm:ss a').format(clockInDateTime)}',
                     style: TextStyle(
                       color: Colors.black,
                     ),
@@ -557,11 +585,10 @@ class _IndexState extends State<Index> {
                     onPressed: () {
                       Navigator.pop(ctx); // Close the dialog
                       setState(() {
-                      isLoggedIn = false;
-                      timestatus = 'Time In';
-                    });
+                        isLoggedIn = false;
+                        timestatus = 'Time In';
+                      });
                       _getStatus();
-
                     },
                     child: Text(
                       'OK',
@@ -603,7 +630,7 @@ class _IndexState extends State<Index> {
               TextButton(
                 onPressed: () {
                   Navigator.pop(context); // Close the dialog
-                 _getStatus();
+                  _getStatus();
                 },
                 child: const Text('OK'),
               ),
@@ -638,206 +665,223 @@ class _IndexState extends State<Index> {
       final now = DateTime.now();
       return "${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}:${now.second.toString().padLeft(2, '0')}";
     });
-    
-     return WillPopScope(
+
+    return WillPopScope(
       onWillPop: () async {
-        // Show the logout confirmation dialog when the back button is pressed
-        showLogoutDialog();
-        // Return false to prevent the default behavior (pop the route)
+        showExitDialog();
         return false;
       },
-    child: Scaffold(
-      body: SingleChildScrollView(
-        child: Container(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Today's Status",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.normal,
-                        fontFamily: 'NexaRegular',
+      child: Scaffold(
+        body: SingleChildScrollView(
+          child: Container(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Today's Status",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.normal,
+                          fontFamily: 'NexaRegular',
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 10),
-                    Container(
-                      height: 150,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10.0),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 5,
-                            blurRadius: 7,
-                            offset: Offset(0, 3),
-                          ),
-                        ],
-                      ),
-                      padding: EdgeInsets.all(14.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              SizedBox(height: 20),
-                              Text(
-                                'Time In',
-                                style: TextStyle(
-                                  fontSize: 30,
-                                  fontWeight: FontWeight.normal,
-                                  color: Colors.black,
-                                ),
-                              ),
-                              SizedBox(height: 8),
-                              Text(
-                                '$ma_clockin',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.green,
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(width: 50),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              SizedBox(height: 20),
-                              Text(
-                                'Time Out',
-                                style: TextStyle(
-                                  fontSize: 30,
-                                  fontWeight: FontWeight.normal,
-                                  color: Colors.black,
-                                ),
-                              ),
-                              SizedBox(height: 8),
-                              Text(
-                                '$ma_clockout',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.red,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      '$formattedDate',
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.black,
-                      ),
-                    ),
-                    StreamBuilder<String>(
-                      stream: currentTimeStream,
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          final now = DateTime.now();
-                          final formattedTime =
-                              DateFormat('h:mm:ss a').format(now);
-                          return Column(
-                            children: [
-                              Text(
-                                formattedTime,
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                ),
-                              ),
-                            ],
-                          );
-                        } else {
-                          return const Text(
-                            'Loading...',
-                            style: TextStyle(
-                              color: Colors.grey,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
+                      SizedBox(height: 10),
+                      Container(
+                        height: 150,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 5,
+                              blurRadius: 7,
+                              offset: Offset(0, 3),
                             ),
-                          );
-                        }
-                      },
-                    ),
-                  ],
-                ),
-                SizedBox(height: 10),
-                Center(
-                  child: Text(
-                    currentLocation,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 15),
-                Center(
-                  child: GestureDetector(
-                    onTap: () {
-                      verifylocation();
-                    },
-                    child: Container(
-                      width: 180,
-                      height: 180,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: isLoggedIn ? Colors.red : Colors.green,
+                          ],
+                        ),
+                        padding: EdgeInsets.all(14.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                SizedBox(height: 20),
+                                Text(
+                                  'Time In',
+                                  style: TextStyle(
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.normal,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                SizedBox(height: 8),
+                                Text(
+                                  '$ma_clockin',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.green,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(width: 50),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                SizedBox(height: 20),
+                                Text(
+                                  'Time Out',
+                                  style: TextStyle(
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.normal,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                SizedBox(height: 8),
+                                Text(
+                                  '$ma_clockout',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.red,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          // Add your timeout icon here
-                          Icon(
-                            Icons.timer,
-                            color: Colors.white,
-                            size: 80,
-                          ),
-                          SizedBox(
-                              height:
-                                  10), // Adjust the spacing between the icon and text as needed
-                          Center(
-                            child: Text(
-                              timestatus,
-                              style: TextStyle(
-                                fontSize: 18,
+                    ],
+                  ),
+                  SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      StreamBuilder<String>(
+                        stream: currentTimeStream,
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            final now = DateTime.now();
+                            final formattedTime =
+                                DateFormat('E, MMM d • h:mm:ss a').format(now);
+                            return Column(
+                              children: [
+                                Text(
+                                  formattedTime,
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.normal,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                              ],
+                            );
+                          } else {
+                            return currentLocation.isEmpty
+                                ? Shimmer.fromColors(
+                                    baseColor: Colors.grey[300]!,
+                                    highlightColor: Colors.grey[100]!,
+                                    child: Container(
+                                      width: MediaQuery.of(context).size.width -
+                                          150,
+                                      height: 22, // Adjust the height as needed
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                    ),
+                                  )
+                                : SizedBox
+                                    .shrink(); // This will create an empty/hidden widget
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  Center(
+                    child: currentLocation.isEmpty
+                        ? Shimmer.fromColors(
+                            baseColor: Colors.grey[300]!,
+                            highlightColor: Colors.grey[100]!,
+                            child: Container(
+                              width: MediaQuery.of(context).size.width - 32,
+                              height: 55, // Adjust the height as needed
+                              decoration: BoxDecoration(
                                 color: Colors.white,
-                                fontWeight: FontWeight.bold,
+                                borderRadius: BorderRadius.circular(5),
                               ),
                             ),
+                          )
+                        : Text(
+                            currentLocation,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.normal,
+                              color: Colors.black,
+                            ),
                           ),
-                        ],
+                  ),
+                  SizedBox(height: 15),
+                  Center(
+                    child: GestureDetector(
+                      onTap: () {
+                        verifylocation();
+                      },
+                      child: Container(
+                        width: 180,
+                        height: 180,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color:
+                              Colors.white, // Set the background color to white
+                          border: Border.all(
+                            color: isLoggedIn ? Colors.red : Colors.green,
+                            width: 3, // Adjust the border width as needed
+                          ),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            // Add your timeout icon here
+                            Icon(
+                              Icons.alarm,
+                              color: isLoggedIn ? Colors.red : Colors.green,
+                              size: 80,
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ), // Adjust the spacing between the icon and text as needed
+                            Center(
+                              child: Text(
+                                timestatus,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: isLoggedIn ? Colors.red : Colors.green,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
       ),
-    ),
     );
   }
 }

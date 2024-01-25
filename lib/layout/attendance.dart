@@ -17,18 +17,18 @@ class Attendance extends StatefulWidget {
 
 class _AttendanceState extends State<Attendance> {
   String _formatDate(String? date) {
-    print(date);
     if (date == "" || date == null) return '';
     DateTime dateTime = DateTime.parse(date);
     return DateFormat('dd MMM yyyy', 'en_US').format(dateTime);
   }
-String _formatTime(String? time) {
-  print(time);
-  if (time == "" || time == null) return '--:--';
-  DateTime dateTime = DateFormat("HH:mm:ss").parse(time);
-  String formattedTime = DateFormat.jm().format(dateTime); // Format time as 4:00 PM
-  return formattedTime;
-}
+
+  String _formatTime(String? time) {
+    if (time == "" || time == null) return '--:--';
+    DateTime dateTime = DateFormat("HH:mm:ss").parse(time);
+    String formattedTime =
+        DateFormat.jm().format(dateTime); // Format time as 4:00 PM
+    return formattedTime;
+  }
 
   Helper helper = Helper();
   List<AttendanceModel> usersattendance = [];
@@ -46,7 +46,6 @@ String _formatTime(String? time) {
     if (helper.getStatusString(APIStatus.success) == response.message) {
       final jsondata = json.encode(response.result);
       for (var attendanceinfo in json.decode(jsondata)) {
-        print(attendanceinfo);
         setState(() {
           AttendanceModel userattendance = AttendanceModel(
             attendanceinfo['employeeid'],
@@ -124,8 +123,35 @@ String _formatTime(String? time) {
       });
 
       _filterAttendance();
-      print('Selected date range: ${picked!.start} to ${picked.end}');
     }
+  }
+
+  Future<void> showLogoutDialog() async {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirm Logout'),
+          content: const Text('Are you sure you want to exit?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                // Perform the necessary actions for logout
+                // For example, you can call Navigator.of(context).pop() to pop the current route
+                Navigator.of(context).pop();
+              },
+              child: const Text('Logout'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -159,8 +185,8 @@ String _formatTime(String? time) {
                         'My Attendance',
                         style: TextStyle(
                           color: Colors.black,
-                          fontSize: 26,
-                          fontWeight: FontWeight.bold,
+                          fontSize: 22,
+                          fontWeight: FontWeight.normal,
                         ),
                       ),
                       IconButton(

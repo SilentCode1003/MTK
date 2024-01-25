@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage> {
     Map<String, dynamic> userinfo =
         await helper.readJsonToFile('assets/metadata.json');
     UserInfoModel user = UserInfoModel(userinfo['image'],
-        userinfo['employeeid'], userinfo['fullname'], userinfo['accesstype'], userinfo['department'], userinfo['departmentname'], userinfo['position']);
+        userinfo['employeeid'], userinfo['fullname'], userinfo['accesstype'], userinfo['department'], userinfo['departmentname'], userinfo['position'], userinfo['jobstatus'],);
 
 
 
