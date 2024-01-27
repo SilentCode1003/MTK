@@ -6,9 +6,10 @@ class UserInfoModel {
   final int department;
   final String departmentname;
   final String position;
+  final String jobstatus;
 
   UserInfoModel(this.image, this.employeeid, this.fullname, this.accesstype,
-      this.department, this.departmentname, this.position);
+      this.department, this.departmentname, this.position, this.jobstatus);
 
   factory UserInfoModel.fromJson(Map<String, dynamic> json) {
     return UserInfoModel(
@@ -19,6 +20,7 @@ class UserInfoModel {
       json['department'],
       json['deparmentname'],
       json['position'],
+      json['jobstatus'],
     );
   }
 }
@@ -381,6 +383,58 @@ class OffensesModel {
         json['violation'],
         json['date'],
         json['createby'],
+      );
+    }
+}
+
+class AnnouncementModel {
+  final String bulletinid;
+  final String tittle;
+  final String image;
+  final String type;
+  final String description;
+  final String targetdate;
+  final String createby;
+
+
+  AnnouncementModel(
+    this.bulletinid,
+    this.tittle,
+    this.image,
+    this.type,
+    this.description,
+    this.targetdate,
+    this.createby,
+    );
+
+    factory AnnouncementModel.fromJson(Map<String, dynamic> json) {
+      return AnnouncementModel(
+        json['bulletinid'],
+        json['tittle'],
+        json['image'],
+        json['type'],
+        json['description'],
+        json['targetdate'],
+        json['createby'],
+      );
+    }
+}
+
+class AllModel {
+  final String details;
+  final String disciplinary;
+
+
+  AllModel(
+    this.details,
+    this.disciplinary,
+
+    );
+
+    factory AllModel.fromJson(Map<String, dynamic> json) {
+      return AllModel(
+        json['details'],
+        json['disciplinary'],
       );
     }
 }

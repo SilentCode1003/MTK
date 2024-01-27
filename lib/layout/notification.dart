@@ -5,6 +5,9 @@ import 'package:eportal/repository/helper.dart';
 import 'package:eportal/model/userinfo.dart';
 import 'package:eportal/api/notification.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 class Notifications extends StatefulWidget {
   final String employeeid;
@@ -16,30 +19,62 @@ class Notifications extends StatefulWidget {
 }
 
 class _NotificationsState extends State<Notifications> {
-    String _formatDate(String? date) {
-    print(date);
+  String _formatDate(String? date) {
     if (date == "" || date == null) return '';
     DateTime dateTime = DateTime.parse(date);
     return DateFormat('MMM dd', 'en_US').format(dateTime);
   }
+
   String employeeid = '';
   String disciplinaryid = '';
   String offenseid = '';
   String actionid = '';
   String violation = '';
   String date = '';
-  String createby = '';
+  String offensecreatedby = '';
+  String announcementbulletinid = '';
+  String announcementtitle = '';
+  String announcementimage = '';
+  String announcementtype = '';
+  String announcementdescription = '';
+  String announcementtargetdate = '';
+  String announcementcreatedby = '';
+
+  Set<Key> dismissedAnnouncementKeys = {};
+  Set<Key> dismissedOffensesKeys = {};
 
   int _currentIndex = 0;
 
   Helper helper = Helper();
 
   List<OffensesModel> offenses = [];
+  List<AnnouncementModel> announcements = [];
+
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
 
   @override
   void initState() {
+    _initializeLocalNotifications();
     _getoffenses();
+    _getannoucement();
     super.initState();
+  }
+
+  Future<void> _initializeLocalNotifications() async {
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+
+    final InitializationSettings initializationSettings =
+        InitializationSettings(
+      android: initializationSettingsAndroid,
+    );
+
+    await flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+    );
+
+    tz.initializeTimeZones();
   }
 
   Future<void> _getoffenses() async {
@@ -60,7 +95,28 @@ class _NotificationsState extends State<Notifications> {
           offenses.add(offense);
         });
       }
-      print(offenses[0].employeeid);
+    }
+  }
+
+  Future<void> _getannoucement() async {
+    final response =
+        await UserNotifications().getannouncement(widget.employeeid);
+    if (helper.getStatusString(APIStatus.success) == response.message) {
+      final jsondata = json.encode(response.result);
+      for (var announcementinfo in json.decode(jsondata)) {
+        setState(() {
+          AnnouncementModel announcement = AnnouncementModel(
+            announcementinfo['bulletinid'].toString(),
+            announcementinfo['tittle'].toString(),
+            announcementinfo['image'].toString(),
+            announcementinfo['type'].toString(),
+            announcementinfo['description'].toString(),
+            _formatDate(announcementinfo['targetdate']),
+            announcementinfo['createby'].toString(),
+          );
+          announcements.add(announcement);
+        });
+      }
     }
   }
 
@@ -69,7 +125,8 @@ class _NotificationsState extends State<Notifications> {
     return MaterialApp(
       title: '5L SOLUTION',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(
+            seedColor: const Color.fromARGB(255, 215, 36, 24)),
         useMaterial3: true,
       ),
       home: DefaultTabController(
@@ -78,11 +135,11 @@ class _NotificationsState extends State<Notifications> {
           appBar: AppBar(
             title: const Text(
               'Notifications',
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(color: Colors.black),
             ),
-            backgroundColor: const Color.fromARGB(255, 215, 36, 24),
+            backgroundColor: Color.fromARGB(255, 255, 255, 255),
             leading: IconButton(
-              icon: const Icon(Icons.arrow_back, color: Colors.white),
+              icon: const Icon(Icons.arrow_back, color: Colors.black),
               onPressed: () {
                 Navigator.push(
                   context,
@@ -133,25 +190,43 @@ class _NotificationsState extends State<Notifications> {
   }
 
   Widget _buildAnnouncementList() {
-    return ListView(
-      children: [
-        _buildDismissibleListTile(
-          key: UniqueKey(),
-          title: 'Christmas & Year End Party',
-          subtitle: 'Christmas & Year End Party @ Pacita Astrodom',
-          trailing: 'Dec 16',
-        ),
-        // Add more notification items as needed
-      ],
+    if (announcements.isEmpty) {
+      return Center(
+        child: Text("No Announcement found."),
+      );
+    }
+
+    return ListView.builder(
+      itemCount: announcements.length,
+      itemBuilder: (BuildContext context, int index) {
+        return _buildDismissibleListTile(
+          key: Key(announcements[index].bulletinid),
+          title: announcements[index].tittle,
+          subtitle: announcements[index].description,
+          trailing: announcements[index].targetdate,
+          onTap: () {
+            _scheduleLocalNotification(
+              announcements[index].tittle,
+              announcements[index].description,
+            );
+          },
+        );
+      },
     );
   }
 
   Widget _buildOffensesList({required String employeeid}) {
+    if (offenses.isEmpty) {
+      return Center(
+        child: Text("No offenses found."),
+      );
+    }
+
     return ListView.builder(
       itemCount: offenses.length,
       itemBuilder: (BuildContext context, int index) {
         return _buildDismissibleListTile(
-          key: UniqueKey(),
+          key: Key(offenses[index].actionid),
           title: offenses[index].actionid,
           subtitle: offenses[index].violation,
           trailing: offenses[index].date,
@@ -160,13 +235,12 @@ class _NotificationsState extends State<Notifications> {
     );
   }
 
-  // ... other methods
-
   Widget _buildDismissibleListTile({
     required Key key,
     required String title,
     required String subtitle,
     required String trailing,
+    VoidCallback? onTap,
   }) {
     return Dismissible(
       key: key,
@@ -185,7 +259,7 @@ class _NotificationsState extends State<Notifications> {
         ),
       ),
       onDismissed: (direction) {
-        print('Item dismissed: $title');
+        // Handle dismiss action if needed
       },
       child: Padding(
         padding: EdgeInsets.only(left: 8.0, top: 8.0),
@@ -205,9 +279,13 @@ class _NotificationsState extends State<Notifications> {
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 20.0,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
-            subtitle: Text(subtitle),
+            subtitle: Text(
+              subtitle,
+              style: TextStyle(overflow: TextOverflow.ellipsis),
+            ),
             trailing: Text(
               trailing,
               style: TextStyle(
@@ -216,9 +294,33 @@ class _NotificationsState extends State<Notifications> {
               ),
             ),
             contentPadding: EdgeInsets.all(9.0),
+            onTap: onTap,
           ),
         ),
       ),
+    );
+  }
+
+  Future<void> _scheduleLocalNotification(String title, String body) async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+      '123', // Replace with your own channel ID
+      'HRMIS', // Replace with your own channel name
+      importance: Importance.max,
+      priority: Priority.high,
+    );
+
+    const NotificationDetails platformChannelSpecifics =
+        NotificationDetails(android: androidPlatformChannelSpecifics);
+
+    int notificationId = DateTime.now().millisecondsSinceEpoch ~/
+        1000; // Unique ID based on current time
+    await flutterLocalNotificationsPlugin.show(
+      notificationId,
+      title,
+      body,
+      platformChannelSpecifics,
+      payload: 'notification_payload', // Add a payload if needed
     );
   }
 }

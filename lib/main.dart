@@ -1,9 +1,9 @@
 import 'dart:convert';
-
 import 'package:eportal/api/login.dart';
 import 'package:eportal/repository/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:eportal/layout/drawer.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   runApp(const MyApp());
@@ -38,6 +38,26 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
   Helper helper = Helper();
 
+  @override
+  void initState() {
+    super.initState();
+    _loadRememberedCredentials();
+  }
+
+  Future<void> _loadRememberedCredentials() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _usernameController.text = prefs.getString('username') ?? '';
+      _passwordController.text = prefs.getString('password') ?? '';
+    });
+  }
+
+  Future<void> _saveRememberedCredentials() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('username', _usernameController.text);
+    prefs.setString('password', _passwordController.text);
+  }
+
   Future<void> _login() async {
     String username = _usernameController.text;
     String password = _passwordController.text;
@@ -53,6 +73,8 @@ class _LoginPageState extends State<LoginPage> {
       for (var userinfo in json.decode(jsonData)) {
         helper.writeJsonToFile(userinfo, 'metadata.json');
       }
+
+      _saveRememberedCredentials();
 
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (_) => DrawerApp()),

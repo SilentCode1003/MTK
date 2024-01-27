@@ -39,6 +39,8 @@ class _DrawerPageState extends State<DrawerPage> {
   int department = 0;
   String departmentname = '';
   String position = '';
+  String jobstatus = '';
+  Map<String, dynamic> userinfo = {};
 
   Helper helper = Helper();
 
@@ -49,16 +51,17 @@ class _DrawerPageState extends State<DrawerPage> {
   }
 
   Future<void> _getUserInfo() async {
-    Map<String, dynamic> userinfo =
-        await helper.readJsonToFile('metadata.json');
+    userinfo = await helper.readJsonToFile('metadata.json');
     UserInfoModel user = UserInfoModel(
-        userinfo['image'],
-        userinfo['employeeid'],
-        userinfo['fullname'],
-        userinfo['accesstype'],
-        userinfo['department'],
-        userinfo['departmentname'],
-        userinfo['position']);
+      userinfo['image'],
+      userinfo['employeeid'],
+      userinfo['fullname'],
+      userinfo['accesstype'],
+      userinfo['department'],
+      userinfo['departmentname'],
+      userinfo['position'],
+      userinfo['jobstatus'],
+    );
 
     setState(() {
       fullname = user.fullname;
@@ -67,6 +70,7 @@ class _DrawerPageState extends State<DrawerPage> {
       department = user.department;
       departmentname = user.departmentname;
       position = user.position;
+      jobstatus = user.jobstatus;
     });
   }
 
@@ -75,11 +79,34 @@ class _DrawerPageState extends State<DrawerPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          '5L SOLUTIONS',
-          style: TextStyle(color: Colors.white),
+          '5L Solutions Supply & Allied Services Corp.',
+          style: TextStyle(color: Colors.black),
         ),
-        backgroundColor: const Color.fromARGB(
-            255, 215, 36, 24), // Set the app bar color to red
+        backgroundColor: Color.fromARGB(255, 255, 255, 255),
+        elevation: 4,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(
+                right: 16.0), // Adjust the value as needed
+            child: IconButton(
+              icon: Icon(Icons.notifications),
+              color: Colors.black,
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Notifications(
+                      employeeid: employeeid,
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+        iconTheme: IconThemeData(
+          color: Colors.black,
+        ),
       ),
       drawer: Drawer(
         child: ListView(
@@ -87,8 +114,7 @@ class _DrawerPageState extends State<DrawerPage> {
           children: [
             DrawerHeader(
               decoration: const BoxDecoration(
-                color: Color.fromARGB(
-                    255, 215, 36, 24), // Set the sidebar header color to red
+                color: Color.fromARGB(255, 252, 252, 252),
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -104,111 +130,155 @@ class _DrawerPageState extends State<DrawerPage> {
                   ),
                   const SizedBox(height: 15),
                   Text(
-                    '$fullname ($employeeid)',
+                    '$fullname',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Colors.black,
                       fontSize: 18,
                     ),
                   ),
                   Text(
                     '$departmentname',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Colors.black,
                       fontSize: 12,
                     ),
                   ),
                 ],
               ),
             ),
-            ListTile(
-              leading: const Icon(Icons.person),
-              title: const Text('Profile'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Profile(employeeid: employeeid,)),
-                );
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.calendar_month),
-              title: const Text('Leaves'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
+            if (userinfo['jobstatus'] == 'apprentice')
+              ListTile(
+                leading: const Icon(Icons.person),
+                title: const Text('Profile'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Profile(
+                        employeeid: employeeid,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            if (userinfo['jobstatus'] == 'apprentice')
+              ListTile(
+                leading: Icon(Icons.logout),
+                title: Text('Logout'),
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text("Logout"),
+                        content: Text("Are you sure you want to log out?"),
+                        actions: <Widget>[
+                          TextButton(
+                            child: Text("Cancel"),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                          TextButton(
+                            child: Text("Logout"),
+                            onPressed: () {
+                              Navigator.pushReplacementNamed(
+                                  context, '/logout');
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+              ),
+            if (userinfo['jobstatus'] == 'regular' || userinfo['jobstatus'] == 'probitionary')
+              ListTile(
+                leading: const Icon(Icons.person),
+                title: const Text('Profile'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Profile(
+                        employeeid: employeeid,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            if (userinfo['jobstatus'] == 'regular' || userinfo['jobstatus'] == 'probitionary')
+              ListTile(
+                leading: Icon(Icons.calendar_month),
+                title: const Text('Leaves'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
                       builder: (context) => RequestLeave(
-                            employeeid: employeeid,
-                          )),
-                );
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.attach_money),
-              title: Text('Cash Advance'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
+                        employeeid: employeeid,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            if (userinfo['jobstatus'] == 'regular')
+              ListTile(
+                leading: Icon(Icons.attach_money),
+                title: const Text('Cash Advance'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
                       builder: (context) => RequestCash(
-                            employeeid: employeeid,
-                          )),
-                );
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.business),
-              title: const Text('Coop'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Coop()),
-                );
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.notification_add),
-              title: const Text('Notications'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Notifications(employeeid: employeeid,)),
-                );
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.logout),
-              title: Text('Logout'),
-              onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    // return object of type Dialog
-                    return AlertDialog(
-                      title: Text("Logout"),
-                      content: Text("Are you sure you want to log out?"),
-                      actions: <Widget>[
-                        // usually buttons at the bottom of the dialog
-                        TextButton(
-                          child: Text("Cancel"),
-                          onPressed: () {
-                            Navigator.of(context).pop(); // Close the dialog
-                          },
-                        ),
-                        TextButton(
-                          child: Text("Logout"),
-                          onPressed: () {
-                            // Perform logout and navigate to LoginPage
-                            Navigator.pushReplacementNamed(context, '/logout');
-                          },
-                        ),
-                      ],
-                    );
-                  },
-                );
-              },
-            ),
-            // Add more list items as needed
+                        employeeid: employeeid,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            if (userinfo['jobstatus'] == 'regular')
+              ListTile(
+                leading: Icon(Icons.business),
+                title: const Text('Coop'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Coop()),
+                  );
+                },
+              ),
+            if (userinfo['jobstatus'] == 'regular' || userinfo['jobstatus'] == 'probitionary')
+              ListTile(
+                leading: Icon(Icons.logout),
+                title: Text('Logout'),
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text("Logout"),
+                        content: Text("Are you sure you want to log out?"),
+                        actions: <Widget>[
+                          TextButton(
+                            child: Text("Cancel"),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                          TextButton(
+                            child: Text("Logout"),
+                            onPressed: () {
+                              Navigator.pushReplacementNamed(
+                                  context, '/logout');
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+              ),
           ],
         ),
       ),
