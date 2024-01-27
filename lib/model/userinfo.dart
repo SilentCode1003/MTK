@@ -144,12 +144,18 @@ class NotificationModel {
   final String status;
   final String approvaldate;
 
-
-  NotificationModel(this.cashadvanceid, this.employeeid, this.requestdate, this.amount, this.purpose, this.status, this.approvaldate,);
+  NotificationModel(
+    this.cashadvanceid,
+    this.employeeid,
+    this.requestdate,
+    this.amount,
+    this.purpose,
+    this.status,
+    this.approvaldate,
+  );
 
   factory NotificationModel.fromJson(Map<String, dynamic> json) {
     return NotificationModel(
-
       json['cashadvanceid'],
       json['employeeid'],
       json['requestdate'],
@@ -169,20 +175,23 @@ class TodayModel {
   final String logdatein;
   final String logdateout;
 
-
-
-  TodayModel(this.employeeid, this.attendanceid, this.logtimein, this.logtimeout, this.logdatein, this.logdateout,);
+  TodayModel(
+    this.employeeid,
+    this.attendanceid,
+    this.logtimein,
+    this.logtimeout,
+    this.logdatein,
+    this.logdateout,
+  );
 
   factory TodayModel.fromJson(Map<String, dynamic> json) {
     return TodayModel(
-
       json['employeeid'],
       json['attendanceid'],
       json['logtimein'],
       json['logtimeout'],
       json['logdatein'],
       json['logdateout'],
-  
     );
   }
 }
@@ -284,25 +293,26 @@ class Basicinfo {
     this.email,
     this.ercontactname,
     this.ercontactphone,
-    );
+  );
 
-    factory Basicinfo.fromJson(Map<String, dynamic> json) {
-      return Basicinfo(
-        json['employeeid'],
-        json['firstname'],
-        json['lastname'],
-        json['middlename'],
-        json['gender'],
-        json['civilstatus'],
-        json['address'],
-        json['birthday'],
-        json['phone'],
-        json['email'],
-        json['ercontactname'],
-        json['ercontactphone'],
-      );
-    }
+  factory Basicinfo.fromJson(Map<String, dynamic> json) {
+    return Basicinfo(
+      json['employeeid'],
+      json['firstname'],
+      json['lastname'],
+      json['middlename'],
+      json['gender'],
+      json['civilstatus'],
+      json['address'],
+      json['birthday'],
+      json['phone'],
+      json['email'],
+      json['ercontactname'],
+      json['ercontactphone'],
+    );
+  }
 }
+
 class ProfileWorkinfo {
   final String employeeid;
   final String department;
@@ -320,40 +330,41 @@ class ProfileWorkinfo {
     this.jobstatus,
     this.hiredate,
     this.tenure,
-    );
+  );
 
-    factory ProfileWorkinfo.fromJson(Map<String, dynamic> json) {
-      return ProfileWorkinfo(
-        json['employeeid'],
-        json['department'],
-        json['position'],
-        json['departmenthead'],
-        json['jobstatus'],
-        json['hiredate'],
-        json['tenure'],
-      );
-    }
+  factory ProfileWorkinfo.fromJson(Map<String, dynamic> json) {
+    return ProfileWorkinfo(
+      json['employeeid'],
+      json['department'],
+      json['position'],
+      json['departmenthead'],
+      json['jobstatus'],
+      json['hiredate'],
+      json['tenure'],
+    );
+  }
 }
+
 class ProfileGovinfo {
   final String employeeid;
   final String idtype;
   final String idnumber;
 
-
   ProfileGovinfo(
     this.employeeid,
     this.idtype,
     this.idnumber,
-    );
+  );
 
-    factory ProfileGovinfo.fromJson(Map<String, dynamic> json) {
-      return ProfileGovinfo(
-        json['employeeid'],
-        json['idtype'],
-        json['idnumber'],
-      );
-    }
+  factory ProfileGovinfo.fromJson(Map<String, dynamic> json) {
+    return ProfileGovinfo(
+      json['employeeid'],
+      json['idtype'],
+      json['idnumber'],
+    );
+  }
 }
+
 class OffensesModel {
   final String employeeid;
   final String disciplinaryid;
@@ -363,7 +374,6 @@ class OffensesModel {
   final String date;
   final String createby;
 
-
   OffensesModel(
     this.employeeid,
     this.disciplinaryid,
@@ -372,19 +382,19 @@ class OffensesModel {
     this.violation,
     this.date,
     this.createby,
-    );
+  );
 
-    factory OffensesModel.fromJson(Map<String, dynamic> json) {
-      return OffensesModel(
-        json['employeeid'],
-        json['disciplinaryid'],
-        json['offenseid'],
-        json['actionid'],
-        json['violation'],
-        json['date'],
-        json['createby'],
-      );
-    }
+  factory OffensesModel.fromJson(Map<String, dynamic> json) {
+    return OffensesModel(
+      json['employeeid'],
+      json['disciplinaryid'],
+      json['offenseid'],
+      json['actionid'],
+      json['violation'],
+      json['date'],
+      json['createby'],
+    );
+  }
 }
 
 class AnnouncementModel {
@@ -396,7 +406,6 @@ class AnnouncementModel {
   final String targetdate;
   final String createby;
 
-
   AnnouncementModel(
     this.bulletinid,
     this.tittle,
@@ -405,36 +414,34 @@ class AnnouncementModel {
     this.description,
     this.targetdate,
     this.createby,
-    );
+  );
 
-    factory AnnouncementModel.fromJson(Map<String, dynamic> json) {
-      return AnnouncementModel(
-        json['bulletinid'],
-        json['tittle'],
-        json['image'],
-        json['type'],
-        json['description'],
-        json['targetdate'],
-        json['createby'],
-      );
-    }
+  factory AnnouncementModel.fromJson(Map<String, dynamic> json) {
+    return AnnouncementModel(
+      json['bulletinid'],
+      json['tittle'],
+      json['image'],
+      json['type'],
+      json['description'],
+      json['targetdate'],
+      json['createby'],
+    );
+  }
 }
 
 class AllModel {
-  final String details;
-  final String disciplinary;
-
+  final String tittle;
+  final String content;
 
   AllModel(
-    this.details,
-    this.disciplinary,
+    this.tittle,
+    this.content,
+  );
 
+  factory AllModel.fromJson(Map<String, dynamic> json) {
+    return AllModel(
+      json['tittle'],
+      json['content'],
     );
-
-    factory AllModel.fromJson(Map<String, dynamic> json) {
-      return AllModel(
-        json['details'],
-        json['disciplinary'],
-      );
-    }
+  }
 }

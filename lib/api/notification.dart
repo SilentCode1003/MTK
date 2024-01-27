@@ -22,7 +22,8 @@ class UserNotifications {
     ResponceModel data = ResponceModel(message, status, result);
     return data;
   }
-    Future<ResponceModel> getannouncement(String bulletinid) async {
+
+  Future<ResponceModel> getannouncement(String bulletinid) async {
     final url = Uri.parse('${Config.apiUrl}${Config.announcementAPI}');
     final response = await http.post(url, body: {
       'bulletinid': bulletinid,
@@ -38,11 +39,11 @@ class UserNotifications {
     ResponceModel data = ResponceModel(message, status, result);
     return data;
   }
-      Future<ResponceModel> getall(String details, String desciplinary) async {
+
+  Future<ResponceModel> getall(String employeeid) async {
     final url = Uri.parse('${Config.apiUrl}${Config.allAPI}');
     final response = await http.post(url, body: {
-      'details': details,
-      'desciplinary': desciplinary,
+      'employeeid': employeeid,
     });
 
     final responseData = json.decode(response.body);

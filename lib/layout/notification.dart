@@ -49,6 +49,7 @@ class _NotificationsState extends State<Notifications> {
 
   List<OffensesModel> offenses = [];
   List<AnnouncementModel> announcements = [];
+  List<AllModel> allnotification = [];
 
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
@@ -93,6 +94,11 @@ class _NotificationsState extends State<Notifications> {
             offenseinfo['createby'].toString(),
           );
           offenses.add(offense);
+
+          AllModel notification = AllModel(
+              offenseinfo['actionid'].toString(),
+              offenseinfo['violation'].toString());
+          allnotification.add(notification);
         });
       }
     }
@@ -115,6 +121,10 @@ class _NotificationsState extends State<Notifications> {
             announcementinfo['createby'].toString(),
           );
           announcements.add(announcement);
+          AllModel notification = AllModel(
+              announcementinfo['tittle'].toString(),
+              announcementinfo['description'].toString());
+          allnotification.add(notification);
         });
       }
     }
@@ -176,16 +186,35 @@ class _NotificationsState extends State<Notifications> {
   }
 
   Widget _buildNotificationList() {
-    return ListView(
-      children: [
-        _buildDismissibleListTile(
-          key: UniqueKey(),
-          title: 'Christmas & Year End Party',
-          subtitle: 'Christmas & Year End Party @ Pacita Astrodom',
-          trailing: 'Dec 16',
-        ),
-        // Add more notification items as needed
-      ],
+    // return ListView(
+    //   children: [
+    //     _buildDismissibleListTile(
+    //       key: UniqueKey(),
+    //       title: 'Christmas & Year End Party',
+    //       subtitle: 'Christmas & Year End Party @ Pacita Astrodom',
+    //       trailing: 'Dec 16',
+    //     ),
+    //     // Add more notification items as needed
+
+    //   ],
+    // );
+
+    return ListView.builder(
+      itemCount: allnotification.length,
+      itemBuilder: (BuildContext context, int index) {
+        return _buildDismissibleListTile(
+          key: Key(allnotification[index].tittle),
+          title: allnotification[index].tittle,
+          subtitle: allnotification[index].content,
+          trailing: allnotification[index].tittle,
+          onTap: () {
+            _scheduleLocalNotification(
+              allnotification[index].tittle,
+              allnotification[index].content,
+            );
+          },
+        );
+      },
     );
   }
 
