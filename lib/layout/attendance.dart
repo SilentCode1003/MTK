@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:eportal/model/userinfo.dart';
 import 'package:eportal/repository/helper.dart';
 import 'package:eportal/api/attendance.dart';
+import 'package:eportal/model/internet_checker.dart';
 import 'package:intl/intl.dart';
 
 class Attendance extends StatefulWidget {
@@ -156,6 +157,7 @@ class _AttendanceState extends State<Attendance> {
 
   @override
   Widget build(BuildContext context) {
+    checkInternetConnection(context);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(

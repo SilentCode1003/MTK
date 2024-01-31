@@ -16,14 +16,15 @@ class UserAttendance {
     final status = response.statusCode;
     final message = responseData['msg'];
     final result = responseData['data'] ?? [];
+    final description = responseData['description'] ?? "";
 
     print(result);
 
-    ResponceModel data = ResponceModel(message, status, result);
+    ResponceModel data = ResponceModel(message, status, result, description);
     return data;
   }
 
-    Future<ResponceModel> filterattendance(String employeeid) async {
+  Future<ResponceModel> filterattendance(String employeeid) async {
     final url = Uri.parse('${Config.apiUrl}${Config.filterattendanceAPI}');
     final response = await http.post(url, body: {
       'employeeid': employeeid,
@@ -33,14 +34,15 @@ class UserAttendance {
     final status = response.statusCode;
     final message = responseData['msg'];
     final result = responseData['data'] ?? [];
+    final description = responseData['description'] ?? "";
 
     print(result);
 
-    ResponceModel data = ResponceModel(message, status, result);
+    ResponceModel data = ResponceModel(message, status, result, description);
     return data;
   }
 
-    Future<ResponceModel> clockin(
+  Future<ResponceModel> clockin(
       String employeeid, String latitude, String longitude) async {
     final url = Uri.parse('${Config.apiUrl}${Config.clockinAPI}');
     final response = await http.post(url, body: {
@@ -55,8 +57,9 @@ class UserAttendance {
     final status = response.statusCode;
     final message = responseData['status'];
     final result = responseData['data'] ?? [];
+    final description = responseData['description'] ?? "";
 
-    ResponceModel data = ResponceModel(message, status, result);
+    ResponceModel data = ResponceModel(message, status, result, description);
     return data;
   }
 
@@ -75,8 +78,9 @@ class UserAttendance {
     final status = response.statusCode;
     final message = responseData['status'];
     final result = responseData['data'] ?? [];
+    final description = responseData['description'] ?? "";
 
-    ResponceModel data = ResponceModel(message, status, result);
+    ResponceModel data = ResponceModel(message, status, result, description);
     return data;
   }
 
@@ -93,10 +97,11 @@ class UserAttendance {
     final status = response.statusCode;
     final message = responseData['message'];
     final result = responseData['data'] ?? [];
+    final description = responseData['description'] ?? "";
 
     print(result);
 
-    ResponceModel data = ResponceModel(message, status, result);
+    ResponceModel data = ResponceModel(message, status, result, description);
     return data;
   }
 }

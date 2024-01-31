@@ -121,32 +121,33 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       );
       print(response.message);
 
-      if (response.status == 200) {
-  showDialog(
-    context: context,
-    builder: (ctx) => AlertDialog(
-      title: const Text('Success'),
-      actions: [
-        TextButton(
-          onPressed: () {
-            Navigator.popUntil(ctx, (route) => route.isFirst);
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => MyApp()), // Replace MyApp with your main.dart class
-            );
-          },
-          child: const Text('OK'),
-        ),
-      ],
-    ),
-  );
-}
- else {
+      if (response.message != "error") {
         showDialog(
           context: context,
           builder: (ctx) => AlertDialog(
-            title: const Text('Error'),
-            content: Text(response.message),
+            title: const Text('Success'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.popUntil(ctx, (route) => route.isFirst);
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            MyApp()), // Replace MyApp with your main.dart class
+                  );
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      } else {
+        showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: Text(response.message),
+            content: Text('Incorrect Current Password'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(ctx),
@@ -228,8 +229,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   obscureText: _isPasswordObscuredold,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Old Password',
-                    hintText: 'Enter secure old password',
+                    labelText: 'Current Password',
+                    hintText: 'Enter secure Current password',
                     suffixIcon: IconButton(
                       icon: Icon(
                         _isPasswordObscuredold

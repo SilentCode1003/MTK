@@ -16,10 +16,11 @@ class Cash {
     final status = response.statusCode;
     final message = responseData['msg'];
     final result = responseData['data'] ?? [];
+    final description = responseData['description'] ?? "";
 
     print(result);
 
-    ResponceModel data = ResponceModel(message, status, result);
+    ResponceModel data = ResponceModel(message, status, result, description);
     return data;
   }
     Future<ResponceModel> request(String employeeid, String amount, String purpose) async {
@@ -35,8 +36,9 @@ class Cash {
     final status = response.statusCode;
     final message = responseData['msg'];
     final result = responseData['data'] ?? [];
+    final description = responseData['description'] ?? "";
 
-    ResponceModel data = ResponceModel(message, status, result);
+    ResponceModel data = ResponceModel(message, status, result, description);
     return data;
   }
 }
