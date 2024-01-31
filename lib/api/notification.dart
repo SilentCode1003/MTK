@@ -16,10 +16,11 @@ class UserNotifications {
     final status = response.statusCode;
     final message = responseData['msg'];
     final result = responseData['data'] ?? [];
+    final description = responseData['description'] ?? "";
 
     print(result);
 
-    ResponceModel data = ResponceModel(message, status, result);
+    ResponceModel data = ResponceModel(message, status, result, description);
     return data;
   }
 
@@ -33,14 +34,14 @@ class UserNotifications {
     final status = response.statusCode;
     final message = responseData['msg'];
     final result = responseData['data'] ?? [];
+    final description = responseData['description'] ?? "";
 
     print(result);
 
-    ResponceModel data = ResponceModel(message, status, result);
+    ResponceModel data = ResponceModel(message, status, result, description);
     return data;
   }
-
-  Future<ResponceModel> getall(String employeeid) async {
+    Future<ResponceModel> getall(String employeeid) async {
     final url = Uri.parse('${Config.apiUrl}${Config.allAPI}');
     final response = await http.post(url, body: {
       'employeeid': employeeid,
@@ -50,10 +51,11 @@ class UserNotifications {
     final status = response.statusCode;
     final message = responseData['msg'];
     final result = responseData['data'] ?? [];
+    final description = responseData['description'] ?? "";
 
     print(result);
 
-    ResponceModel data = ResponceModel(message, status, result);
+    ResponceModel data = ResponceModel(message, status, result, description);
     return data;
   }
 }

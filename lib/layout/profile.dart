@@ -326,6 +326,57 @@ class _ProfileStatefulWidgetState extends State<Profile> {
               ),
             ),
             Positioned(
+              top: 430.0,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Govinfo(
+                              employeeid: employeeid,
+                            )),
+                  );
+                },
+                child: Container(
+                  height: 50,
+                  width: MediaQuery.of(context).size.width - 32,
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 244, 242, 242),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Row(
+                    children: [
+                      // Icon of a person
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10, right: 10),
+                        child: Icon(
+                          Icons.assignment,
+                          color: Colors.black,
+                        ),
+                      ),
+                      // Text for basic information
+                      Text(
+                        'Trainings',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 14,
+                        ),
+                      ),
+                      // Greater-than icon with margin on the right side
+                      Spacer(),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 10),
+                        child: Icon(
+                          Icons.chevron_right,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
               top: 490.0,
               child: GestureDetector(
                 onTap: () {

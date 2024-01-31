@@ -432,16 +432,26 @@ class AnnouncementModel {
 class AllModel {
   final String tittle;
   final String content;
+  final String date;
+  final String image;
+  final String type;
+  
 
   AllModel(
     this.tittle,
     this.content,
+    this.date,
+    this.image,
+    this.type,
   );
 
   factory AllModel.fromJson(Map<String, dynamic> json) {
     return AllModel(
       json['tittle'],
       json['content'],
+      json['date'],
+      json['image'],
+      json['type'],
     );
   }
 }

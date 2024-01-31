@@ -3,6 +3,7 @@ import 'package:eportal/api/login.dart';
 import 'package:eportal/repository/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:eportal/layout/drawer.dart';
+import 'package:eportal/model/internet_checker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
@@ -14,6 +15,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    checkInternetConnection(context);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: '5L SOLUTION',
@@ -109,99 +111,123 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
+  Future<bool> _onWillPop() async {
+    return (await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Are you sure?'),
+            content: Text('Do you want to exit the app?'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: Text('No'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: Text('Yes'),
+              ),
+            ],
+          ),
+        )) ??
+        false;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(top: 60.0),
-              child: Center(
-                child: Container(
-                  width: 200,
-                  height: 150,
-                  child: Image.asset('assets/5L.png'),
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 15),
-              child: TextField(
-                controller: _usernameController,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Username',
-                  hintText: 'Enter valid Username',
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(
-                left: 15.0,
-                right: 15.0,
-                top: 15,
-                bottom: 15,
-              ),
-              child: TextField(
-                controller: _passwordController,
-                obscureText: _isPasswordObscured,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Password',
-                  hintText: 'Enter secure password',
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _isPasswordObscured
-                          ? Icons.visibility
-                          : Icons.visibility_off,
-                    ),
-                    onPressed: () {
-                      _togglePasswordVisibility();
-                    },
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(top: 60.0),
+                child: Center(
+                  child: Container(
+                    width: 200,
+                    height: 150,
+                    child: Image.asset('assets/5L.png'),
                   ),
                 ),
               ),
-            ),
-            Container(
-              height: 50,
-              width: 250,
-              decoration: BoxDecoration(
-                color: Colors.red,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: ElevatedButton(
-                onPressed: () {
-                  _login();
-                },
-                style: ElevatedButton.styleFrom(
-                  primary: const Color.fromARGB(255, 215, 36, 24),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 15),
+                child: TextField(
+                  controller: _usernameController,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Username',
+                    hintText: 'Enter valid Username',
+                  ),
                 ),
-                child: isLoading
-                    ? Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CircularProgressIndicator(color: Colors.white),
-                          const SizedBox(width: 10),
-                        ],
-                      )
-                    : Text(
-                        'Login',
-                        style: TextStyle(color: Colors.white, fontSize: 25),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(
+                  left: 15.0,
+                  right: 15.0,
+                  top: 15,
+                  bottom: 15,
+                ),
+                child: TextField(
+                  controller: _passwordController,
+                  obscureText: _isPasswordObscured,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Password',
+                    hintText: 'Enter secure password',
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _isPasswordObscured
+                            ? Icons.visibility
+                            : Icons.visibility_off,
                       ),
+                      onPressed: () {
+                        _togglePasswordVisibility();
+                      },
+                    ),
+                  ),
+                ),
               ),
-            ),
-            TextButton(
-              onPressed: () {
-                // TODO: FORGOT PASSWORD SCREEN GOES HERE
-              },
-              child: Text(
-                'Forgot Password',
-                style: TextStyle(color: Colors.red, fontSize: 15),
+              Container(
+                height: 50,
+                width: 250,
+                decoration: BoxDecoration(
+                  color: Colors.red,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: ElevatedButton(
+                  onPressed: () {
+                    _login();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: const Color.fromARGB(255, 215, 36, 24),
+                  ),
+                  child: isLoading
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CircularProgressIndicator(color: Colors.white),
+                            const SizedBox(width: 10),
+                          ],
+                        )
+                      : Text(
+                          'Login',
+                          style: TextStyle(color: Colors.white, fontSize: 25),
+                        ),
+                ),
               ),
-            ),
-          ],
+              TextButton(
+                onPressed: () {
+                  // TODO: FORGOT PASSWORD SCREEN GOES HERE
+                },
+                child: Text(
+                  'Forgot Password',
+                  style: TextStyle(color: Colors.red, fontSize: 15),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

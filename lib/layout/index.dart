@@ -12,6 +12,9 @@ import 'package:geolocator/geolocator.dart';
 import 'package:geodesy/geodesy.dart';
 import 'package:eportal/api/todaystatus.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:eportal/model/internet_checker.dart';
+import 'dart:io';
+
 
 class Index extends StatefulWidget {
   final String employeeid;
@@ -97,11 +100,71 @@ class _IndexState extends State<Index> {
         }
       });
     });
+    checkLocationService();
     _getUserInfo();
 
     // fetchLocation();
     super.initState();
   }
+  Future<void> checkLocationService() async {
+  bool serviceEnabled;
+  LocationPermission permission;
+
+  // Test if location services are enabled.
+  serviceEnabled = await Geolocator.isLocationServiceEnabled();
+  if (!serviceEnabled) {
+    // Location services are not enabled, show alert dialog
+    showLocationServiceAlertDialog();
+    return;
+  }
+
+  permission = await Geolocator.checkPermission();
+  if (permission == LocationPermission.deniedForever) {
+    // Permissions are denied forever, handle appropriately.
+    return;
+  }
+
+  if (permission == LocationPermission.denied) {
+    // Permissions are denied, request permissions.
+    permission = await Geolocator.requestPermission();
+    if (permission != LocationPermission.whileInUse &&
+        permission != LocationPermission.always) {
+      // Permissions are denied, display an error message.
+      return;
+    }
+  }
+  // Permissions are granted, continue fetching location.
+}
+
+void showLocationServiceAlertDialog() {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Location Services Disabled'),
+        content: Text('Please enable location services to use this app.'),
+        actions: <Widget>[
+          TextButton(
+            child: Text('Cancel'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          TextButton(
+            child: Text('Open Location Settings'),
+            onPressed: () {
+              // Open device settings to enable location services
+              Geolocator.openLocationSettings();
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
+
 
   Future<void> _getStatus() async {
     final response =
@@ -291,29 +354,35 @@ class _IndexState extends State<Index> {
           );
         });
   }
-    void showExitDialog() {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Log Out'),
-            content: const Text('Are you sure you want to logout?'),
-            actions: [
-              TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('Cancel')),
-              TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('Log Out'))
-            ],
-          );
-        });
-  }
+void showExitDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Log Out'),
+        content: const Text('Are you sure you want to logout?'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              // Close the app when Log Out button is pressed
+              if (Platform.isAndroid || Platform.isIOS) {
+                exit(0);
+              }
+            },
+            child: const Text('Log Out'),
+          ),
+        ],
+      );
+    },
+  );
+}
   
 
   void verifylocation() async {
@@ -656,9 +725,9 @@ class _IndexState extends State<Index> {
 
   @override
   Widget build(BuildContext context) {
+    checkInternetConnection(context);
     DateTime now = DateTime.now();
     String formattedDate = DateFormat('MMM d yyyy').format(now);
-    // String formattedTime = DateFormat('h:mm a').format(now);
 
     Stream<String> currentTimeStream =
         Stream.periodic(const Duration(seconds: 1), (int _) {
@@ -668,7 +737,7 @@ class _IndexState extends State<Index> {
 
     return WillPopScope(
       onWillPop: () async {
-        showExitDialog();
+         showExitDialog(context);
         return false;
       },
       child: Scaffold(

@@ -16,10 +16,11 @@ class Profileinfo {
     final status = response.statusCode;
     final message = responseData['msg'];
     final result = responseData['data'] ?? [];
+    final description = responseData['description'] ?? "";
 
     print(result);
 
-    ResponceModel data = ResponceModel(message, status, result);
+    ResponceModel data = ResponceModel(message, status, result, description);
     return data;
   }
     Future<ResponceModel> getworkinfo(String employeeid) async {
@@ -32,10 +33,11 @@ class Profileinfo {
     final status = response.statusCode;
     final message = responseData['msg'];
     final result = responseData['data'] ?? [];
+    final description = responseData['description'] ?? "";
 
     print(result);
 
-    ResponceModel data = ResponceModel(message, status, result);
+    ResponceModel data = ResponceModel(message, status, result, description);
     return data;
   }
    Future<ResponceModel> getgovinfo(String employeeid) async {
@@ -48,10 +50,11 @@ class Profileinfo {
     final status = response.statusCode;
     final message = responseData['msg'];
     final result = responseData['data'] ?? [];
+    final description = responseData['description'] ?? "";
 
     print(result);
 
-    ResponceModel data = ResponceModel(message, status, result);
+    ResponceModel data = ResponceModel(message, status, result, description);
     return data;
   }
 }

@@ -19,8 +19,9 @@ class ChangePassword {
     final status = response.statusCode;
     final message = responseData['msg'];
     final result = responseData['data'] ?? [];
+    final description = responseData['description'] ?? "";
 
-    ResponceModel data = ResponceModel(message, status, result);
+    ResponceModel data = ResponceModel(message, status, result, description);
     return data;
   }
 }

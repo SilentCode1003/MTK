@@ -8,11 +8,12 @@ import 'package:intl/intl.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
+import 'package:eportal/layout/announcementdetails.dart';
 
 class Notifications extends StatefulWidget {
   final String employeeid;
 
-  const Notifications({super.key, required this.employeeid});
+  const Notifications({Key? key, required this.employeeid}) : super(key: key);
 
   @override
   _NotificationsState createState() => _NotificationsState();
@@ -42,6 +43,7 @@ class _NotificationsState extends State<Notifications> {
 
   Set<Key> dismissedAnnouncementKeys = {};
   Set<Key> dismissedOffensesKeys = {};
+  Set<String> dismissedNotificationKeys = {};
 
   int _currentIndex = 0;
 
@@ -96,8 +98,12 @@ class _NotificationsState extends State<Notifications> {
           offenses.add(offense);
 
           AllModel notification = AllModel(
-              offenseinfo['actionid'].toString(),
-              offenseinfo['violation'].toString());
+            offenseinfo['actionid'].toString(),
+            offenseinfo['violation'].toString(),
+            _formatDate(offenseinfo['date'].toString()),
+            offenseinfo['actionid'].toString(),
+            offenseinfo['image'].toString(),
+          );
           allnotification.add(notification);
         });
       }
@@ -122,8 +128,12 @@ class _NotificationsState extends State<Notifications> {
           );
           announcements.add(announcement);
           AllModel notification = AllModel(
-              announcementinfo['tittle'].toString(),
-              announcementinfo['description'].toString());
+            announcementinfo['tittle'].toString(),
+            announcementinfo['description'].toString(),
+            _formatDate(announcementinfo['targetdate'].toString()),
+            announcementinfo['image'].toString(),
+            announcementinfo['type'].toString(),
+          );
           allnotification.add(notification);
         });
       }
@@ -186,31 +196,30 @@ class _NotificationsState extends State<Notifications> {
   }
 
   Widget _buildNotificationList() {
-    // return ListView(
-    //   children: [
-    //     _buildDismissibleListTile(
-    //       key: UniqueKey(),
-    //       title: 'Christmas & Year End Party',
-    //       subtitle: 'Christmas & Year End Party @ Pacita Astrodom',
-    //       trailing: 'Dec 16',
-    //     ),
-    //     // Add more notification items as needed
-
-    //   ],
-    // );
-
+     if (allnotification.isEmpty) {
+      return Center(
+        child: Text("No Announcement found."),
+      );
+    }
     return ListView.builder(
       itemCount: allnotification.length,
       itemBuilder: (BuildContext context, int index) {
-        return _buildDismissibleListTile(
-          key: Key(allnotification[index].tittle),
+        return _buildListTile(
           title: allnotification[index].tittle,
           subtitle: allnotification[index].content,
-          trailing: allnotification[index].tittle,
+          trailing: allnotification[index].date,
           onTap: () {
-            _scheduleLocalNotification(
-              allnotification[index].tittle,
-              allnotification[index].content,
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AllDetailsPage(
+                  title: allnotification[index].tittle,
+                  description: allnotification[index].tittle,
+                  targetDate: allnotification[index].date,
+                  image: allnotification[index].image,
+                  type: allnotification[index].type,
+                ),
+              ),
             );
           },
         );
@@ -228,15 +237,23 @@ class _NotificationsState extends State<Notifications> {
     return ListView.builder(
       itemCount: announcements.length,
       itemBuilder: (BuildContext context, int index) {
-        return _buildDismissibleListTile(
-          key: Key(announcements[index].bulletinid),
+        int notificationId = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+        return _buildListTile(
           title: announcements[index].tittle,
           subtitle: announcements[index].description,
           trailing: announcements[index].targetdate,
           onTap: () {
-            _scheduleLocalNotification(
-              announcements[index].tittle,
-              announcements[index].description,
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AnnouncementDetailsPage(
+                  title: announcements[index].tittle,
+                  description: announcements[index].description,
+                  targetDate: announcements[index].targetdate,
+                  image: announcements[index].image,
+                  type: announcements[index].type,
+                ),
+              ),
             );
           },
         );
@@ -254,83 +271,64 @@ class _NotificationsState extends State<Notifications> {
     return ListView.builder(
       itemCount: offenses.length,
       itemBuilder: (BuildContext context, int index) {
-        return _buildDismissibleListTile(
-          key: Key(offenses[index].actionid),
+        return _buildListTile(
           title: offenses[index].actionid,
           subtitle: offenses[index].violation,
           trailing: offenses[index].date,
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => OffensesDetailsPage(
+                  title: offenses[index].actionid,
+                  description: offenses[index].violation,
+                  targetDate: offenses[index].date,
+                  type: offenses[index].violation,
+                ),
+              ),
+            );
+          },
         );
       },
     );
   }
 
-  Widget _buildDismissibleListTile({
-    required Key key,
+  Widget _buildListTile({
     required String title,
     required String subtitle,
     required String trailing,
     VoidCallback? onTap,
   }) {
-    return Dismissible(
-      key: key,
-      background: Container(
-        color: Colors.red,
-        child: Align(
-          alignment: Alignment.centerRight,
-          child: Padding(
-            padding: const EdgeInsets.only(right: 16.0),
-            child: Icon(
-              Icons.delete,
-              color: Colors.white,
-              size: 50,
-            ),
-          ),
+    return ListTile(
+      title: Text(
+        title,
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 20.0,
+          overflow: TextOverflow.ellipsis,
         ),
       ),
-      onDismissed: (direction) {
-        // Handle dismiss action if needed
-      },
-      child: Padding(
-        padding: EdgeInsets.only(left: 8.0, top: 8.0),
-        child: Container(
-          margin: EdgeInsets.only(top: 8.0),
-          decoration: BoxDecoration(
-            border: Border(
-              left: BorderSide(
-                color: const Color.fromARGB(255, 215, 36, 24),
-                width: 5.0,
-              ),
-            ),
-          ),
-          child: ListTile(
-            title: Text(
-              title,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20.0,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            subtitle: Text(
-              subtitle,
-              style: TextStyle(overflow: TextOverflow.ellipsis),
-            ),
-            trailing: Text(
-              trailing,
-              style: TextStyle(
-                fontWeight: FontWeight.normal,
-                fontSize: 14.0,
-              ),
-            ),
-            contentPadding: EdgeInsets.all(9.0),
-            onTap: onTap,
-          ),
+      subtitle: Text(
+        subtitle,
+        style: TextStyle(overflow: TextOverflow.ellipsis),
+      ),
+      trailing: Text(
+        trailing,
+        style: TextStyle(
+          fontWeight: FontWeight.normal,
+          fontSize: 14.0,
         ),
       ),
+      contentPadding: EdgeInsets.all(9.0),
+      onTap: onTap,
     );
   }
 
-  Future<void> _scheduleLocalNotification(String title, String body) async {
+  Future<void> _scheduleLocalNotification(
+      String title, String body, int notificationId) async {
+    // Cancel the previous notification if exists
+    await flutterLocalNotificationsPlugin.cancel(notificationId);
+
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
       '123', // Replace with your own channel ID
@@ -342,14 +340,12 @@ class _NotificationsState extends State<Notifications> {
     const NotificationDetails platformChannelSpecifics =
         NotificationDetails(android: androidPlatformChannelSpecifics);
 
-    int notificationId = DateTime.now().millisecondsSinceEpoch ~/
-        1000; // Unique ID based on current time
     await flutterLocalNotificationsPlugin.show(
       notificationId,
       title,
       body,
       platformChannelSpecifics,
-      payload: 'notification_payload', // Add a payload if needed
+      payload: 'notification_payload',
     );
   }
 }
