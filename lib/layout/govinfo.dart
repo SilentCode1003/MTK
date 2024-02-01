@@ -5,6 +5,7 @@ import 'package:eportal/layout/profile.dart';
 import 'package:eportal/model/userinfo.dart';
 import 'package:eportal/repository/helper.dart';
 import 'package:eportal/api/profile.dart';
+import 'package:eportal/model/internet_checker.dart';
 
 class Govinfo extends StatefulWidget {
   final String employeeid;
@@ -36,8 +37,10 @@ class _GovinfoStatefulWidgetState extends State<Govinfo> {
       final jsondata = json.encode(response.result);
       for (var govinfoid in json.decode(jsondata)) {
         setState(() {
-          ProfileGovinfo govinfo = ProfileGovinfo(govinfoid['employeeid'],
-              govinfoid['idtype'], govinfoid['idnumber']);
+          ProfileGovinfo govinfo = ProfileGovinfo(
+            govinfoid['employeeid'],
+            govinfoid['idtype'], 
+            govinfoid['idnumber']);
           govinfos.add(govinfo);
         });
       }
@@ -47,6 +50,7 @@ class _GovinfoStatefulWidgetState extends State<Govinfo> {
 
   @override
   Widget build(BuildContext context) {
+    checkInternetConnection(context);
     return Scaffold(
         appBar: AppBar(
           title: const Text(

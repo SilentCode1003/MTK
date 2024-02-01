@@ -54,6 +54,7 @@ class _AttendanceState extends State<Attendance> {
             _formatDate(attendanceinfo['attendancedateout']),
             _formatTime(attendanceinfo['clockin']),
             _formatTime(attendanceinfo['clockout']),
+            attendanceinfo['geofencename'] ?? '--:--',
             attendanceinfo['devicein'],
             attendanceinfo['deviceout'] ?? '--:--',
             attendanceinfo['totalhours'] ?? '--:--',
@@ -88,6 +89,7 @@ class _AttendanceState extends State<Attendance> {
               _formatDate(attendanceinfo['attendancedateout']),
               attendanceinfo['clockin'] ?? '--:--',
               attendanceinfo['clockout'] ?? '--:--',
+              attendanceinfo['geofencename'] ?? '--:--',
               attendanceinfo['devicein'],
               attendanceinfo['deviceout'] ?? '--:--',
               attendanceinfo['totalhours'] ?? '--:--',
@@ -274,6 +276,12 @@ class _AttendanceState extends State<Attendance> {
                                             leading: Icon(Icons.timer_off),
                                             title: Text(
                                               'Clock Out:  ${usersattendance[index].clockout} ${usersattendance[index].attendancedateOut}',
+                                            ),
+                                          ),
+                                          ListTile(
+                                            leading: Icon(Icons.location_city),
+                                            title: Text(
+                                              'Location:  ${usersattendance[index].geofencename}',
                                             ),
                                           ),
                                           ListTile(

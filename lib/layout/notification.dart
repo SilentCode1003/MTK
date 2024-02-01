@@ -142,6 +142,7 @@ class _NotificationsState extends State<Notifications> {
 
   @override
   Widget build(BuildContext context) {
+    
     return MaterialApp(
       title: '5L SOLUTION',
       theme: ThemeData(
@@ -194,6 +195,7 @@ class _NotificationsState extends State<Notifications> {
       ),
     );
   }
+
 
   Widget _buildNotificationList() {
      if (allnotification.isEmpty) {

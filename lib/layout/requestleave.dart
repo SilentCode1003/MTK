@@ -7,6 +7,7 @@ import 'package:eportal/model/userinfo.dart';
 import 'package:eportal/repository/helper.dart';
 import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:eportal/model/internet_checker.dart';
 
 class RequestLeave extends StatefulWidget {
   final String employeeid;
@@ -107,6 +108,7 @@ class _RequestLeaveState extends State<RequestLeave> {
 
   @override
   Widget build(BuildContext context) {
+    checkInternetConnection(context);
     if (jobstatus == 'probitionary') {
       return Scaffold(
         appBar: AppBar(

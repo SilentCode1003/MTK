@@ -5,6 +5,7 @@ import 'package:eportal/layout/profile.dart';
 import 'package:eportal/repository/helper.dart';
 import 'package:eportal/model/userinfo.dart';
 import 'package:eportal/api/profile.dart';
+import 'package:eportal/model/internet_checker.dart';
 
 class Basicinformation extends StatefulWidget {
   final String employeeid;
@@ -82,6 +83,7 @@ class _BasicinfoStatefulWidgetState extends State<Basicinformation> {
 
   @override
   Widget build(BuildContext context) {
+    checkInternetConnection(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text(
