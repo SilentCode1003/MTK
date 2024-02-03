@@ -1,10 +1,11 @@
 class Config {
-  static const String apiUrl = 'https://payroll.5lsolutions.com/';
-  //static const String apiUrl = 'http://192.168.30.81:3005/';
+  //static const String apiUrl = 'https://payroll.5lsolutions.com/';
+  static const String apiUrl = 'http://192.168.30.81:3005/';
 
   static const String loginAPI = 'login/login';
   static const String leaveAPI = 'eportalrequestleave/getleave';
   static const String requestleaveAPI = 'eportalrequestleave/submit';
+  static const String updateleaveAPI = 'eportalrequestleave/cancelLeave';
   static const String requestashAPI = 'eportalcashadvance/submitforapp';
   static const String cashAPI = 'eportalcashadvance/getload';
   static const String geofenceAPI = 'geofencesettings/selectgeofence';
@@ -21,6 +22,6 @@ class Config {
   static const String govinfoAPI = 'employee/getgovid';
   static const String trainingAPI = 'employee/gettrainingforapp';
   static const String offensesAPI = 'eportaldisciplinaryaction/loadforapp';
-  static const String announcementAPI = 'announcement/loadforapp';
+  static const String announcementAPI = 'announcement/+++++++++++++';
   static const String changepassAPI = 'eportalsettings/updatepassword';
 }

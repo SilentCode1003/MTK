@@ -15,7 +15,6 @@ import 'package:shimmer/shimmer.dart';
 import 'package:eportal/model/internet_checker.dart';
 import 'dart:io';
 
-
 class Index extends StatefulWidget {
   final String employeeid;
   final int department;
@@ -74,6 +73,8 @@ class _IndexState extends State<Index> {
 
   String employeeid = '';
   int department = 0;
+  int _geofenceid = 0;
+  String _geofencename = '';
 
   @override
   void initState() {
@@ -106,65 +107,64 @@ class _IndexState extends State<Index> {
     // fetchLocation();
     super.initState();
   }
+
   Future<void> checkLocationService() async {
-  bool serviceEnabled;
-  LocationPermission permission;
+    bool serviceEnabled;
+    LocationPermission permission;
 
-  // Test if location services are enabled.
-  serviceEnabled = await Geolocator.isLocationServiceEnabled();
-  if (!serviceEnabled) {
-    // Location services are not enabled, show alert dialog
-    showLocationServiceAlertDialog();
-    return;
-  }
-
-  permission = await Geolocator.checkPermission();
-  if (permission == LocationPermission.deniedForever) {
-    // Permissions are denied forever, handle appropriately.
-    return;
-  }
-
-  if (permission == LocationPermission.denied) {
-    // Permissions are denied, request permissions.
-    permission = await Geolocator.requestPermission();
-    if (permission != LocationPermission.whileInUse &&
-        permission != LocationPermission.always) {
-      // Permissions are denied, display an error message.
+    // Test if location services are enabled.
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      // Location services are not enabled, show alert dialog
+      showLocationServiceAlertDialog();
       return;
     }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.deniedForever) {
+      // Permissions are denied forever, handle appropriately.
+      return;
+    }
+
+    if (permission == LocationPermission.denied) {
+      // Permissions are denied, request permissions.
+      permission = await Geolocator.requestPermission();
+      if (permission != LocationPermission.whileInUse &&
+          permission != LocationPermission.always) {
+        // Permissions are denied, display an error message.
+        return;
+      }
+    }
+    // Permissions are granted, continue fetching location.
   }
-  // Permissions are granted, continue fetching location.
-}
 
-void showLocationServiceAlertDialog() {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text('Location Services Disabled'),
-        content: Text('Please enable location services to use this app.'),
-        actions: <Widget>[
-          TextButton(
-            child: Text('Cancel'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          TextButton(
-            child: Text('Open Location Settings'),
-            onPressed: () {
-              // Open device settings to enable location services
-              Geolocator.openLocationSettings();
-              Navigator.of(context).pop();
-            },
-          ),
-        ],
-      );
-    },
-  );
-}
-
-
+  void showLocationServiceAlertDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Location Services Disabled'),
+          content: Text('Please enable location services to use this app.'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('Open Location Settings'),
+              onPressed: () {
+                // Open device settings to enable location services
+                Geolocator.openLocationSettings();
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   Future<void> _getStatus() async {
     final response =
@@ -191,14 +191,15 @@ void showLocationServiceAlertDialog() {
     Map<String, dynamic> userinfo =
         await Helper().readJsonToFile('metadata.json');
     UserInfoModel user = UserInfoModel(
-        userinfo['image'],
-        userinfo['employeeid'],
-        userinfo['fullname'],
-        userinfo['accesstype'],
-        userinfo['department'],
-        userinfo['departmentname'],
-        userinfo['position'],
-        userinfo['jobstatus'],);
+      userinfo['image'],
+      userinfo['employeeid'],
+      userinfo['fullname'],
+      userinfo['accesstype'],
+      userinfo['department'],
+      userinfo['departmentname'],
+      userinfo['position'],
+      userinfo['jobstatus'],
+    );
 
     setState(() {
       employeeid = user.employeeid;
@@ -260,6 +261,8 @@ void showLocationServiceAlertDialog() {
             setting['location'],
             setting['status'],
           ));
+          print('ito and geofence name');
+          print(_geofenceid);
         }
       });
     } catch (e) {
@@ -293,6 +296,7 @@ void showLocationServiceAlertDialog() {
 
       if (kDebugMode) {
         print('Latitude: $latitude, Longitude: $longitude');
+        print(_geofenceid);
       }
     }).catchError((e) {
       // Handle error scenarios
@@ -330,8 +334,8 @@ void showLocationServiceAlertDialog() {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text('Log Out'),
-            content: const Text('Are you sure you want to logout?'),
+            title: const Text('Clock out'),
+            content: const Text('Are you sure you want to clock out?'),
             actions: [
               TextButton(
                   onPressed: () {
@@ -340,7 +344,8 @@ void showLocationServiceAlertDialog() {
                   child: const Text('Cancel')),
               TextButton(
                   onPressed: () {
-                    _clockout(widget.employeeid, _latitude, _longitude);
+                    _clockout(
+                        widget.employeeid, _latitude, _longitude, _geofenceid);
                     // setState(() {
                     //   isLoggedIn = false;
                     //   timestatus = 'Time In';
@@ -349,41 +354,40 @@ void showLocationServiceAlertDialog() {
                     Navigator.of(context).pop();
                     Navigator.of(context).pop();
                   },
-                  child: const Text('Log Out'))
+                  child: const Text('Yes'))
             ],
           );
         });
   }
-void showExitDialog(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: const Text('Log Out'),
-        content: const Text('Are you sure you want to logout?'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              // Close the app when Log Out button is pressed
-              if (Platform.isAndroid || Platform.isIOS) {
-                exit(0);
-              }
-            },
-            child: const Text('Log Out'),
-          ),
-        ],
-      );
-    },
-  );
-}
-  
+
+  void showExitDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Log Out'),
+          content: const Text('Are you sure you want to Exit?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                if (Platform.isAndroid || Platform.isIOS) {
+                  exit(0);
+                }
+              },
+              child: const Text('Exit'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   void verifylocation() async {
     await _getCurrentLocation();
@@ -398,91 +402,102 @@ void showExitDialog(BuildContext context) {
         setState(() {
           print('true');
           isStatusButtonEnabled = true;
+          _geofenceid = fence.geofenceid;
+          _geofencename = fence.geofencename;
         });
       }
     }
-
     showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Verify Location'),
-            content: SizedBox(
-              width: double.maxFinite,
-              height: 400,
-              child: FlutterMap(
-                mapController: mapController,
-                options: MapOptions(
-                  center: activelocation,
-                  zoom: zoomLevel.level,
-                  onTap: (point, activelocation) {
-                    // _selectLocation(latLng);
-
-                    // Check if the selected location is inside circledomain, circledomaintwo, or thirdcircle
-                  },
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: _geofencename.isNotEmpty
+              ? Center(
+                  child: Text(_geofencename, style: TextStyle(fontSize: 15)))
+              : Center(
+                  child: Text('Please move to your assigned location',
+                      style: TextStyle(
+                          fontSize:
+                              15))), // Centered title if not empty, else default message
+          content: SizedBox(
+            width: double.maxFinite,
+            height: 400,
+            child: FlutterMap(
+              mapController: mapController,
+              options: MapOptions(
+                center: activelocation,
+                zoom: zoomLevel.level,
+                onTap: (point, activelocation) {
+                  // _selectLocation(latLng);
+                  // Check if the selected location is inside circledomain, circledomaintwo, or thirdcircle
+                },
+              ),
+              children: [
+                TileLayer(
+                  urlTemplate:
+                      'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                  subdomains: const ['a', 'b', 'c'],
                 ),
-                children: [
-                  TileLayer(
-                    urlTemplate:
-                        'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                    subdomains: const ['a', 'b', 'c'],
-                  ),
-                  MarkerLayer(
-                    markers: [
-                      Marker(
-                          point: activelocation,
-                          child: const Icon(Icons.location_pin,
-                              color: Colors.red, size: 40.0))
+                MarkerLayer(
+                  markers: [
+                    Marker(
+                        point: activelocation,
+                        child: const Icon(Icons.location_pin,
+                            color: Colors.red, size: 40.0))
+                  ],
+                ),
+                for (GeofenceModel fence in geofence)
+                  CircleLayer(
+                    circles: [
+                      CircleMarker(
+                        point: LatLng(fence.latitude, fence.longitude),
+                        color: Colors.green.withOpacity(0.5), // Fill color
+                        borderColor: Colors.blue, // Border color
+                        borderStrokeWidth: 2, // Border width
+                        useRadiusInMeter: true,
+                        radius: fence.radius, // Radius in meters_geofenceid
+                      ),
                     ],
                   ),
-                  for (GeofenceModel fence in geofence)
-                    CircleLayer(
-                      circles: [
-                        CircleMarker(
-                          point: LatLng(fence.latitude, fence.longitude),
-                          color: Colors.green.withOpacity(0.5), // Fill color
-                          borderColor: Colors.blue, // Border color
-                          borderStrokeWidth: 2, // Border width
-                          useRadiusInMeter: true,
-                          radius: fence.radius, // Radius in meters
-                        ),
-                      ],
-                    ),
-                ],
-              ),
+              ],
             ),
-            actions: [
-              ElevatedButton(
-                  onPressed: isStatusButtonEnabled
-                      ? () {
-                          print('isLogin $isLoggedIn');
-                          if (isLoggedIn) {
-                            showLogoutDialog();
-                          } else {
-                            _clockin(widget.employeeid, _latitude, _longitude);
-                            // setState(() {
-                            //   isLoggedIn = true;
-                            //   timestatus = 'Time Out';
-                            // });
-                            Navigator.of(context).pop();
-                          }
-                        }
-                      : null,
-                  child: const Text('Confirm')),
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('Close'))
-            ],
-          );
-        });
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: isStatusButtonEnabled
+                  ? () {
+                      print('isLogin $isLoggedIn');
+                      if (isLoggedIn) {
+                        showLogoutDialog();
+                      } else {
+                        _clockin(widget.employeeid, _latitude, _longitude,
+                            _geofenceid);
+                        // setState(() {
+                        //   isLoggedIn = true;
+                        //   timestatus = 'Time Out';
+                        // });
+                        Navigator.of(context).pop();
+                      }
+                    }
+                  : null,
+              child: const Text('Confirm', style: TextStyle(fontSize: 10)),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Close', style: TextStyle(fontSize: 10)),
+            )
+          ],
+        );
+      },
+    );
   }
 
-  Future<void> _clockin(employeeid, latitude, longitude) async {
+  Future<void> _clockin(employeeid, latitude, longitude, geofenceid) async {
     try {
-      final results = await UserAttendance()
-          .clockin(employeeid, latitude.toString(), longitude.toString());
+      final results = await UserAttendance().clockin(employeeid,
+          latitude.toString(), longitude.toString(), geofenceid.toString());
 
       print(results);
 
@@ -520,9 +535,16 @@ void showExitDialog(BuildContext context) {
                       color: Colors.black,
                     ),
                   ),
-                ),Center(
+                ),
+                Center(
                   child: Text(
-                    'Time in Main Office'
+                    _geofencename,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.normal,
+                      color: Colors.black,
+                    ),
                   ),
                 ),
               ],
@@ -557,6 +579,7 @@ void showExitDialog(BuildContext context) {
           ),
         );
       } else {
+        print(_geofencename);
         showDialog(
           context: context,
           builder: (ctx) => AlertDialog(
@@ -600,10 +623,10 @@ void showExitDialog(BuildContext context) {
     }
   }
 
-  Future<void> _clockout(employeeid, latitude, longitude) async {
+  Future<void> _clockout(employeeid, latitude, longitude, geofenceid) async {
     try {
-      final results = await UserAttendance()
-          .clockout(employeeid, latitude.toString(), longitude.toString());
+      final results = await UserAttendance().clockout(employeeid,
+          latitude.toString(), longitude.toString(), geofenceid.toString());
 
       if (results.message == Helper().getStatusString(APIStatus.success)) {
         showDialog(
@@ -634,8 +657,11 @@ void showExitDialog(BuildContext context) {
                 const SizedBox(height: 5),
                 Center(
                   child: Text(
-                    '${DateFormat('h:mm:ss a').format(clockInDateTime)}',
+                    _geofencename,
+                    textAlign: TextAlign.center,
                     style: TextStyle(
+                      fontSize: 8,
+                      fontWeight: FontWeight.normal,
                       color: Colors.black,
                     ),
                   ),
@@ -737,7 +763,7 @@ void showExitDialog(BuildContext context) {
 
     return WillPopScope(
       onWillPop: () async {
-         showExitDialog(context);
+        showExitDialog(context);
         return false;
       },
       child: Scaffold(
@@ -869,7 +895,7 @@ void showExitDialog(BuildContext context) {
                                     ),
                                   )
                                 : SizedBox
-                                    .shrink(); // This will create an empty/hidden widget
+                                    .shrink(); // This will create an empty/hidden widgetrrent
                           }
                         },
                       ),
