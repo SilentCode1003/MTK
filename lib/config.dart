@@ -19,6 +19,7 @@ class Config {
   static const String basicinfoAPI = 'employee/getemployee';
   static const String workinfoAPI = 'employee/getemployeeprofileforappbasicinformation';
   static const String govinfoAPI = 'employee/getgovid';
+  static const String trainingAPI = 'employee/gettrainingforapp';
   static const String offensesAPI = 'eportaldisciplinaryaction/loadforapp';
   static const String announcementAPI = 'announcement/loadforapp';
   static const String changepassAPI = 'eportalsettings/updatepassword';

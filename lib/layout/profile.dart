@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:eportal/layout/drawer.dart';
 import 'package:eportal/layout/basicinfo.dart';
@@ -10,6 +9,7 @@ import 'package:eportal/model/userinfo.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:eportal/layout/changepass.dart';
 import 'package:eportal/layout/schedinfo.dart';
+import 'package:eportal/layout/training.dart';
 
 class Profile extends StatefulWidget {
   final String employeeid;
@@ -58,7 +58,7 @@ class _ProfileStatefulWidgetState extends State<Profile> {
       department = user.department;
       departmentname = user.departmentname;
       position = user.position;
-      isLoading = false; // Set loading to false when data is fetched
+      isLoading = false;
     });
   }
 
@@ -326,13 +326,13 @@ class _ProfileStatefulWidgetState extends State<Profile> {
               ),
             ),
             Positioned(
-              top: 430.0,
+              top: 490.0,
               child: GestureDetector(
                 onTap: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => Govinfo(
+                        builder: (context) => Traininginfo(
                               employeeid: employeeid,
                             )),
                   );
@@ -377,7 +377,7 @@ class _ProfileStatefulWidgetState extends State<Profile> {
               ),
             ),
             Positioned(
-              top: 490.0,
+              top: 550.0,
               child: GestureDetector(
                 onTap: () {
                   Navigator.push(

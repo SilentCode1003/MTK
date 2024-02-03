@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:eportal/model/internet_checker.dart';
 
 void main() {
   runApp(const Salary());
@@ -9,6 +10,7 @@ class Salary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    checkInternetConnection(context);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(

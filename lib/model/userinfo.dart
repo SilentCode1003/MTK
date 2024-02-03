@@ -33,6 +33,7 @@ class AttendanceModel {
   final String attendancedateOut;
   final String clockin;
   final String clockout;
+  final String geofencename;
   final String devicein;
   final String deviceout;
   final String totalhours;
@@ -43,6 +44,7 @@ class AttendanceModel {
     this.attendancedateOut,
     this.clockin,
     this.clockout,
+    this.geofencename,
     this.devicein,
     this.deviceout,
     this.totalhours,
@@ -55,6 +57,7 @@ class AttendanceModel {
       json['attendancedateOut'],
       json['clockin'],
       json['clockout'] ?? '',
+      json['geofencename'] ?? '',
       json['devicein'],
       json['deviceout'] ?? '',
       json['totalhours'] ?? '',
@@ -363,6 +366,36 @@ class ProfileGovinfo {
       json['idnumber'],
     );
   }
+}
+
+class ProfileTraininginfo {
+  final String employeeid;
+  final String trainingid;
+  final String name;
+  final String startdate;
+  final String enddate;
+  final String location;
+
+  ProfileTraininginfo(
+    this.employeeid,
+    this.trainingid,
+    this.name,
+    this.startdate,
+    this.enddate,
+    this.location,
+  );
+
+factory ProfileTraininginfo.fromJson(Map<String, dynamic> json) {
+  return ProfileTraininginfo(
+    json['employeeid'],
+    json['trainingid'],
+    json['name'],
+    json['startdate'],
+    json['enddate'],
+    json['location'],
+  );
+}
+
 }
 
 class OffensesModel {

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:eportal/main.dart';
 import 'package:eportal/api/changepass.dart';
 import 'package:eportal/repository/helper.dart';
+import 'package:eportal/model/internet_checker.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   final String employeeid;
@@ -194,6 +195,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
+    checkInternetConnection(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text(

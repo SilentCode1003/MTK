@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:eportal/model/userinfo.dart';
 import 'package:eportal/repository/helper.dart';
 import 'package:eportal/api/cash.dart';
+import 'package:eportal/model/internet_checker.dart';
 
 class RequestCash extends StatefulWidget {
   final String employeeid;
@@ -62,6 +63,7 @@ class _RequestCashState extends State<RequestCash> {
 
   @override
   Widget build(BuildContext context) {
+    checkInternetConnection(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text(

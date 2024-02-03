@@ -1,9 +1,11 @@
 import 'dart:convert';
+import 'dart:io';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:eportal/api/login.dart';
 import 'package:eportal/repository/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:eportal/layout/drawer.dart';
-import 'package:eportal/model/internet_checker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
@@ -15,7 +17,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    checkInternetConnection(context);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: '5L SOLUTION',
@@ -23,8 +24,56 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
         useMaterial3: true,
       ),
-      home: LoginPage(),
+      home: const OpeningPage(),
       routes: {'/logout': ((context) => LoginPage())},
+    );
+  }
+}
+
+class OpeningPage extends StatefulWidget {
+  const OpeningPage({Key? key}) : super(key: key);
+
+  @override
+  _OpeningPageState createState() => _OpeningPageState();
+}
+
+class _OpeningPageState extends State<OpeningPage> {
+  @override
+  void initState() {
+    super.initState();
+    _loadLoginPage();
+  }
+
+  Future<void> _loadLoginPage() async {
+    await Future.delayed(Duration(seconds: 3));
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => LoginPage()),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 250,
+              height: 200,
+              child: Column(
+                children: [
+                  Image.asset('assets/5L.png'),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+            CircularProgressIndicator(),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -68,6 +117,30 @@ class _LoginPageState extends State<LoginPage> {
       isLoading = true;
     });
 
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.none) {
+      await Future.delayed(Duration(seconds: 3)); // Add a 3-second delay
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: Text('No Internet Connection'),
+          content: Text('Please check your internet connection.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(ctx);
+                setState(() {
+                  isLoading = false;
+                });
+              },
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
+      return;
+    }
+
     final response = await Login().login(username, password);
 
     if (helper.getStatusString(APIStatus.success) == response.message) {
@@ -75,9 +148,7 @@ class _LoginPageState extends State<LoginPage> {
       for (var userinfo in json.decode(jsonData)) {
         helper.writeJsonToFile(userinfo, 'metadata.json');
       }
-
       _saveRememberedCredentials();
-
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (_) => DrawerApp()),
       );
@@ -119,11 +190,16 @@ class _LoginPageState extends State<LoginPage> {
             content: Text('Do you want to exit the app?'),
             actions: <Widget>[
               TextButton(
-                onPressed: () => Navigator.of(context).pop(false),
+                onPressed: () => Navigator.of(context).pop(),
                 child: Text('No'),
               ),
               TextButton(
-                onPressed: () => Navigator.of(context).pop(true),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  if (Platform.isAndroid || Platform.isIOS) {
+                    exit(0);
+                  }
+                },
                 child: Text('Yes'),
               ),
             ],
