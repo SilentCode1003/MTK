@@ -141,23 +141,46 @@ class _LoginPageState extends State<LoginPage> {
       return;
     }
 
-    final response = await Login().login(username, password);
+    try {
+      final response = await Login().login(username, password);
 
-    if (helper.getStatusString(APIStatus.success) == response.message) {
-      final jsonData = json.encode(response.result);
-      for (var userinfo in json.decode(jsonData)) {
-        helper.writeJsonToFile(userinfo, 'metadata.json');
+      if (helper.getStatusString(APIStatus.success) == response.message) {
+        final jsonData = json.encode(response.result);
+        for (var userinfo in json.decode(jsonData)) {
+          helper.writeJsonToFile(userinfo, 'metadata.json');
+        }
+        _saveRememberedCredentials();
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => DrawerApp()),
+        );
+      } else {
+        showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: const Text('Access'),
+            content: const Text('Incorrect username and password'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(ctx);
+                  setState(() {
+                    isLoading = false;
+                  });
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
       }
-      _saveRememberedCredentials();
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => DrawerApp()),
-      );
-    } else {
+    } catch (error) {
+      // Handle SocketException
       showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: const Text('Access'),
-          content: const Text('Incorrect username and password'),
+          title: const Text('Error'),
+          content: const Text(
+              'Failed to connect to the server. Please try again later.'),
           actions: [
             TextButton(
               onPressed: () {

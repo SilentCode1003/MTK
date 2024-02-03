@@ -53,7 +53,6 @@ class _RequestLeaveState extends State<RequestLeave> {
   @override
   void initState() {
     selectedLeaveType = 'Service Incentive Leave';
-    _getUserInfo();
     _getLeave();
     super.initState();
     leaveDateFromController = TextEditingController();
@@ -82,28 +81,60 @@ class _RequestLeaveState extends State<RequestLeave> {
     }
   }
 
-  Future<void> _getUserInfo() async {
-    userinfo = await helper.readJsonToFile('metadata.json');
-    UserInfoModel user = UserInfoModel(
-      userinfo['image'],
-      userinfo['employeeid'],
-      userinfo['fullname'],
-      userinfo['accesstype'],
-      userinfo['department'],
-      userinfo['departmentname'],
-      userinfo['position'],
-      userinfo['jobstatus'],
-    );
-
-    setState(() {
-      fullname = user.fullname;
-      employeeid = user.employeeid;
-      image = user.image;
-      department = user.department;
-      departmentname = user.departmentname;
-      position = user.position;
-      jobstatus = user.jobstatus;
-    });
+  Future<void> _cancelLeaveApplication(String leaveId) async {
+    try {
+      final response =
+          await Leave().updaterequest(employeeid, leaveId, 'cancelled');
+      if (response.status == 200) {
+        // Show a success dialog or handle success accordingly
+        showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: const Text('Success'),
+            content: Text(response.message),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(ctx);
+                  _getLeave(); // Refresh the leave list
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      } else {
+        // Show an error dialog or handle error accordingly
+        showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: const Text('Errors'),
+            content: Text(response.message),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(ctx),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+    } catch (e) {
+      // Handle exceptions or errors
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text('Error'),
+          content: const Text('An error occurred'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
   }
 
   @override
@@ -168,6 +199,7 @@ class _RequestLeaveState extends State<RequestLeave> {
                     itemBuilder: (context, index) {
                       return GestureDetector(
                         onTap: () {
+                          print('Leave ID: ${userleaves[index].leaveid}');
                           showModalBottomSheet(
                             context: context,
                             shape: RoundedRectangleBorder(
@@ -268,7 +300,7 @@ class _RequestLeaveState extends State<RequestLeave> {
                                                         ? Colors.red
                                                         : userleaves[index]
                                                                     .status ==
-                                                                'Cancel'
+                                                                'Cancelled'
                                                             ? Colors.red
                                                             : Colors.black,
                                           ),
@@ -285,9 +317,15 @@ class _RequestLeaveState extends State<RequestLeave> {
                                                     20), // Adjust the margin value as needed
                                             child: ElevatedButton(
                                               onPressed: () {
-                                                // Add your button functionality here
-                                                Navigator.pop(
-                                                    context); // Close the bottom sheet
+                                                print(
+                                                    'Leave ID: ${userleaves[index].leaveid}');
+                                                // Call the method to cancel leave application
+                                                _cancelLeaveApplication(
+                                                    userleaves[index]
+                                                        .leaveid
+                                                        .toString());
+                                                // Close the bottom sheet
+                                                Navigator.pop(context);
                                               },
                                               style: ElevatedButton.styleFrom(
                                                 primary: Colors.red,
@@ -359,7 +397,7 @@ class _RequestLeaveState extends State<RequestLeave> {
                                                     ? Colors.red
                                                     : userleaves[index]
                                                                 .status ==
-                                                            'Cancel'
+                                                            'Cancelled'
                                                         ? Colors.red
                                                         : Colors.black,
                                       ),
@@ -402,8 +440,6 @@ class _RequestLeaveState extends State<RequestLeave> {
       String startdate = _startDateController.text;
       String enddate = _endDateController.text;
       String reason = _reasonController.text;
-
-      print('$startdate $enddate $reason $leavetype');
 
       try {
         final response = await Leave().request(widget.employeeid, startdate,
