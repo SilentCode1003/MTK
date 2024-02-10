@@ -96,6 +96,7 @@ class _RequestLeaveState extends State<RequestLeave> {
               TextButton(
                 onPressed: () {
                   Navigator.pop(ctx);
+                  userleaves.clear();
                   _getLeave(); // Refresh the leave list
                 },
                 child: const Text('OK'),
@@ -147,7 +148,6 @@ class _RequestLeaveState extends State<RequestLeave> {
             'Leaves',
             style: TextStyle(color: Colors.black),
           ),
-          backgroundColor: Color.fromARGB(255, 255, 255, 255),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back, color: Colors.black),
             onPressed: () {
@@ -453,8 +453,9 @@ class _RequestLeaveState extends State<RequestLeave> {
               actions: [
                 TextButton(
                   onPressed: () {
-                    Navigator.pop(ctx); // Close the success dialog
-                    _getLeave();
+                    Navigator.pop(ctx);
+                    Navigator.of(context).pop();
+                    userleaves.clear();
                   },
                   child: const Text('OK'),
                 ),

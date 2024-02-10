@@ -3,13 +3,13 @@ class UserInfoModel {
   final String fullname;
   final String accesstype;
   final String image;
-  final int department;
+  final int departmentid;
   final String departmentname;
   final String position;
   final String jobstatus;
 
   UserInfoModel(this.image, this.employeeid, this.fullname, this.accesstype,
-      this.department, this.departmentname, this.position, this.jobstatus);
+      this.departmentid, this.departmentname, this.position, this.jobstatus);
 
   factory UserInfoModel.fromJson(Map<String, dynamic> json) {
     return UserInfoModel(
@@ -17,7 +17,7 @@ class UserInfoModel {
       json['fullname'],
       json['accesstype'],
       json['image'],
-      json['department'],
+      json['departmentid'],
       json['deparmentname'],
       json['position'],
       json['jobstatus'],
@@ -31,6 +31,8 @@ class AttendanceModel {
   final String employeeid;
   final String attendancedateIn;
   final String attendancedateOut;
+  final String geofencenameIn;
+  final String geofencenameOut;
   final String clockin;
   final String clockout;
   final String geofencename;
@@ -42,6 +44,8 @@ class AttendanceModel {
     this.employeeid,
     this.attendancedateIn,
     this.attendancedateOut,
+    this.geofencenameIn,
+    this.geofencenameOut,
     this.clockin,
     this.clockout,
     this.geofencename,
@@ -55,6 +59,8 @@ class AttendanceModel {
       json['employeeid'],
       json['attendancedateIn'],
       json['attendancedateOut'],
+      json['geofencenameIn'],
+      json['geofencenameOut'] ?? '',
       json['clockin'],
       json['clockout'] ?? '',
       json['geofencename'] ?? '',
@@ -318,7 +324,7 @@ class Basicinfo {
 
 class ProfileWorkinfo {
   final String employeeid;
-  final String department;
+  final String departmentid;
   final String position;
   final String departmenthead;
   final String jobstatus;
@@ -327,7 +333,7 @@ class ProfileWorkinfo {
 
   ProfileWorkinfo(
     this.employeeid,
-    this.department,
+    this.departmentid,
     this.position,
     this.departmenthead,
     this.jobstatus,
@@ -338,7 +344,7 @@ class ProfileWorkinfo {
   factory ProfileWorkinfo.fromJson(Map<String, dynamic> json) {
     return ProfileWorkinfo(
       json['employeeid'],
-      json['department'],
+      json['departmentid'],
       json['position'],
       json['departmenthead'],
       json['jobstatus'],

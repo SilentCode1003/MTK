@@ -8,9 +8,9 @@ import '../repository/helper.dart';
 
 class HomePage extends StatefulWidget {
   final String employeeid;
-  final int department;
+  final int departmentid;
 
-  const HomePage({Key? key, required this.employeeid, required this.department})
+  const HomePage({Key? key, required this.employeeid, required this.departmentid})
       : super(key: key);
   @override
   _HomePageState createState() => _HomePageState();
@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage> {
     Map<String, dynamic> userinfo =
         await helper.readJsonToFile('assets/metadata.json');
     UserInfoModel user = UserInfoModel(userinfo['image'],
-        userinfo['employeeid'], userinfo['fullname'], userinfo['accesstype'], userinfo['department'], userinfo['departmentname'], userinfo['position'], userinfo['jobstatus'],);
+        userinfo['employeeid'], userinfo['fullname'], userinfo['accesstype'], userinfo['departmentid'], userinfo['departmentname'], userinfo['position'], userinfo['jobstatus'],);
 
 
 
@@ -64,7 +64,7 @@ class _HomePageState extends State<HomePage> {
       case 0:
         return Index(
           employeeid: widget.employeeid,
-          department: widget.department,
+          departmentid: widget.departmentid,
         );
       case 1:
         return Attendance(

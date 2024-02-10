@@ -20,7 +20,7 @@ class Workinfo extends StatefulWidget {
 
 class _WorkinfoStatefulWidgetState extends State<Workinfo> {
   String employeeid = '';
-  String department = '';
+  String departmentid = '';
   String position = ''; 
   String departmenthead = '';
   String jobstatus = '';
@@ -38,35 +38,34 @@ class _WorkinfoStatefulWidgetState extends State<Workinfo> {
     _getWorkInfo();
   }
 
-    Future<void> _getWorkInfo() async {
-    final response = await Profileinfo().getworkinfo(employeeid);
-    if (helper.getStatusString(APIStatus.success) == response.message) {
-      final jsondata = json.encode(response.result);
-      for (var basicinfos in json.decode(jsondata)) {
-        setState(() {
-          // Update the state variables with fetched data
-          ProfileWorkinfo basicinfo = ProfileWorkinfo(
-            basicinfos['employeeid'],
-            basicinfos['department'],
-            basicinfos['position'],
-            basicinfos['departmenthead'],
-            basicinfos['jobstatus'],
-            basicinfos['hiredate'],
-            basicinfos['tenure'],
-          );
-          employeeid = basicinfo.employeeid;
-          department = basicinfo.department;
-          position = basicinfo.position;
-          departmenthead = basicinfo.departmenthead;
-          jobstatus = basicinfo.jobstatus;
-          hiredate = basicinfo.hiredate;
-          tenure = basicinfo.tenure;
-
-        });
-      }
-      print(employeeid);
+Future<void> _getWorkInfo() async {
+  final response = await Profileinfo().getworkinfo(employeeid);
+  if (helper.getStatusString(APIStatus.success) == response.message) {
+    final jsonData = response.result as List<dynamic>; // Ensure response.result is a list
+    for (var basicInfos in jsonData) {
+      setState(() {
+        ProfileWorkinfo basicInfo = ProfileWorkinfo(
+          basicInfos['employeeid'].toString(), 
+          basicInfos['department'].toString(),
+          basicInfos['position'].toString(),
+          basicInfos['departmenthead'].toString(),
+          basicInfos['jobstatus'].toString(),
+          basicInfos['hiredate'].toString(),
+          basicInfos['tenure'].toString(),
+        );
+        employeeid = basicInfo.employeeid;
+        departmentid = basicInfo.departmentid;
+        position = basicInfo.position;
+        departmenthead = basicInfo.departmenthead;
+        jobstatus = basicInfo.jobstatus;
+        hiredate = basicInfo.hiredate;
+        tenure = basicInfo.tenure;
+      });
     }
+    print(employeeid);
   }
+}
+
 
 
   @override
@@ -106,7 +105,7 @@ class _WorkinfoStatefulWidgetState extends State<Workinfo> {
                 padding: const EdgeInsets.only(
                     left: 8.0, right: 8.0, bottom: 8.0), // Adjust as needed
                 child: Text(
-                  '$department',
+                  '$departmentid',
                   style: TextStyle(fontSize: 16),
                 ),
               ),

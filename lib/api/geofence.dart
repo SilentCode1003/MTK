@@ -6,10 +6,10 @@ import '../config.dart';
 import 'package:http/http.dart' as http;
 
 class Geofence {
-  Future<ResponceModel> getfence(String department) async {
+  Future<ResponceModel> getfence(String departmentid) async {
     final url = Uri.parse('${Config.apiUrl}${Config.geofenceAPI}');
     final response = await http.post(url, body: {
-      'department': department,
+      'departmentid': departmentid,
     });
 
     print(response.body);
