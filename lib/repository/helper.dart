@@ -17,17 +17,16 @@ class Helper {
         DateFormat('yyyy-MM-dd HH:mm').format(currentDateTime);
     return formattedDateTime;
   }
+
   String GetYesterdayDatetime() {
-  DateTime yesterday = DateTime.now().subtract(Duration(days: 1));
-  String formattedDateTime = DateFormat('yyyy-MM-dd HH:mm').format(yesterday);
-  return formattedDateTime;
+    DateTime yesterday = DateTime.now().subtract(Duration(days: 1));
+    String formattedDateTime = DateFormat('yyyy-MM-dd HH:mm').format(yesterday);
+    return formattedDateTime;
   }
 
   Future<Map<String, dynamic>> readJsonToFile(String filePath) async {
     final directory = await getApplicationDocumentsDirectory();
     final file = File('${directory.path}/$filePath');
-
-    print(file);
 
     // Check if the file exists
     if (!file.existsSync()) {
@@ -77,15 +76,13 @@ class Helper {
       final directory = await getApplicationDocumentsDirectory();
       final file = File('${directory.path}/$filePath');
 
-        print(file);
-
       // Convert the data to a JSON string
       String jsonString = jsonEncode(jsnonData);
 
       // Write the JSON string to the file
       await file.writeAsString(jsonString);
 
-      print('Data written to ${file.path}');
+      // print('Data written to ${file.path}');
     } catch (e) {
       print(e);
     }
