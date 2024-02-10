@@ -36,7 +36,7 @@ class _DrawerPageState extends State<DrawerPage> {
   String fullname = '';
   String employeeid = '';
   String image = '';
-  int department = 0;
+  int departmentid = 0;
   String departmentname = '';
   String position = '';
   String jobstatus = '';
@@ -57,7 +57,7 @@ class _DrawerPageState extends State<DrawerPage> {
       userinfo['employeeid'],
       userinfo['fullname'],
       userinfo['accesstype'],
-      userinfo['department'],
+      userinfo['departmentid'],
       userinfo['departmentname'],
       userinfo['position'],
       userinfo['jobstatus'],
@@ -67,7 +67,7 @@ class _DrawerPageState extends State<DrawerPage> {
       fullname = user.fullname;
       employeeid = user.employeeid;
       image = user.image;
-      department = user.department;
+      departmentid = user.departmentid;
       departmentname = user.departmentname;
       position = user.position;
       jobstatus = user.jobstatus;
@@ -248,6 +248,17 @@ class _DrawerPageState extends State<DrawerPage> {
                   );
                 },
               ),
+              if (userinfo['jobstatus'] == 'regular')
+              ListTile(
+                leading: Icon(Icons.mobile_friendly),
+                title: const Text('Devices'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Coop()),
+                  );
+                },
+              ),
             if (userinfo['jobstatus'] == 'regular' || userinfo['jobstatus'] == 'probitionary')
               ListTile(
                 leading: Icon(Icons.logout),
@@ -283,7 +294,7 @@ class _DrawerPageState extends State<DrawerPage> {
         ),
       ),
       body: Center(
-        child: HomePage(employeeid: employeeid, department: department),
+        child: HomePage(employeeid: employeeid, departmentid: departmentid),
       ),
     );
   }

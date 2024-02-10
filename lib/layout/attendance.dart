@@ -7,6 +7,8 @@ import 'package:eportal/api/attendance.dart';
 import 'package:eportal/model/internet_checker.dart';
 import 'package:intl/intl.dart';
 
+
+
 class Attendance extends StatefulWidget {
   final String employeeid;
 
@@ -52,6 +54,8 @@ class _AttendanceState extends State<Attendance> {
             attendanceinfo['employeeid'],
             _formatDate(attendanceinfo['attendancedatein']),
             _formatDate(attendanceinfo['attendancedateout']),
+            attendanceinfo['geofencenameIn'].toString(),
+            attendanceinfo['geofencenameOut'] ?? '--:--',
             _formatTime(attendanceinfo['clockin']),
             _formatTime(attendanceinfo['clockout']),
             attendanceinfo['geofencename'] ?? '--:--',
@@ -87,8 +91,10 @@ class _AttendanceState extends State<Attendance> {
               attendanceinfo['employeeid'],
               _formatDate(attendanceinfo['attendancedatein']),
               _formatDate(attendanceinfo['attendancedateout']),
-              _formatDate(attendanceinfo['clockin'] ?? '--:--'),
-              _formatDate(attendanceinfo['clockout'] ?? '--:--'),
+              attendanceinfo['geofencenameIn'].toString(),
+              attendanceinfo['geofencenameOut'] ?? '--:--',
+              _formatTime(attendanceinfo['clockin']),
+              _formatTime(attendanceinfo['clockout']),
               attendanceinfo['geofencename'] ?? '--:--',
               attendanceinfo['devicein'],
               attendanceinfo['deviceout'] ?? '--:--',
@@ -122,7 +128,7 @@ class _AttendanceState extends State<Attendance> {
     if (picked?.start != null && picked?.end != null) {
       setState(() {
         selectedDateRange = picked;
-        usersattendance.clear(); // Clear the existing data
+        usersattendance.clear();
       });
 
       _filterAttendance();
@@ -281,7 +287,13 @@ class _AttendanceState extends State<Attendance> {
                                           ListTile(
                                             leading: Icon(Icons.location_city),
                                             title: Text(
-                                              'Location:  ${usersattendance[index].geofencename}',
+                                              'Location In:  ${usersattendance[index].geofencenameIn}',
+                                            ),
+                                          ),
+                                          ListTile(
+                                            leading: Icon(Icons.location_city),
+                                            title: Text(
+                                              'Location Out:  ${usersattendance[index].geofencenameOut}',
                                             ),
                                           ),
                                           ListTile(

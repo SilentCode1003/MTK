@@ -14,14 +14,16 @@ import 'package:eportal/api/todaystatus.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:eportal/model/internet_checker.dart';
 import 'dart:io';
+import 'package:eportal/model/developer_options_checker.dart';
+import 'dart:async';
 
 class Index extends StatefulWidget {
   final String employeeid;
-  final int department;
+  final int departmentid;
   const Index({
     Key? key,
     required this.employeeid,
-    required this.department,
+    required this.departmentid,
   }) : super(key: key);
 
   @override
@@ -34,9 +36,9 @@ class _IndexState extends State<Index> {
   DateTime clockOutDate = DateTime.now();
   DateTime clockOutDateTime = DateTime.now();
   DateTime clockInDateTime = DateTime.now();
+  String image = '';
 
   String _formatTime(String? time) {
-    print(time);
     if (time == "" || time == null) return '--:--';
     DateTime dateTime = DateFormat("HH:mm:ss").parse(time);
     String formattedTime =
@@ -72,7 +74,7 @@ class _IndexState extends State<Index> {
   List<AttendanceLog> attendancelogs = [];
 
   String employeeid = '';
-  int department = 0;
+  int departmentid = 0;
   int _geofenceid = 0;
   String _geofencename = '';
 
@@ -101,7 +103,9 @@ class _IndexState extends State<Index> {
         }
       });
     });
+
     checkLocationService();
+    _checkDeveloperOptions();
     _getUserInfo();
 
     // fetchLocation();
@@ -147,7 +151,7 @@ class _IndexState extends State<Index> {
           content: Text('Please enable location services to use this app.'),
           actions: <Widget>[
             TextButton(
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -195,7 +199,7 @@ class _IndexState extends State<Index> {
       userinfo['employeeid'],
       userinfo['fullname'],
       userinfo['accesstype'],
-      userinfo['department'],
+      userinfo['departmentid'],
       userinfo['departmentname'],
       userinfo['position'],
       userinfo['jobstatus'],
@@ -203,7 +207,8 @@ class _IndexState extends State<Index> {
 
     setState(() {
       employeeid = user.employeeid;
-      department = user.department;
+      departmentid = user.departmentid;
+      image = user.image;
 
       _getGeofence();
       _getLatesLog();
@@ -247,7 +252,7 @@ class _IndexState extends State<Index> {
 
   Future<void> _getGeofence() async {
     try {
-      final results = await Geofence().getfence('$department');
+      final results = await Geofence().getfence('$departmentid');
       final jsonData = json.encode(results.result);
       setState(() {
         for (var setting in json.decode(jsonData)) {
@@ -365,23 +370,63 @@ class _IndexState extends State<Index> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Log Out'),
-          content: const Text('Are you sure you want to Exit?'),
+          contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          title: Center(
+            child: Text('Are you sure?'),
+          ),
+          content: Padding(
+            padding: EdgeInsets.only(left: 50), // Set left margin
+            child: Text('Do you want to exit?'),
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0), // Set button radius
+          ),
           actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Cancel'),
+            SizedBox(
+              width: 120,
+              height: 40,
+              child: TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.grey),
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                  ),
+                ),
+                child: const Text(
+                  'No',
+                  style: TextStyle(color: Colors.white, fontSize: 18),
+                ),
+              ),
             ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                if (Platform.isAndroid || Platform.isIOS) {
-                  exit(0);
-                }
-              },
-              child: const Text('Exit'),
+            SizedBox(
+              width: 130,
+              height: 40,
+              child: TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  if (Platform.isAndroid || Platform.isIOS) {
+                    exit(0);
+                  }
+                },
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                  ),
+                ),
+                child: const Text(
+                  'Yes',
+                  style: TextStyle(color: Colors.white, fontSize: 18),
+                ),
+              ),
             ),
           ],
         );
@@ -413,12 +458,10 @@ class _IndexState extends State<Index> {
         return AlertDialog(
           title: _geofencename.isNotEmpty
               ? Center(
-                  child: Text(_geofencename, style: TextStyle(fontSize: 15)))
+                  child: Text(_geofencename, style: TextStyle(fontSize: 20)))
               : Center(
                   child: Text('Please move to your assigned location',
-                      style: TextStyle(
-                          fontSize:
-                              15))), // Centered title if not empty, else default message
+                      style: TextStyle(fontSize: 15))),
           content: SizedBox(
             width: double.maxFinite,
             height: 400,
@@ -441,9 +484,30 @@ class _IndexState extends State<Index> {
                 MarkerLayer(
                   markers: [
                     Marker(
-                        point: activelocation,
-                        child: const Icon(Icons.location_pin,
-                            color: Colors.red, size: 40.0))
+                      point: activelocation,
+                      child: Container(
+                        width: 40.0,
+                        height: 40.0,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors
+                              .transparent, // Set the color to transparent to avoid overlapping with the image
+                          border: Border.all(
+                            color: Colors.red, // Set the border color to red
+                            width: 2.0, // Set the width of the border
+                          ),
+                        ),
+                        child: ClipOval(
+                          child: Image.memory(
+                            base64Decode(
+                                image), // Replace this with your image path
+                            width: 40.0,
+                            height: 40.0,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    )
                   ],
                 ),
                 for (GeofenceModel fence in geofence)
@@ -505,43 +569,44 @@ class _IndexState extends State<Index> {
         showDialog(
           context: context,
           builder: (ctx) => AlertDialog(
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
+            shape: RoundedRectangleBorder(
+              borderRadius:
+                  BorderRadius.circular(20.0), // Adjust the value as needed
+            ),
+            title: Column(
               children: [
-                const SizedBox(height: 10),
-                Center(
-                  child: Text(
-                    'Clock In successful!',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Center(
-                  child: Text(
-                    '${DateFormat('MMM dd, yyyy').format(clockInDateTime)}',
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),
-                  ),
+                Icon(
+                  Icons.check_circle_outline,
+                  color: Colors.green,
+                  size: 80, // Adjust the size of the icon as needed
                 ),
                 const SizedBox(height: 5),
+                const Text(
+                  'Clock In Successfully',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
                 Center(
                   child: Text(
-                    '${DateFormat('h:mm:ss a').format(clockInDateTime)}',
+                    '${DateFormat('MMM dd').format(clockInDateTime)} ${DateFormat('h:mm a').format(clockInDateTime)}',
                     style: TextStyle(
                       color: Colors.black,
+                      fontSize: 16,
+                      fontWeight: FontWeight.normal,
                     ),
                   ),
+                ),
+                const SizedBox(
+                  height: 5,
                 ),
                 Center(
                   child: Text(
                     _geofencename,
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 10,
+                      fontSize: 14,
                       fontWeight: FontWeight.normal,
                       color: Colors.black,
                     ),
@@ -550,13 +615,13 @@ class _IndexState extends State<Index> {
               ],
             ),
             actions: [
-              Center(
-                child: Container(
-                  width: 200,
-                  decoration: BoxDecoration(
-                    color: Colors.red,
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
+              SizedBox(
+                width: 250,
+                height: 50,
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    right: 20.0,
+                  ), // Adjust the value as needed
                   child: TextButton(
                     onPressed: () {
                       Navigator.pop(ctx); // Close the dialog
@@ -566,11 +631,18 @@ class _IndexState extends State<Index> {
                       });
                       _getStatus();
                     },
-                    child: Text(
-                      'OK',
-                      style: TextStyle(
-                        color: Colors.white,
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(Colors.green),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
                       ),
+                    ),
+                    child: const Text(
+                      'Okay',
+                      style: TextStyle(color: Colors.white, fontSize: 16),
                     ),
                   ),
                 ),
@@ -579,23 +651,59 @@ class _IndexState extends State<Index> {
           ),
         );
       } else {
-        print(_geofencename);
         showDialog(
           context: context,
           builder: (ctx) => AlertDialog(
-            title: Text('$timestatus'),
-            content: const Text('Tama kana may bukas pa!'),
+            shape: RoundedRectangleBorder(
+              borderRadius:
+                  BorderRadius.circular(20.0), // Adjust the value as needed
+            ),
+            title: Column(
+              children: [
+                Icon(
+                  Icons.error_outline,
+                  color: Colors.red,
+                  size: 80, // Adjust the size of the icon as needed
+                ),
+                const SizedBox(height: 5),
+                const Text(
+                  'Already have Attendance',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
             actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(ctx);
-                  _getStatus();
-                  setState(() {
-                    isLoggedIn = false;
-                    timestatus = 'Time In';
-                  });
-                },
-                child: const Text('OK'),
+              SizedBox(
+                width: 250,
+                height: 50,
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    right: 20.0,
+                  ), // Adjust the value as needed
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.pop(ctx);
+                      _getStatus();
+                      setState(() {
+                        isLoggedIn = false;
+                        timestatus = 'Time In';
+                      });
+                    },
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(Colors.red),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                      ),
+                    ),
+                    child: const Text(
+                      'Okay',
+                      style: TextStyle(color: Colors.white, fontSize: 18),
+                    ),
+                  ),
+                ),
               ),
             ],
           ),
@@ -612,7 +720,7 @@ class _IndexState extends State<Index> {
             actions: [
               TextButton(
                 onPressed: () {
-                  Navigator.pop(context); // Close the dialog
+                  Navigator.pop(context);
                 },
                 child: const Text('OK'),
               ),
@@ -632,35 +740,44 @@ class _IndexState extends State<Index> {
         showDialog(
           context: context,
           builder: (ctx) => AlertDialog(
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
+            shape: RoundedRectangleBorder(
+              borderRadius:
+                  BorderRadius.circular(20.0), // Adjust the value as needed
+            ),
+            title: Column(
               children: [
-                const SizedBox(height: 10),
-                Center(
-                  child: Text(
-                    'Clock out successful!',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Center(
-                  child: Text(
-                    '${DateFormat('MMM dd, yyyy').format(clockOutDateTime)}',
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),
-                  ),
+                Icon(
+                  Icons.check_circle_outline,
+                  color: Colors.red,
+                  size: 80, // Adjust the size of the icon as needed
                 ),
                 const SizedBox(height: 5),
+                const Text(
+                  'Clock out Successfully',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Center(
+                  child: Text(
+                    '${DateFormat('MMM dd').format(clockInDateTime)} ${DateFormat('h:mm a').format(clockInDateTime)}',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 16,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
                 Center(
                   child: Text(
                     _geofencename,
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 8,
+                      fontSize: 14,
                       fontWeight: FontWeight.normal,
                       color: Colors.black,
                     ),
@@ -669,13 +786,13 @@ class _IndexState extends State<Index> {
               ],
             ),
             actions: [
-              Center(
-                child: Container(
-                  width: 200,
-                  decoration: BoxDecoration(
-                    color: Colors.red,
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
+              SizedBox(
+                width: 250,
+                height: 50,
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    right: 20.0,
+                  ), // Adjust the value as needed
                   child: TextButton(
                     onPressed: () {
                       Navigator.pop(ctx); // Close the dialog
@@ -685,11 +802,18 @@ class _IndexState extends State<Index> {
                       });
                       _getStatus();
                     },
-                    child: Text(
-                      'OK',
-                      style: TextStyle(
-                        color: Colors.white,
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(Colors.red),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
                       ),
+                    ),
+                    child: const Text(
+                      'Okay',
+                      style: TextStyle(color: Colors.white, fontSize: 18),
                     ),
                   ),
                 ),
@@ -736,24 +860,13 @@ class _IndexState extends State<Index> {
     }
   }
 
-  void _reloadPage() {
-    Navigator.pop(context); // Pop the current page
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (BuildContext context) => Index(
-          employeeid: widget.employeeid,
-          department: widget.department,
-        ),
-      ),
-    );
+  void _checkDeveloperOptions() async {
+    await DeveloperModeChecker.checkAndShowDeveloperModeDialog(context);
   }
 
   @override
   Widget build(BuildContext context) {
     checkInternetConnection(context);
-    DateTime now = DateTime.now();
-    String formattedDate = DateFormat('MMM d yyyy').format(now);
 
     Stream<String> currentTimeStream =
         Stream.periodic(const Duration(seconds: 1), (int _) {

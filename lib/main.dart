@@ -1,12 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
-
+import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:eportal/api/login.dart';
 import 'package:eportal/repository/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:eportal/layout/drawer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:eportal/layout/forgetpass.dart';
+import 'package:eportal/model/developer_options_checker.dart';
 
 void main() async {
   runApp(const MyApp());
@@ -88,11 +90,17 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   Helper helper = Helper();
+  bool developerMode = true;
 
   @override
   void initState() {
     super.initState();
     _loadRememberedCredentials();
+    _checkDeveloperOptions();
+  }
+
+  void _checkDeveloperOptions() async {
+    await DeveloperModeChecker.checkAndShowDeveloperModeDialog(context);
   }
 
   Future<void> _loadRememberedCredentials() async {
@@ -122,21 +130,56 @@ class _LoginPageState extends State<LoginPage> {
       await Future.delayed(Duration(seconds: 3)); // Add a 3-second delay
       showDialog(
         context: context,
-        builder: (ctx) => AlertDialog(
-          title: Text('No Internet Connection'),
-          content: Text('Please check your internet connection.'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(ctx);
-                setState(() {
-                  isLoading = false;
-                });
-              },
-              child: Text('OK'),
+        builder: (BuildContext context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius:
+                  BorderRadius.circular(20.0), // Adjust the value as needed
             ),
-          ],
-        ),
+            title: Center(
+              child: Text('No Connection!'),
+            ),
+            content: Padding(
+              padding: EdgeInsets.only(left: 50),
+              child: Text(
+                'Please check your internet connection and try again.',
+                style: TextStyle(fontWeight: FontWeight.normal),
+              ),
+            ),
+            actions: <Widget>[
+              SizedBox(
+                width: 250,
+                height: 40,
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    right: 30.0,
+                  ), // Adjust the value as needed
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      setState(() {
+                        isLoading = false;
+                      });
+                    },
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(Colors.red),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                      ),
+                    ),
+                    child: const Text(
+                      'Okay',
+                      style: TextStyle(color: Colors.white, fontSize: 18),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
       );
       return;
     }
@@ -318,7 +361,12 @@ class _LoginPageState extends State<LoginPage> {
               ),
               TextButton(
                 onPressed: () {
-                  // TODO: FORGOT PASSWORD SCREEN GOES HERE
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ForgotPasswordPage(),
+                    ),
+                  );
                 },
                 child: Text(
                   'Forgot Password',

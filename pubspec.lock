@@ -122,13 +122,13 @@ packages:
     source: hosted
     version: "0.7.10"
   device_info_plus:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: device_info_plus
-      sha256: "0042cb3b2a76413ea5f8a2b40cec2a33e01d0c937e91f0f7c211fde4f7739ba6"
+      sha256: "77f757b789ff68e4eaf9c56d1752309bd9f7ad557cb105b938a7f8eb89e59110"
       url: "https://pub.dev"
     source: hosted
-    version: "9.1.1"
+    version: "9.1.2"
   device_info_plus_platform_interface:
     dependency: transitive
     description:
@@ -174,6 +174,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_jailbreak_detection:
+    dependency: "direct main"
+    description:
+      name: flutter_jailbreak_detection
+      sha256: "67ff11ea41965152d24db7104da1f9b343f94ada64c2a9e309ec4d753a12d281"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.10.0"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -568,6 +576,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.0"
+  quickalert:
+    dependency: "direct main"
+    description:
+      name: quickalert
+      sha256: "0c21c9be68b9ae76082e1ad56db9f51202a38e617e08376f05375238277cfb5a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.2"
   shared_preferences:
     dependency: "direct main"
     description:
@@ -628,10 +644,10 @@ packages:
     dependency: "direct main"
     description:
       name: shimmer
-      sha256: "1f1009b5845a1f88f1c5630212279540486f97409e9fc3f63883e71070d107bf"
+      sha256: "5f88c883a22e9f9f299e5ba0e4f7e6054857224976a5d9f839d4ebdc94a14ac9"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.0"
+    version: "3.0.0"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -641,10 +657,10 @@ packages:
     dependency: "direct main"
     description:
       name: slider_button
-      sha256: "9e23a806af48fa615b0891a18be87bb751ae3b6ca8dd5a299ecaafdf351623ef"
+      sha256: dd0cb7e6658c817932767a063b98ec56b71d72bb12eb377e265e6a3727b070e7
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.0"
+    version: "2.1.0"
   source_span:
     dependency: transitive
     description:

@@ -24,7 +24,7 @@ class _ProfileStatefulWidgetState extends State<Profile> {
   String fullname = '';
   String employeeid = '';
   String image = '';
-  int department = 0;
+  int departmentid = 0;
   String departmentname = '';
   String position = '';
   bool isLoading = true; // Add this line
@@ -45,7 +45,7 @@ class _ProfileStatefulWidgetState extends State<Profile> {
       userinfo['employeeid'],
       userinfo['fullname'],
       userinfo['accesstype'],
-      userinfo['department'],
+      userinfo['departmentid'],
       userinfo['departmentname'],
       userinfo['position'],
       userinfo['jobstatus'],
@@ -55,7 +55,7 @@ class _ProfileStatefulWidgetState extends State<Profile> {
       fullname = user.fullname;
       employeeid = user.employeeid;
       image = user.image;
-      department = user.department;
+      departmentid = user.departmentid;
       departmentname = user.departmentname;
       position = user.position;
       isLoading = false;
