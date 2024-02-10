@@ -182,7 +182,7 @@ class _IndexState extends State<Index> {
         });
       }
       for (var statusinfo in json.decode(jsondata)) {
-        print(statusinfo);
+        // print(statusinfo);
         setState(() {
           ma_clockin = _formatTime(statusinfo['logtimein']);
           ma_clockout = _formatTime(statusinfo['logtimeout']);
@@ -266,8 +266,6 @@ class _IndexState extends State<Index> {
             setting['location'],
             setting['status'],
           ));
-          print('ito and geofence name');
-          print(_geofenceid);
         }
       });
     } catch (e) {
@@ -563,7 +561,7 @@ class _IndexState extends State<Index> {
       final results = await UserAttendance().clockin(employeeid,
           latitude.toString(), longitude.toString(), geofenceid.toString());
 
-      print(results);
+      // print(results);
 
       if (results.message == Helper().getStatusString(APIStatus.success)) {
         showDialog(
