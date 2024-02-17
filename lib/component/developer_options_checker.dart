@@ -19,10 +19,9 @@ class DeveloperModeChecker {
     showDialog(
       context: context,
       builder: (ctx) => WillPopScope(
-        // Intercept back button press
         onWillPop: () async {
           if (Platform.isAndroid || Platform.isIOS) {
-            exit(0); // Close the app
+            exit(0);
           }
           return true;
         },
@@ -32,7 +31,7 @@ class DeveloperModeChecker {
                 BorderRadius.circular(20.0), // Adjust the value as needed
           ),
           title: Center(child: Text('Warning!'),), 
-          content: Padding( padding: EdgeInsets.only(left: 50), child: Text(
+          content: Padding( padding: EdgeInsets.only(left: 25), child: Text(
               'Disable developer options to continue.'),) ,
           actions: [
             SizedBox(

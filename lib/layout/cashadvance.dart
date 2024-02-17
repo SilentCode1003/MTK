@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:eportal/model/userinfo.dart';
 import 'package:eportal/repository/helper.dart';
 import 'package:eportal/api/cash.dart';
-import 'package:eportal/model/internet_checker.dart';
+import 'package:eportal/component/internet_checker.dart';
+import 'package:eportal/component/developer_options_checker.dart';
 
 class RequestCash extends StatefulWidget {
   final String employeeid;
@@ -38,6 +39,11 @@ class _RequestCashState extends State<RequestCash> {
     super.initState();
     amountController = TextEditingController();
     purposeController = TextEditingController();
+    _checkDeveloperOptions();
+  }
+
+   void _checkDeveloperOptions() async {
+    await DeveloperModeChecker.checkAndShowDeveloperModeDialog(context);
   }
 
   Future<void> _getCash() async {
@@ -61,6 +67,60 @@ class _RequestCashState extends State<RequestCash> {
     }
   }
 
+    Future<void> _cancelLeaveApplication(String cashadvanceid) async {
+    try {
+      final response =
+          await Cash().cancelrequest(employeeid, cashadvanceid, 'Cancelled');
+      if (response.status == 200) {
+        showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: const Text('Success'),
+            content: Text(response.message),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(ctx);
+                  userscash.clear();
+                  _getCash();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      } else {
+        showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: const Text('Errors'),
+            content: Text(response.message),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(ctx),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+    } catch (e) {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text('Error'),
+          content: const Text('An error occurred'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     checkInternetConnection(context);
@@ -71,17 +131,20 @@ class _RequestCashState extends State<RequestCash> {
           style: TextStyle(color: Colors.black),
         ),
         backgroundColor: Color.fromARGB(255, 255, 255, 255),
+        elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => DrawerApp()),
+              MaterialPageRoute(builder: (context) => DrawerPage()),
             );
           },
         ),
       ),
-      body: Column(
+      body: Container(
+        color: Color.fromARGB(255, 255, 255, 255),
+     child: Column(
         children: <Widget>[
           Expanded(
             child: userscash.isEmpty
@@ -195,22 +258,20 @@ class _RequestCashState extends State<RequestCash> {
                                                         ? Colors.red
                                                         : userscash[index]
                                                                     .status ==
-                                                                'Cancel'
+                                                                'Cancelled'
                                                             ? Colors.red
                                                             : Colors.black,
                                           ),
                                         ),
                                       ),
-                                      SizedBox(height: 50), // Add some space
-
-                                      // Conditionally show the button based on the status
+                                      SizedBox(height: 50),
                                       if (userscash[index].status == 'Pending')
                                         Center(
                                           child: ElevatedButton(
                                             onPressed: () {
-                                              // Add your button functionality here
-                                              Navigator.pop(
-                                                  context); // Close the bottom sheet
+                                             _cancelLeaveApplication(
+                                              userscash[index].cashadvanceid.toString());
+                                              Navigator.pop(context);
                                             },
                                             style: ElevatedButton.styleFrom(
                                               primary: Colors.red,
@@ -280,7 +341,7 @@ class _RequestCashState extends State<RequestCash> {
                                                         'Rejected'
                                                     ? Colors.red
                                                     : userscash[index].status ==
-                                                            'Cancel'
+                                                            'Cancelled'
                                                         ? Colors.red
                                                         : Colors.black,
                                       ),
@@ -296,6 +357,7 @@ class _RequestCashState extends State<RequestCash> {
                   ),
           )
         ],
+      ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -334,6 +396,8 @@ class _RequestCashState extends State<RequestCash> {
                 TextButton(
                   onPressed: () {
                     Navigator.pop(ctx);
+                    Navigator.of(context).pop();
+                    userscash.clear();
                      _getCash();
                   },
                   child: const Text('OK'),
@@ -376,14 +440,10 @@ class _RequestCashState extends State<RequestCash> {
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
-        // Validate function
         bool _validateFields() {
-          // Add your validation logic here.
-          // For example, check if the selectedLeaveType, startDate, endDate, and reason are not empty.
           return _amountController.text.isNotEmpty &&
               _purposeController.text.isNotEmpty;
         }
-
         return AlertDialog(
           title: const Text('Cash Advance'),
           content: SingleChildScrollView(
@@ -411,7 +471,6 @@ class _RequestCashState extends State<RequestCash> {
                 if (_validateFields()) {
                   _requestcash();
                 } else {
-                  // Show an alert indicating that all fields must be filled.
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {

@@ -5,8 +5,9 @@ import 'package:eportal/layout/profile.dart';
 import 'package:eportal/model/userinfo.dart';
 import 'package:eportal/repository/helper.dart';
 import 'package:eportal/api/profile.dart';
-import 'package:eportal/model/internet_checker.dart';
+import 'package:eportal/component/internet_checker.dart';
 import 'package:intl/intl.dart';
+import 'package:eportal/component/developer_options_checker.dart';
 
 class Traininginfo extends StatefulWidget {
   final String employeeid;
@@ -38,6 +39,11 @@ class _TraininginfoStatefulWidgetState extends State<Traininginfo> {
   void initState() {
     _gettraininginfo();
     super.initState();
+    _checkDeveloperOptions();
+  }
+
+      void _checkDeveloperOptions() async {
+    await DeveloperModeChecker.checkAndShowDeveloperModeDialog(context);
   }
 
 Future<void> _gettraininginfo() async {
@@ -72,6 +78,7 @@ Future<void> _gettraininginfo() async {
             style: TextStyle(color: Colors.black),
           ),
           backgroundColor: Color.fromARGB(255, 255, 255, 255),
+          elevation: 0,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back, color: Colors.black),
             onPressed: () {
@@ -85,7 +92,9 @@ Future<void> _gettraininginfo() async {
             },
           ),
         ),
-        body: Column(
+        body: Container(
+          color: Color.fromARGB(255, 255, 255, 255),
+       child: Column(
           children: <Widget>[
             Expanded(
               child: traininginfos.isEmpty
@@ -119,10 +128,10 @@ Future<void> _gettraininginfo() async {
                                 padding: const EdgeInsets.only(
                                     left: 8.0,
                                     right: 8.0,
-                                    bottom: 8.0), // Adjust as needed
+                                    bottom: 8.0),
                                 child: Text(
                                   '${traininginfos[index].startdate} to ${traininginfos[index].enddate}',
-                                  style: TextStyle(fontSize: 16),
+                                  style: TextStyle(fontSize: 18),
                                 ),
                               ),
                               Divider(),
@@ -133,7 +142,8 @@ Future<void> _gettraininginfo() async {
                     ),
             )
           ],
-        ));
+        )),
+        );
   }
 
   void main() {

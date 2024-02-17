@@ -7,7 +7,8 @@ import 'package:eportal/model/userinfo.dart';
 import 'package:eportal/repository/helper.dart';
 import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:eportal/model/internet_checker.dart';
+import 'package:eportal/component/internet_checker.dart';
+import 'package:eportal/component/developer_options_checker.dart';
 
 class RequestLeave extends StatefulWidget {
   final String employeeid;
@@ -58,6 +59,11 @@ class _RequestLeaveState extends State<RequestLeave> {
     leaveDateFromController = TextEditingController();
     leaveDateToController = TextEditingController();
     reasonController = TextEditingController();
+    _checkDeveloperOptions();
+  }
+
+      void _checkDeveloperOptions() async {
+    await DeveloperModeChecker.checkAndShowDeveloperModeDialog(context);
   }
 
   Future<void> _getLeave() async {
@@ -153,7 +159,7 @@ class _RequestLeaveState extends State<RequestLeave> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => DrawerApp()),
+                MaterialPageRoute(builder: (context) => DrawerPage()),
               );
             },
           ),
@@ -174,17 +180,20 @@ class _RequestLeaveState extends State<RequestLeave> {
           style: TextStyle(color: Colors.black),
         ),
         backgroundColor: Color.fromARGB(255, 255, 255, 255),
+        elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => DrawerApp()),
+              MaterialPageRoute(builder: (context) => DrawerPage()),
             );
           },
         ),
       ),
-      body: Column(
+      body: Container(
+      color: Color.fromARGB(255, 255, 255, 255),
+     child: Column(
         children: <Widget>[
           Expanded(
             child: userleaves.isEmpty
@@ -414,6 +423,7 @@ class _RequestLeaveState extends State<RequestLeave> {
           ),
         ],
       ),
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           _showLeaveApplicationForm(context);
@@ -427,8 +437,6 @@ class _RequestLeaveState extends State<RequestLeave> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
-
-  ///MODAL
 
   Future<void> _showLeaveApplicationForm(BuildContext context) async {
     TextEditingController _startDateController = TextEditingController();
@@ -456,6 +464,7 @@ class _RequestLeaveState extends State<RequestLeave> {
                     Navigator.pop(ctx);
                     Navigator.of(context).pop();
                     userleaves.clear();
+                    _getLeave();
                   },
                   child: const Text('OK'),
                 ),

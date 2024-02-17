@@ -41,4 +41,21 @@ class Cash {
     ResponceModel data = ResponceModel(message, status, result, description);
     return data;
   }
+      Future<ResponceModel> cancelrequest(String employeeid, String ca_cashadvanceid, String ca_status) async {
+    final url = Uri.parse('${Config.apiUrl}${Config.updatecashAPI}');
+    final response = await http.post(url, body: {
+      'employeeid': employeeid,
+      'cashadvanceid': ca_cashadvanceid,
+      'status': ca_status,
+    });
+
+    final responseData = json.decode(response.body);
+    final status = response.statusCode;
+    final message = responseData['msg'];
+    final result = responseData['data'] ?? [];
+    final description = responseData['description'] ?? "";
+
+    ResponceModel data = ResponceModel(message, status, result, description);
+    return data;
+  }
 }

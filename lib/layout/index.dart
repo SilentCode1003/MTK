@@ -12,9 +12,9 @@ import 'package:geolocator/geolocator.dart';
 import 'package:geodesy/geodesy.dart';
 import 'package:eportal/api/todaystatus.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:eportal/model/internet_checker.dart';
+import 'package:eportal/component/internet_checker.dart';
 import 'dart:io';
-import 'package:eportal/model/developer_options_checker.dart';
+import 'package:eportal/component/developer_options_checker.dart';
 import 'dart:async';
 
 class Index extends StatefulWidget {
@@ -42,7 +42,7 @@ class _IndexState extends State<Index> {
     if (time == "" || time == null) return '--:--';
     DateTime dateTime = DateFormat("HH:mm:ss").parse(time);
     String formattedTime =
-        DateFormat.jm().format(dateTime); // Format time as 4:00 PM
+        DateFormat.jm().format(dateTime);
     return formattedTime;
   }
 
@@ -107,39 +107,30 @@ class _IndexState extends State<Index> {
     checkLocationService();
     _checkDeveloperOptions();
     _getUserInfo();
-
-    // fetchLocation();
     super.initState();
   }
 
   Future<void> checkLocationService() async {
     bool serviceEnabled;
     LocationPermission permission;
-
-    // Test if location services are enabled.
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      // Location services are not enabled, show alert dialog
       showLocationServiceAlertDialog();
       return;
     }
 
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.deniedForever) {
-      // Permissions are denied forever, handle appropriately.
       return;
     }
 
     if (permission == LocationPermission.denied) {
-      // Permissions are denied, request permissions.
       permission = await Geolocator.requestPermission();
       if (permission != LocationPermission.whileInUse &&
           permission != LocationPermission.always) {
-        // Permissions are denied, display an error message.
         return;
       }
     }
-    // Permissions are granted, continue fetching location.
   }
 
   void showLocationServiceAlertDialog() {
@@ -159,7 +150,6 @@ class _IndexState extends State<Index> {
             TextButton(
               child: Text('Open Location Settings'),
               onPressed: () {
-                // Open device settings to enable location services
                 Geolocator.openLocationSettings();
                 Navigator.of(context).pop();
               },
@@ -182,7 +172,6 @@ class _IndexState extends State<Index> {
         });
       }
       for (var statusinfo in json.decode(jsondata)) {
-        // print(statusinfo);
         setState(() {
           ma_clockin = _formatTime(statusinfo['logtimein']);
           ma_clockout = _formatTime(statusinfo['logtimeout']);
@@ -275,10 +264,8 @@ class _IndexState extends State<Index> {
 
   Future<void> _getCurrentLocation() async {
     getCurrentLocation().then((Position position) {
-      // Use the position data
       double latitude = position.latitude;
       double longitude = position.longitude;
-      // Do something with the latitude and longitude
 
       setState(() {
         _latitude = latitude;
@@ -302,7 +289,6 @@ class _IndexState extends State<Index> {
         print(_geofenceid);
       }
     }).catchError((e) {
-      // Handle error scenarios
       if (kDebugMode) {
         print(e);
       }
@@ -323,7 +309,6 @@ class _IndexState extends State<Index> {
 
   void clearNotifications() {
     setState(() {
-      // showNotifications = false;
       Future.delayed(const Duration(milliseconds: 300), () {
         setState(() {
           notifications.clear();
@@ -334,19 +319,47 @@ class _IndexState extends State<Index> {
 
   void showLogoutDialog() {
     showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Clock out'),
-            content: const Text('Are you sure you want to clock out?'),
-            actions: [
-              TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('Cancel')),
-              TextButton(
-                  onPressed: () {
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          title: Center(
+            child: Text(
+              'Are you sure you want to clock out?',
+              style: TextStyle(fontSize: 14),
+            ),
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+          actions: [
+            SizedBox(
+              width: 120,
+              height: 40,
+              child: TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.grey),
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                  ),
+                ),
+                child: const Text(
+                  'No',
+                  style: TextStyle(color: Colors.white, fontSize: 18),
+                ),
+              ),
+            ),
+            SizedBox(
+              width: 130,
+              height: 40,
+              child: TextButton(
+                onPressed: () {
                     _clockout(
                         widget.employeeid, _latitude, _longitude, _geofenceid);
                     // setState(() {
@@ -357,10 +370,24 @@ class _IndexState extends State<Index> {
                     Navigator.of(context).pop();
                     Navigator.of(context).pop();
                   },
-                  child: const Text('Yes'))
-            ],
-          );
-        });
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                  ),
+                ),
+                child: const Text(
+                  'Yes',
+                  style: TextStyle(color: Colors.white, fontSize: 18),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void showExitDialog(BuildContext context) {
@@ -370,14 +397,13 @@ class _IndexState extends State<Index> {
         return AlertDialog(
           contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           title: Center(
-            child: Text('Are you sure?'),
-          ),
-          content: Padding(
-            padding: EdgeInsets.only(left: 50), // Set left margin
-            child: Text('Do you want to exit?'),
+            child: Text(
+              'Are you sure you want to exit?',
+              style: TextStyle(fontSize: 15),
+            ),
           ),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0), // Set button radius
+            borderRadius: BorderRadius.circular(20.0),
           ),
           actions: [
             SizedBox(
@@ -441,7 +467,6 @@ class _IndexState extends State<Index> {
       final distanceToDomain =
           const Distance().as(LengthUnit.Meter, circledomain, activelocation);
       if (distanceToDomain <= fence.radius) {
-        // Enable the "Status" button
         setState(() {
           print('true');
           isStatusButtonEnabled = true;
@@ -469,8 +494,6 @@ class _IndexState extends State<Index> {
                 center: activelocation,
                 zoom: zoomLevel.level,
                 onTap: (point, activelocation) {
-                  // _selectLocation(latLng);
-                  // Check if the selected location is inside circledomain, circledomaintwo, or thirdcircle
                 },
               ),
               children: [
@@ -488,17 +511,15 @@ class _IndexState extends State<Index> {
                         height: 40.0,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Colors
-                              .transparent, // Set the color to transparent to avoid overlapping with the image
+                          color: Colors.transparent,
                           border: Border.all(
-                            color: Colors.red, // Set the border color to red
-                            width: 2.0, // Set the width of the border
+                            color: Colors.red,
+                            width: 2.0,
                           ),
                         ),
                         child: ClipOval(
                           child: Image.memory(
-                            base64Decode(
-                                image), // Replace this with your image path
+                            base64Decode(image),
                             width: 40.0,
                             height: 40.0,
                             fit: BoxFit.cover,
@@ -513,11 +534,11 @@ class _IndexState extends State<Index> {
                     circles: [
                       CircleMarker(
                         point: LatLng(fence.latitude, fence.longitude),
-                        color: Colors.green.withOpacity(0.5), // Fill color
-                        borderColor: Colors.blue, // Border color
-                        borderStrokeWidth: 2, // Border width
+                        color: Colors.green.withOpacity(0.5),
+                        borderColor: Colors.blue,
+                        borderStrokeWidth: 2,
                         useRadiusInMeter: true,
-                        radius: fence.radius, // Radius in meters_geofenceid
+                        radius: fence.radius,
                       ),
                     ],
                   ),
@@ -561,22 +582,19 @@ class _IndexState extends State<Index> {
       final results = await UserAttendance().clockin(employeeid,
           latitude.toString(), longitude.toString(), geofenceid.toString());
 
-      // print(results);
-
       if (results.message == Helper().getStatusString(APIStatus.success)) {
         showDialog(
           context: context,
           builder: (ctx) => AlertDialog(
             shape: RoundedRectangleBorder(
-              borderRadius:
-                  BorderRadius.circular(20.0), // Adjust the value as needed
+              borderRadius: BorderRadius.circular(20.0),
             ),
             title: Column(
               children: [
                 Icon(
                   Icons.check_circle_outline,
                   color: Colors.green,
-                  size: 80, // Adjust the size of the icon as needed
+                  size: 80,
                 ),
                 const SizedBox(height: 5),
                 const Text(
@@ -619,10 +637,10 @@ class _IndexState extends State<Index> {
                 child: Padding(
                   padding: const EdgeInsets.only(
                     right: 20.0,
-                  ), // Adjust the value as needed
+                  ),
                   child: TextButton(
                     onPressed: () {
-                      Navigator.pop(ctx); // Close the dialog
+                      Navigator.pop(ctx);
                       setState(() {
                         isLoggedIn = true;
                         timestatus = 'Time Out';
@@ -653,15 +671,14 @@ class _IndexState extends State<Index> {
           context: context,
           builder: (ctx) => AlertDialog(
             shape: RoundedRectangleBorder(
-              borderRadius:
-                  BorderRadius.circular(20.0), // Adjust the value as needed
+              borderRadius: BorderRadius.circular(20.0),
             ),
             title: Column(
               children: [
                 Icon(
                   Icons.error_outline,
                   color: Colors.red,
-                  size: 80, // Adjust the size of the icon as needed
+                  size: 80,
                 ),
                 const SizedBox(height: 5),
                 const Text(
@@ -677,7 +694,7 @@ class _IndexState extends State<Index> {
                 child: Padding(
                   padding: const EdgeInsets.only(
                     right: 20.0,
-                  ), // Adjust the value as needed
+                  ),
                   child: TextButton(
                     onPressed: () {
                       Navigator.pop(ctx);
@@ -739,15 +756,14 @@ class _IndexState extends State<Index> {
           context: context,
           builder: (ctx) => AlertDialog(
             shape: RoundedRectangleBorder(
-              borderRadius:
-                  BorderRadius.circular(20.0), // Adjust the value as needed
+              borderRadius: BorderRadius.circular(20.0),
             ),
             title: Column(
               children: [
                 Icon(
                   Icons.check_circle_outline,
-                  color: Colors.red,
-                  size: 80, // Adjust the size of the icon as needed
+                  color: Colors.green,
+                  size: 80,
                 ),
                 const SizedBox(height: 5),
                 const Text(
@@ -790,10 +806,10 @@ class _IndexState extends State<Index> {
                 child: Padding(
                   padding: const EdgeInsets.only(
                     right: 20.0,
-                  ), // Adjust the value as needed
+                  ),
                   child: TextButton(
                     onPressed: () {
-                      Navigator.pop(ctx); // Close the dialog
+                      Navigator.pop(ctx);
                       setState(() {
                         isLoggedIn = false;
                         timestatus = 'Time In';
@@ -802,7 +818,7 @@ class _IndexState extends State<Index> {
                     },
                     style: ButtonStyle(
                       backgroundColor:
-                          MaterialStateProperty.all<Color>(Colors.red),
+                          MaterialStateProperty.all<Color>(Colors.green),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20.0),
@@ -846,7 +862,7 @@ class _IndexState extends State<Index> {
             actions: [
               TextButton(
                 onPressed: () {
-                  Navigator.pop(context); // Close the dialog
+                  Navigator.pop(context);
                   _getStatus();
                 },
                 child: const Text('OK'),
@@ -880,6 +896,7 @@ class _IndexState extends State<Index> {
       child: Scaffold(
         body: SingleChildScrollView(
           child: Container(
+            color: Color.fromARGB(255, 255, 255, 255),
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -998,7 +1015,7 @@ class _IndexState extends State<Index> {
                                     child: Container(
                                       width: MediaQuery.of(context).size.width -
                                           150,
-                                      height: 22, // Adjust the height as needed
+                                      height: 22,
                                       decoration: BoxDecoration(
                                         color: Colors.white,
                                         borderRadius: BorderRadius.circular(5),
@@ -1006,7 +1023,7 @@ class _IndexState extends State<Index> {
                                     ),
                                   )
                                 : SizedBox
-                                    .shrink(); // This will create an empty/hidden widgetrrent
+                                    .shrink();
                           }
                         },
                       ),
@@ -1020,7 +1037,7 @@ class _IndexState extends State<Index> {
                             highlightColor: Colors.grey[100]!,
                             child: Container(
                               width: MediaQuery.of(context).size.width - 32,
-                              height: 55, // Adjust the height as needed
+                              height: 55,
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(5),
@@ -1049,16 +1066,15 @@ class _IndexState extends State<Index> {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color:
-                              Colors.white, // Set the background color to white
+                              Colors.white,
                           border: Border.all(
                             color: isLoggedIn ? Colors.red : Colors.green,
-                            width: 3, // Adjust the border width as needed
+                            width: 3,
                           ),
                         ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            // Add your timeout icon here
                             Icon(
                               Icons.alarm,
                               color: isLoggedIn ? Colors.red : Colors.green,
@@ -1066,7 +1082,7 @@ class _IndexState extends State<Index> {
                             ),
                             SizedBox(
                               height: 10,
-                            ), // Adjust the spacing between the icon and text as needed
+                            ),
                             Center(
                               child: Text(
                                 timestatus,

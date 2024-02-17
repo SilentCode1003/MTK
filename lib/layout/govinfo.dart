@@ -5,7 +5,8 @@ import 'package:eportal/layout/profile.dart';
 import 'package:eportal/model/userinfo.dart';
 import 'package:eportal/repository/helper.dart';
 import 'package:eportal/api/profile.dart';
-import 'package:eportal/model/internet_checker.dart';
+import 'package:eportal/component/internet_checker.dart';
+import 'package:eportal/component/developer_options_checker.dart';
 
 class Govinfo extends StatefulWidget {
   final String employeeid;
@@ -29,6 +30,11 @@ class _GovinfoStatefulWidgetState extends State<Govinfo> {
   void initState() {
     _getgovinfo();
     super.initState();
+    _checkDeveloperOptions();
+  }
+
+      void _checkDeveloperOptions() async {
+    await DeveloperModeChecker.checkAndShowDeveloperModeDialog(context);
   }
 
   Future<void> _getgovinfo() async {
@@ -58,6 +64,7 @@ class _GovinfoStatefulWidgetState extends State<Govinfo> {
             style: TextStyle(color: Colors.black),
           ),
           backgroundColor: Color.fromARGB(255, 255, 255, 255),
+          elevation: 0,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back, color: Colors.black),
             onPressed: () {
@@ -71,7 +78,9 @@ class _GovinfoStatefulWidgetState extends State<Govinfo> {
             },
           ),
         ),
-        body: Column(
+        body: Container(
+          color: Color.fromARGB(255, 255, 255, 255),
+        child: Column(
           children: <Widget>[
             Expanded(
             child: govinfos.isEmpty
@@ -97,7 +106,7 @@ class _GovinfoStatefulWidgetState extends State<Govinfo> {
                               child: Text(
                                 '${govinfos[index].idtype}',
                                 style: TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.bold),
+                                    fontSize: 14, fontWeight: FontWeight.bold),
                               ),
                             ),
                             Padding(
@@ -107,7 +116,7 @@ class _GovinfoStatefulWidgetState extends State<Govinfo> {
                                   bottom: 8.0), // Adjust as needed
                               child: Text(
                                 '${govinfos[index].idnumber}',
-                                style: TextStyle(fontSize: 16),
+                                style: TextStyle(fontSize: 18),
                               ),
                             ),
                             Divider(),
@@ -118,7 +127,9 @@ class _GovinfoStatefulWidgetState extends State<Govinfo> {
                   ),
             )
           ],
-        ));
+        )
+        ),
+        );
   }
 
   void main() {

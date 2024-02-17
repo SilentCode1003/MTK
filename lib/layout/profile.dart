@@ -10,6 +10,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:eportal/layout/changepass.dart';
 import 'package:eportal/layout/schedinfo.dart';
 import 'package:eportal/layout/training.dart';
+import 'package:eportal/component/developer_options_checker.dart';
 
 class Profile extends StatefulWidget {
   final String employeeid;
@@ -35,6 +36,11 @@ class _ProfileStatefulWidgetState extends State<Profile> {
   void initState() {
     _getUserInfo();
     super.initState();
+    _checkDeveloperOptions();
+  }
+
+  void _checkDeveloperOptions() async {
+    await DeveloperModeChecker.checkAndShowDeveloperModeDialog(context);
   }
 
   Future<void> _getUserInfo() async {
@@ -77,358 +83,363 @@ class _ProfileStatefulWidgetState extends State<Profile> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => DrawerApp()),
+              MaterialPageRoute(builder: (context) => DrawerPage()),
             );
           },
         ),
       ),
-      body: Stack(
-        alignment: Alignment.topCenter,
-        children: [
-          if (isLoading) ShimmerLoading(),
-          if (!isLoading) ...[
-            Positioned(
-              top: 20.0,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(80.0),
-                child: Image.memory(
-                  base64Decode(image),
-                  fit: BoxFit.cover,
-                  width: 130.0,
-                  height: 130.0,
-                ),
-              ),
-            ),
-            // Name Text
-            Positioned(
-              top: 160.0,
-              child: Text(
-                '$fullname', // Replace with the actual name
-                style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
-              ),
-            ),
-            Positioned(
-              top: 190.0,
-              child: Text(
-                '$position', // Replace with the actual name
-                style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.normal),
-              ),
-            ),
-            Positioned(
-              top: 210.0,
-              child: Text(
-                '$departmentname', // Replace with the actual name
-                style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.normal),
-              ),
-            ),
-            Positioned(
-              top: 250.0,
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => Basicinformation(
-                              employeeid: employeeid,
-                            )),
-                  );
-                },
-                child: Container(
-                  height: 50,
-                  width: MediaQuery.of(context).size.width - 32,
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 244, 242, 242),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Row(
-                    children: [
-                      // Icon of a person
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10, right: 10),
-                        child: Icon(
-                          Icons.person,
-                          color: Colors.black,
-                        ),
-                      ),
-                      // Text for basic information
-                      Text(
-                        'Basic Information',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 14,
-                        ),
-                      ),
-                      // Greater-than icon with margin on the right side
-                      Spacer(),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 10),
-                        child: Icon(
-                          Icons.chevron_right,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
+      body: Container(
+        color: Color.fromARGB(255, 255, 255, 255),
+        child: Stack(
+          alignment: Alignment.topCenter,
+          children: [
+            if (isLoading) ShimmerLoading(),
+            if (!isLoading) ...[
+              Positioned(
+                top: 20.0,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(80.0),
+                  child: Image.memory(
+                    base64Decode(image),
+                    fit: BoxFit.cover,
+                    width: 130.0,
+                    height: 130.0,
                   ),
                 ),
               ),
-            ),
-            Positioned(
-              top: 310.0,
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => Workinfo(
-                              employeeid: employeeid,
-                            )),
-                  );
-                },
-                child: Container(
-                  height: 50,
-                  width: MediaQuery.of(context).size.width - 32,
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 244, 242, 242),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Row(
-                    children: [
-                      // Icon of a person
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10, right: 10),
-                        child: Icon(
-                          Icons.work,
-                          color: Colors.black,
+              // Name Text
+              Positioned(
+                top: 160.0,
+                child: Text(
+                  '$fullname', // Replace with the actual name
+                  style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+                ),
+              ),
+              Positioned(
+                top: 190.0,
+                child: Text(
+                  '$position', // Replace with the actual name
+                  style:
+                      TextStyle(fontSize: 14.0, fontWeight: FontWeight.normal),
+                ),
+              ),
+              Positioned(
+                top: 210.0,
+                child: Text(
+                  '$departmentname', // Replace with the actual name
+                  style:
+                      TextStyle(fontSize: 14.0, fontWeight: FontWeight.normal),
+                ),
+              ),
+              Positioned(
+                top: 250.0,
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Basicinformation(
+                                employeeid: employeeid,
+                              )),
+                    );
+                  },
+                  child: Container(
+                    height: 50,
+                    width: MediaQuery.of(context).size.width - 32,
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 244, 242, 242),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Row(
+                      children: [
+                        // Icon of a person
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10, right: 10),
+                          child: Icon(
+                            Icons.person,
+                            color: Colors.black,
+                          ),
                         ),
-                      ),
-                      // Text for basic information
-                      Text(
-                        'Work Information',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 14,
+                        // Text for basic information
+                        Text(
+                          'Basic Information',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 14,
+                          ),
                         ),
-                      ),
-                      // Greater-than icon with margin on the right side
-                      Spacer(),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 10),
-                        child: Icon(
-                          Icons.chevron_right,
-                          color: Colors.black,
+                        // Greater-than icon with margin on the right side
+                        Spacer(),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: Icon(
+                            Icons.chevron_right,
+                            color: Colors.black,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-            Positioned(
-              top: 370.0,
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => Schedule(
-                              employeeid: employeeid,
-                            )),
-                  );
-                },
-                child: Container(
-                  height: 50,
-                  width: MediaQuery.of(context).size.width - 32,
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 244, 242, 242),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Row(
-                    children: [
-                      // Icon of a person
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10, right: 10),
-                        child: Icon(
-                          Icons.calendar_month,
-                          color: Colors.black,
+              Positioned(
+                top: 310.0,
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Workinfo(
+                                employeeid: employeeid,
+                              )),
+                    );
+                  },
+                  child: Container(
+                    height: 50,
+                    width: MediaQuery.of(context).size.width - 32,
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 244, 242, 242),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Row(
+                      children: [
+                        // Icon of a person
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10, right: 10),
+                          child: Icon(
+                            Icons.work,
+                            color: Colors.black,
+                          ),
                         ),
-                      ),
-                      // Text for basic information
-                      Text(
-                        'Work Scheduled',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 14,
+                        // Text for basic information
+                        Text(
+                          'Work Information',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 14,
+                          ),
                         ),
-                      ),
-                      // Greater-than icon with margin on the right side
-                      Spacer(),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 10),
-                        child: Icon(
-                          Icons.chevron_right,
-                          color: Colors.black,
+                        // Greater-than icon with margin on the right side
+                        Spacer(),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: Icon(
+                            Icons.chevron_right,
+                            color: Colors.black,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            Positioned(
-              top: 430.0,
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => Govinfo(
-                              employeeid: employeeid,
-                            )),
-                  );
-                },
-                child: Container(
-                  height: 50,
-                  width: MediaQuery.of(context).size.width - 32,
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 244, 242, 242),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Row(
-                    children: [
-                      // Icon of a person
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10, right: 10),
-                        child: Icon(
-                          Icons.description,
-                          color: Colors.black,
-                        ),
-                      ),
-                      // Text for basic information
-                      Text(
-                        'Goverment Information',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 14,
-                        ),
-                      ),
-                      // Greater-than icon with margin on the right side
-                      Spacer(),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 10),
-                        child: Icon(
-                          Icons.chevron_right,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-            Positioned(
-              top: 490.0,
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => Traininginfo(
-                              employeeid: employeeid,
-                            )),
-                  );
-                },
-                child: Container(
-                  height: 50,
-                  width: MediaQuery.of(context).size.width - 32,
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 244, 242, 242),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Row(
-                    children: [
-                      // Icon of a person
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10, right: 10),
-                        child: Icon(
-                          Icons.assignment,
-                          color: Colors.black,
+              Positioned(
+                top: 370.0,
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Schedule(
+                                employeeid: employeeid,
+                              )),
+                    );
+                  },
+                  child: Container(
+                    height: 50,
+                    width: MediaQuery.of(context).size.width - 32,
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 244, 242, 242),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Row(
+                      children: [
+                        // Icon of a person
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10, right: 10),
+                          child: Icon(
+                            Icons.calendar_month,
+                            color: Colors.black,
+                          ),
                         ),
-                      ),
-                      // Text for basic information
-                      Text(
-                        'Trainings',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 14,
+                        // Text for basic information
+                        Text(
+                          'Work Scheduled',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 14,
+                          ),
                         ),
-                      ),
-                      // Greater-than icon with margin on the right side
-                      Spacer(),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 10),
-                        child: Icon(
-                          Icons.chevron_right,
-                          color: Colors.black,
+                        // Greater-than icon with margin on the right side
+                        Spacer(),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: Icon(
+                            Icons.chevron_right,
+                            color: Colors.black,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            Positioned(
-              top: 550.0,
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => ChangePasswordScreen(
-                              employeeid: employeeid,
-                            )),
-                  );
-                },
-                child: Container(
-                  height: 50,
-                  width: MediaQuery.of(context).size.width - 32,
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 244, 242, 242),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Row(
-                    children: [
-                      // Icon of a person
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10, right: 10),
-                        child: Icon(
-                          Icons.lock,
-                          color: Colors.black,
-                        ),
-                      ),
-                      // Text for basic information
-                      Text(
-                        'Change Password',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 14,
-                        ),
-                      ),
-                      // Greater-than icon with margin on the right side
-                      Spacer(),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 10),
-                        child: Icon(
-                          Icons.chevron_right,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
+              Positioned(
+                top: 430.0,
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Govinfo(
+                                employeeid: employeeid,
+                              )),
+                    );
+                  },
+                  child: Container(
+                    height: 50,
+                    width: MediaQuery.of(context).size.width - 32,
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 244, 242, 242),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Row(
+                      children: [
+                        // Icon of a person
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10, right: 10),
+                          child: Icon(
+                            Icons.description,
+                            color: Colors.black,
+                          ),
+                        ),
+                        // Text for basic information
+                        Text(
+                          'Goverment Information',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 14,
+                          ),
+                        ),
+                        // Greater-than icon with margin on the right side
+                        Spacer(),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: Icon(
+                            Icons.chevron_right,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 490.0,
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Traininginfo(
+                                employeeid: employeeid,
+                              )),
+                    );
+                  },
+                  child: Container(
+                    height: 50,
+                    width: MediaQuery.of(context).size.width - 32,
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 244, 242, 242),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Row(
+                      children: [
+                        // Icon of a person
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10, right: 10),
+                          child: Icon(
+                            Icons.assignment,
+                            color: Colors.black,
+                          ),
+                        ),
+                        // Text for basic information
+                        Text(
+                          'Trainings',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 14,
+                          ),
+                        ),
+                        // Greater-than icon with margin on the right side
+                        Spacer(),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: Icon(
+                            Icons.chevron_right,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 550.0,
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ChangePasswordScreen(
+                                employeeid: employeeid,
+                              )),
+                    );
+                  },
+                  child: Container(
+                    height: 50,
+                    width: MediaQuery.of(context).size.width - 32,
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 244, 242, 242),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Row(
+                      children: [
+                        // Icon of a person
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10, right: 10),
+                          child: Icon(
+                            Icons.lock,
+                            color: Colors.black,
+                          ),
+                        ),
+                        // Text for basic information
+                        Text(
+                          'Change Password',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 14,
+                          ),
+                        ),
+                        // Greater-than icon with margin on the right side
+                        Spacer(),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: Icon(
+                            Icons.chevron_right,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }
