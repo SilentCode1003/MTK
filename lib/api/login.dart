@@ -24,4 +24,21 @@ class Login {
     ResponceModel data = ResponceModel(message, status, result, description);
     return data;
   }
+  Future<ResponceModel> getversion(String appid) async {
+    final url = Uri.parse('${Config.apiUrl}${Config.appversionAPI}');
+    final response = await http.post(url, body: {
+      'appid': appid,
+    });
+
+    final responseData = json.decode(response.body);
+    final status = response.statusCode;
+    final message = responseData['msg'];
+    final result = responseData['data'] ?? [];
+    final description = responseData['description'] ?? "";
+
+    print(responseData);
+
+    ResponceModel data = ResponceModel(message, status, result, description);
+    return data;
+  }
 }

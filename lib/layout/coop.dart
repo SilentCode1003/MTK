@@ -1,18 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:eportal/layout/drawer.dart';
-import 'package:eportal/model/internet_checker.dart';
+import 'package:eportal/component/internet_checker.dart';
+import 'package:eportal/component/developer_options_checker.dart';
+
 
 void main() {
   runApp(const Coop());
 }
 
-class Coop extends StatelessWidget {
+class Coop extends StatefulWidget {
   const Coop({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    checkInternetConnection(context);
+  _CoopState createState() => _CoopState();
+}
 
+class _CoopState extends State<Coop> {
+  @override
+  void initState() {
+    super.initState();
+    checkInternetConnection(context);
+     _checkDeveloperOptions();
+  }
+  void _checkDeveloperOptions() async {
+    await DeveloperModeChecker.checkAndShowDeveloperModeDialog(context);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return MaterialApp(
       title: '5L SOLUTION',
       theme: ThemeData(
@@ -31,7 +46,7 @@ class Coop extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => DrawerApp()),
+                MaterialPageRoute(builder: (context) => DrawerPage()),
               );
             },
           ),
@@ -39,6 +54,7 @@ class Coop extends StatelessWidget {
         body: SingleChildScrollView(
           child: Column(
             children: [
+              // Add your widgets here
             ],
           ),
         ),

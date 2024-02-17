@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:eportal/model/developer_options_checker.dart';
+import 'package:eportal/component/developer_options_checker.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
   @override

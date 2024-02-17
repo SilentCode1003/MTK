@@ -401,7 +401,47 @@ factory ProfileTraininginfo.fromJson(Map<String, dynamic> json) {
     json['location'],
   );
 }
+}
 
+class Profileshiftinfo{
+  final String employeeid;
+  final String shiftid;
+  final String department;
+  final String monday;
+  final String tuesday;
+  final String wednesday;
+  final String thursday;
+  final String friday;
+  final String saturday;
+  final String sunday;
+
+  Profileshiftinfo(
+    this.employeeid,
+    this.shiftid,
+    this.department,
+    this.monday,
+    this.tuesday,
+    this.wednesday,
+    this.thursday,
+    this.friday,
+    this.saturday,
+    this.sunday,
+  );
+
+factory Profileshiftinfo.fromJson(Map<String, dynamic> json) {
+  return Profileshiftinfo(
+    json['employeeid'],
+    json['shiftid'],
+    json['department'],
+    json['monday'],
+    json['tuesday'],
+    json['wednesday'],
+    json['thursday'],
+    json['friday'],
+    json['saturday'],
+    json['sunday'],
+  );
+}
 }
 
 class OffensesModel {
@@ -491,6 +531,33 @@ class AllModel {
       json['date'],
       json['image'],
       json['type'],
+    );
+  }
+}
+
+class VersionModel {
+  final String appid;
+  final String appname;
+  final String appversion;
+  final String appdate;
+  final String createdby;
+  
+
+  VersionModel(
+    this.appid,
+    this.appname,
+    this.appversion,
+    this.appdate,
+    this.createdby,
+  );
+
+  factory VersionModel.fromJson(Map<String, dynamic> json) {
+    return VersionModel(
+      json['appid'],
+      json['appname'],
+      json['appversions'],
+      json['appdate'],
+      json['createdby'],
     );
   }
 }

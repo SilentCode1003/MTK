@@ -1,11 +1,11 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:eportal/model/userinfo.dart';
 import 'package:eportal/repository/helper.dart';
 import 'package:eportal/api/attendance.dart';
-import 'package:eportal/model/internet_checker.dart';
+import 'package:eportal/component/internet_checker.dart';
 import 'package:intl/intl.dart';
+import 'package:eportal/component/developer_options_checker.dart';
 
 
 
@@ -42,7 +42,13 @@ class _AttendanceState extends State<Attendance> {
   void initState() {
     _getAttendance();
     super.initState();
+    _checkDeveloperOptions();
   }
+
+      void _checkDeveloperOptions() async {
+    await DeveloperModeChecker.checkAndShowDeveloperModeDialog(context);
+  }
+
 
   Future<void> _getAttendance() async {
     final response = await UserAttendance().getattendance(widget.employeeid);

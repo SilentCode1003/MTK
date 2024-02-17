@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:eportal/layout/home.dart';
 import 'package:eportal/layout/profile.dart';
 import 'package:flutter/material.dart';
@@ -20,13 +19,23 @@ class DrawerApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        scaffoldBackgroundColor: Colors.white,
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.white,
+          iconTheme: IconThemeData(color: Colors.black),
+        ),
+        textTheme: TextTheme(
+          bodyText2: TextStyle(color: Colors.black),
+        ),
+      ),
       home: DrawerPage(),
     );
   }
 }
 
 class DrawerPage extends StatefulWidget {
-  const DrawerPage({super.key});
+  const DrawerPage({Key? key}) : super(key: key);
 
   @override
   State<DrawerPage> createState() => _DrawerPageState();
@@ -83,11 +92,12 @@ class _DrawerPageState extends State<DrawerPage> {
           style: TextStyle(color: Colors.black),
         ),
         backgroundColor: Color.fromARGB(255, 255, 255, 255),
-        elevation: 4,
+        elevation: 0,
         actions: [
           Padding(
             padding: const EdgeInsets.only(
-                right: 16.0), // Adjust the value as needed
+              right: 16.0,
+            ), // Adjust the value as needed
             child: IconButton(
               icon: Icon(Icons.notifications),
               color: Colors.black,
@@ -109,188 +119,284 @@ class _DrawerPageState extends State<DrawerPage> {
         ),
       ),
       drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            DrawerHeader(
-              decoration: const BoxDecoration(
-                color: Color.fromARGB(255, 252, 252, 252),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(40.0),
-                    child: Image.memory(
-                      base64Decode(image),
-                      fit: BoxFit.cover,
-                      width: 80.0,
-                      height: 80.0,
-                    ),
-                  ),
-                  const SizedBox(height: 15),
-                  Text(
-                    '$fullname',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
-                    ),
-                  ),
-                  Text(
-                    '$departmentname',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            if (userinfo['jobstatus'] == 'apprentice')
-              ListTile(
-                leading: const Icon(Icons.person),
-                title: const Text('Profile'),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => Profile(
-                        employeeid: employeeid,
+        child: Container(
+          color: Colors.white, // Set the background color of the Drawer
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Colors.white, // Set background color to white
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(40.0),
+                      child: Image.memory(
+                        base64Decode(image),
+                        fit: BoxFit.cover,
+                        width: 80.0,
+                        height: 80.0,
                       ),
                     ),
-                  );
-                },
+                    const SizedBox(height: 15),
+                    Text(
+                      '$fullname',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 18,
+                      ),
+                    ),
+                    Text(
+                      '$departmentname',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            if (userinfo['jobstatus'] == 'apprentice')
-              ListTile(
-                leading: Icon(Icons.logout),
-                title: Text('Logout'),
-                onTap: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text("Logout"),
-                        content: Text("Are you sure you want to log out?"),
-                        actions: <Widget>[
-                          TextButton(
-                            child: Text("Cancel"),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
+              if (userinfo['jobstatus'] == 'apprentice')
+                ListTile(
+                  leading: const Icon(Icons.person),
+                  title: const Text('Profile'),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Profile(
+                          employeeid: employeeid,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              if (userinfo['jobstatus'] == 'apprentice')
+                ListTile(
+                  leading: Icon(Icons.logout),
+                  title: Text('Logout'),
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          contentPadding:
+                              EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                          title: Center(
+                            child: Text('Are you sure you want to log out?', style: TextStyle(fontSize: 14),),
                           ),
-                          TextButton(
-                            child: Text("Logout"),
-                            onPressed: () {
-                              Navigator.pushReplacementNamed(
-                                  context, '/logout');
-                            },
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(20.0), // Set button radius
                           ),
-                        ],
-                      );
-                    },
-                  );
-                },
-              ),
-            if (userinfo['jobstatus'] == 'regular' || userinfo['jobstatus'] == 'probitionary')
-              ListTile(
-                leading: const Icon(Icons.person),
-                title: const Text('Profile'),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => Profile(
-                        employeeid: employeeid,
+                          actions: [
+                            SizedBox(
+                              width: 120,
+                              height: 40,
+                              child: TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                style: ButtonStyle(
+                                  backgroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                          Colors.grey),
+                                  shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                    ),
+                                  ),
+                                ),
+                                child: const Text(
+                                  'No',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 18),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 130,
+                              height: 40,
+                              child: TextButton(
+                                onPressed: () {
+                                  Navigator.pushReplacementNamed(
+                                      context, '/logout');
+                                },
+                                style: ButtonStyle(
+                                  backgroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                          Colors.red),
+                                  shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                    ),
+                                  ),
+                                ),
+                                child: const Text(
+                                  'Yes',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 18),
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                ),
+              if (userinfo['jobstatus'] == 'regular' ||
+                  userinfo['jobstatus'] == 'probitionary')
+                ListTile(
+                  leading: const Icon(Icons.person),
+                  title: const Text('Profile'),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Profile(
+                          employeeid: employeeid,
+                        ),
                       ),
-                    ),
-                  );
-                },
-              ),
-            if (userinfo['jobstatus'] == 'regular' || userinfo['jobstatus'] == 'probitionary')
-              ListTile(
-                leading: Icon(Icons.calendar_month),
-                title: const Text('Leaves'),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => RequestLeave(
-                        employeeid: employeeid,
+                    );
+                  },
+                ),
+              if (userinfo['jobstatus'] == 'regular' ||
+                  userinfo['jobstatus'] == 'probitionary')
+                ListTile(
+                  leading: Icon(Icons.calendar_month),
+                  title: const Text('Leaves'),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => RequestLeave(
+                          employeeid: employeeid,
+                        ),
                       ),
-                    ),
-                  );
-                },
-              ),
-            if (userinfo['jobstatus'] == 'regular')
-              ListTile(
-                leading: Icon(Icons.attach_money),
-                title: const Text('Cash Advance'),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => RequestCash(
-                        employeeid: employeeid,
-                      ),
-                    ),
-                  );
-                },
-              ),
-            if (userinfo['jobstatus'] == 'regular')
-              ListTile(
-                leading: Icon(Icons.business),
-                title: const Text('Coop'),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Coop()),
-                  );
-                },
-              ),
+                    );
+                  },
+                ),
               if (userinfo['jobstatus'] == 'regular')
-              ListTile(
-                leading: Icon(Icons.mobile_friendly),
-                title: const Text('Devices'),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Coop()),
-                  );
-                },
-              ),
-            if (userinfo['jobstatus'] == 'regular' || userinfo['jobstatus'] == 'probitionary')
-              ListTile(
-                leading: Icon(Icons.logout),
-                title: Text('Logout'),
-                onTap: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text("Logout"),
-                        content: Text("Are you sure you want to log out?"),
-                        actions: <Widget>[
-                          TextButton(
-                            child: Text("Cancel"),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
+                ListTile(
+                  leading: Icon(Icons.attach_money),
+                  title: const Text('Cash Advance'),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => RequestCash(
+                          employeeid: employeeid,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              if (userinfo['jobstatus'] == 'regular')
+                ListTile(
+                  leading: Icon(Icons.business),
+                  title: const Text('Coop'),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Coop()),
+                    );
+                  },
+                ),
+              if (userinfo['jobstatus'] == 'regular')
+                ListTile(
+                  leading: Icon(Icons.mobile_friendly),
+                  title: const Text('Devices'),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Coop()),
+                    );
+                  },
+                ),
+              if (userinfo['jobstatus'] == 'regular' ||
+                  userinfo['jobstatus'] == 'probitionary')
+                ListTile(
+                  leading: Icon(Icons.logout),
+                  title: Text('Logout'),
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          contentPadding:
+                              EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                          title: Center(
+                            child: Text('Are you sure you want to log out?', style: TextStyle(fontSize: 15),),
                           ),
-                          TextButton(
-                            child: Text("Logout"),
-                            onPressed: () {
-                              Navigator.pushReplacementNamed(
-                                  context, '/logout');
-                            },
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(20.0), // Set button radius
                           ),
-                        ],
-                      );
-                    },
-                  );
-                },
-              ),
-          ],
+                          actions: [
+                            SizedBox(
+                              width: 120,
+                              height: 40,
+                              child: TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                style: ButtonStyle(
+                                  backgroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                          Colors.grey),
+                                  shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                    ),
+                                  ),
+                                ),
+                                child: const Text(
+                                  'No',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 18),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 130,
+                              height: 40,
+                              child: TextButton(
+                                onPressed: () {
+                                  Navigator.pushReplacementNamed(
+                                      context, '/logout');
+                                },
+                                style: ButtonStyle(
+                                  backgroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                          Colors.red),
+                                  shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                    ),
+                                  ),
+                                ),
+                                child: const Text(
+                                  'Yes',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 18),
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                ),
+            ],
+          ),
         ),
       ),
       body: Center(

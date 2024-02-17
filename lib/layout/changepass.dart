@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:eportal/main.dart';
 import 'package:eportal/api/changepass.dart';
 import 'package:eportal/repository/helper.dart';
-import 'package:eportal/model/internet_checker.dart';
+import 'package:eportal/component/internet_checker.dart';
+import 'package:eportal/layout/profile.dart';
+import 'package:eportal/component/developer_options_checker.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   final String employeeid;
@@ -135,7 +137,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     context,
                     MaterialPageRoute(
                         builder: (context) =>
-                            MyApp()), // Replace MyApp with your main.dart class
+                            LoginPage()), // Replace MyApp with your main.dart class
                   );
                 },
                 child: const Text('OK'),
@@ -191,6 +193,11 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         });
       }
     });
+    _checkDeveloperOptions();
+  }
+
+  void _checkDeveloperOptions() async {
+    await DeveloperModeChecker.checkAndShowDeveloperModeDialog(context);
   }
 
   @override
@@ -200,9 +207,22 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       appBar: AppBar(
         title: const Text(
           'Change Password',
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.black),
         ),
-        backgroundColor: const Color.fromARGB(255, 215, 36, 24),
+        backgroundColor: Color.fromARGB(255, 255, 255, 255),
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => Profile(
+                        employeeid: employeeid,
+                      )),
+            );
+          },
+        ),
       ),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
