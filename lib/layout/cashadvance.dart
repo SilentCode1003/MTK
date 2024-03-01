@@ -42,7 +42,7 @@ class _RequestCashState extends State<RequestCash> {
     _checkDeveloperOptions();
   }
 
-   void _checkDeveloperOptions() async {
+  void _checkDeveloperOptions() async {
     await DeveloperModeChecker.checkAndShowDeveloperModeDialog(context);
   }
 
@@ -67,7 +67,7 @@ class _RequestCashState extends State<RequestCash> {
     }
   }
 
-    Future<void> _cancelLeaveApplication(String cashadvanceid) async {
+  Future<void> _cancelLeaveApplication(String cashadvanceid) async {
     try {
       final response =
           await Cash().cancelrequest(employeeid, cashadvanceid, 'Cancelled');
@@ -144,220 +144,225 @@ class _RequestCashState extends State<RequestCash> {
       ),
       body: Container(
         color: Color.fromARGB(255, 255, 255, 255),
-     child: Column(
-        children: <Widget>[
-          Expanded(
-            child: userscash.isEmpty
-                ? Center(
-                    child: Text(
-                      'No Cash Advance applications',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                  )
-                : ListView.builder(
-                    itemCount: userscash.length,
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
-                        onTap: () {
-                          showModalBottomSheet(
-                            context: context,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.vertical(
-                                top: Radius.circular(25),
+        child: Column(
+          children: <Widget>[
+            Expanded(
+              child: userscash.isEmpty
+                  ? Center(
+                      child: Text(
+                        'No Cash Advance applications',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    )
+                  : ListView.builder(
+                      itemCount: userscash.length,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            showModalBottomSheet(
+                              context: context,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(25),
+                                ),
                               ),
-                            ),
-                            builder: (BuildContext context) {
-                              return Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.vertical(
-                                    top: Radius.circular(25),
-                                  ),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Center(
-                                        child: const Text(
-                                          'Cash Details',
-                                          style: TextStyle(
-                                            fontSize: 28,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(height: 30.0),
-                                      Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          '₱ ${userscash[index].amount}',
-                                          style: TextStyle(
-                                            fontSize: 25,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(height: 10.0),
-                                      Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          'Start Date:     ${userscash[index].requestdate}',
-                                          style: TextStyle(
-                                            fontSize: 22,
-                                            fontWeight: FontWeight.normal,
-                                          ),
-                                        ),
-                                      ),
-                                      Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          'End Date:     ${userscash[index].requestdate}',
-                                          style: TextStyle(
-                                            fontSize: 22,
-                                            fontWeight: FontWeight.normal,
-                                          ),
-                                        ),
-                                      ),
-                                      Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          'Applied Date: ${userscash[index].approvaldate}',
-                                          style: TextStyle(
-                                            fontSize: 22,
-                                            fontWeight: FontWeight.normal,
-                                          ),
-                                        ),
-                                      ),
-                                      Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          'Reason: ${userscash[index].purpose}',
-                                          style: TextStyle(
-                                            fontSize: 22,
-                                            fontWeight: FontWeight.normal,
-                                          ),
-                                        ),
-                                      ),
-                                      Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          'Status: ${userscash[index].status}',
-                                          style: TextStyle(
-                                            fontSize: 22,
-                                            fontWeight: FontWeight.bold,
-                                            color: userscash[index].status ==
-                                                    'Pending'
-                                                ? Colors.orange
-                                                : userscash[index].status ==
-                                                        'Approved'
-                                                    ? Colors.green
-                                                    : userscash[index].status ==
-                                                            'Rejected'
-                                                        ? Colors.red
-                                                        : userscash[index]
-                                                                    .status ==
-                                                                'Cancelled'
-                                                            ? Colors.red
-                                                            : Colors.black,
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(height: 50),
-                                      if (userscash[index].status == 'Pending')
-                                        Center(
-                                          child: ElevatedButton(
-                                            onPressed: () {
-                                             _cancelLeaveApplication(
-                                              userscash[index].cashadvanceid.toString());
-                                              Navigator.pop(context);
-                                            },
-                                            style: ElevatedButton.styleFrom(
-                                              primary: Colors.red,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
-                                              ),
-                                              minimumSize: Size(250, 50),
-                                            ),
-                                            child: Text(
-                                              'Cancel Cash Application',
-                                              style: TextStyle(fontSize: 18),
-                                            ),
-                                          ),
-                                        ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                          );
-                        },
-                        child: Card(
-                          elevation: 3,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              children: <Widget>[
-                                const SizedBox(height: 10.0),
-                                Expanded(
-                                  child: ListTile(
-                                    title: Text(
-                                      '₱ ${userscash[index].amount}',
-                                      style: TextStyle(
-                                        fontSize: 22.0,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                              builder: (BuildContext context) {
+                                return Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.vertical(
+                                      top: Radius.circular(25),
                                     ),
-                                    subtitle: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        SizedBox(height: 7.0),
-                                        Text(
-                                          'Approved Date: ${userscash[index].approvaldate}',
+                                        Center(
+                                          child: const Text(
+                                            'Cash Details',
+                                            style: TextStyle(
+                                              fontSize: 28,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
                                         ),
-                                        SizedBox(height: 5.0),
-                                        Text(
-                                          'Applied Date: ${userscash[index].requestdate}',
-                                        )
+                                        const SizedBox(height: 30.0),
+                                        Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            '₱ ${userscash[index].amount}',
+                                            style: TextStyle(
+                                              fontSize: 25,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(height: 10.0),
+                                        Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            'Start Date:     ${userscash[index].requestdate}',
+                                            style: TextStyle(
+                                              fontSize: 22,
+                                              fontWeight: FontWeight.normal,
+                                            ),
+                                          ),
+                                        ),
+                                        Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            'End Date:     ${userscash[index].requestdate}',
+                                            style: TextStyle(
+                                              fontSize: 22,
+                                              fontWeight: FontWeight.normal,
+                                            ),
+                                          ),
+                                        ),
+                                        Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            'Applied Date: ${userscash[index].approvaldate}',
+                                            style: TextStyle(
+                                              fontSize: 22,
+                                              fontWeight: FontWeight.normal,
+                                            ),
+                                          ),
+                                        ),
+                                        Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            'Reason: ${userscash[index].purpose}',
+                                            style: TextStyle(
+                                              fontSize: 22,
+                                              fontWeight: FontWeight.normal,
+                                            ),
+                                          ),
+                                        ),
+                                        Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            'Status: ${userscash[index].status}',
+                                            style: TextStyle(
+                                              fontSize: 22,
+                                              fontWeight: FontWeight.bold,
+                                              color: userscash[index].status ==
+                                                      'Pending'
+                                                  ? Colors.orange
+                                                  : userscash[index].status ==
+                                                          'Approved'
+                                                      ? Colors.green
+                                                      : userscash[index]
+                                                                  .status ==
+                                                              'Rejected'
+                                                          ? Colors.red
+                                                          : userscash[index]
+                                                                      .status ==
+                                                                  'Cancelled'
+                                                              ? Colors.red
+                                                              : Colors.black,
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(height: 50),
+                                        if (userscash[index].status ==
+                                            'Pending')
+                                          Center(
+                                            child: ElevatedButton(
+                                              onPressed: () {
+                                                _cancelLeaveApplication(
+                                                    userscash[index]
+                                                        .cashadvanceid
+                                                        .toString());
+                                                Navigator.pop(context);
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                primary: Colors.red,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                ),
+                                                minimumSize: Size(250, 50),
+                                              ),
+                                              child: Text(
+                                                'Cancel Cash Application',
+                                                style: TextStyle(fontSize: 18),
+                                              ),
+                                            ),
+                                          ),
                                       ],
                                     ),
-                                    trailing: Text(
-                                      (userscash[index].status),
-                                      style: TextStyle(
-                                        fontSize: 20.0,
-                                        fontWeight: FontWeight.bold,
-                                        color: userscash[index].status ==
-                                                'Pending'
-                                            ? Colors.orange
-                                            : userscash[index].status ==
-                                                    'Approved'
-                                                ? Colors.green
-                                                : userscash[index].status ==
-                                                        'Rejected'
-                                                    ? Colors.red
-                                                    : userscash[index].status ==
-                                                            'Cancelled'
-                                                        ? Colors.red
-                                                        : Colors.black,
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                          child: Card(
+                            elevation: 3,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                children: <Widget>[
+                                  const SizedBox(height: 10.0),
+                                  Expanded(
+                                    child: ListTile(
+                                      title: Text(
+                                        '₱ ${userscash[index].amount}',
+                                        style: TextStyle(
+                                          fontSize: 22.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      subtitle: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          SizedBox(height: 7.0),
+                                          Text(
+                                            'Approved Date: ${userscash[index].approvaldate}',
+                                          ),
+                                          SizedBox(height: 5.0),
+                                          Text(
+                                            'Applied Date: ${userscash[index].requestdate}',
+                                          )
+                                        ],
+                                      ),
+                                      trailing: Text(
+                                        (userscash[index].status),
+                                        style: TextStyle(
+                                          fontSize: 20.0,
+                                          fontWeight: FontWeight.bold,
+                                          color: userscash[index].status ==
+                                                  'Pending'
+                                              ? Colors.orange
+                                              : userscash[index].status ==
+                                                      'Approved'
+                                                  ? Colors.green
+                                                  : userscash[index].status ==
+                                                          'Rejected'
+                                                      ? Colors.red
+                                                      : userscash[index]
+                                                                  .status ==
+                                                              'Cancelled'
+                                                          ? Colors.red
+                                                          : Colors.black,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                )
-                              ],
+                                  )
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      );
-                    },
-                  ),
-          )
-        ],
-      ),
+                        );
+                      },
+                    ),
+            )
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -375,6 +380,7 @@ class _RequestCashState extends State<RequestCash> {
 
   Future<void> _showCashApplicationForm(BuildContext context) async {
     TextEditingController _amountController = TextEditingController();
+    
     TextEditingController _purposeController = TextEditingController();
 
     Future<void> _requestcash() async {
@@ -398,7 +404,7 @@ class _RequestCashState extends State<RequestCash> {
                     Navigator.pop(ctx);
                     Navigator.of(context).pop();
                     userscash.clear();
-                     _getCash();
+                    _getCash();
                   },
                   child: const Text('OK'),
                 ),
@@ -444,6 +450,7 @@ class _RequestCashState extends State<RequestCash> {
           return _amountController.text.isNotEmpty &&
               _purposeController.text.isNotEmpty;
         }
+
         return AlertDialog(
           title: const Text('Cash Advance'),
           content: SingleChildScrollView(
@@ -452,8 +459,7 @@ class _RequestCashState extends State<RequestCash> {
                 const SizedBox(height: 10),
                 TextFormField(
                   controller: _amountController,
-                  decoration:
-                      const InputDecoration(labelText: 'Amount'),
+                  decoration: const InputDecoration(labelText: 'Amount'),
                   keyboardType: TextInputType.datetime,
                 ),
                 const SizedBox(height: 10),

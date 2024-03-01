@@ -74,8 +74,12 @@ class _OpeningPageState extends State<OpeningPage> {
                 ],
               ),
             ),
-            const SizedBox(height: 20),
-            CircularProgressIndicator(),
+            SizedBox(height: 20),
+            Container(
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
+              ),
+            ),
           ],
         ),
       ),
@@ -169,8 +173,7 @@ class _LoginPageState extends State<LoginPage> {
                     final Uri toLaunch = Uri(
                         scheme: 'https',
                         host: 'drive.google.com',
-                        path:
-                            'drive/u/4/folders/1vcBLiuf2xJUH_p15TUJm8B5Y7B2je8Ap');
+                        path:'drive/u/4/folders/1vcBLiuf2xJUH_p15TUJm8B5Y7B2je8Ap');
                     _launchInBrowser(toLaunch);
                   },
                   child: Text('OK'),
@@ -408,8 +411,8 @@ class _LoginPageState extends State<LoginPage> {
                         bottom: 15,
                       ),
                       child: TextField(
-                        controller: _passwordController,
                         obscureText: _isPasswordObscured,
+                        controller: _passwordController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'Password',

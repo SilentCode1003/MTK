@@ -259,6 +259,7 @@ class _IndexState extends State<Index> {
       });
     } catch (e) {
       print('Geofence $e');
+      print('ito and geofence');
     }
   }
 
@@ -458,8 +459,7 @@ class _IndexState extends State<Index> {
     );
   }
 
-  void verifylocation() async {
-    await _getCurrentLocation();
+  void verifylocation() async { await _getCurrentLocation();
 
     LatLng activelocation = LatLng(_latitude, _longitude);
     for (GeofenceModel fence in geofence) {
@@ -1065,8 +1065,7 @@ class _IndexState extends State<Index> {
                         height: 180,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color:
-                              Colors.white,
+                          color:Colors.white,
                           border: Border.all(
                             color: isLoggedIn ? Colors.red : Colors.green,
                             width: 3,

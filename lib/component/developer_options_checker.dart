@@ -8,7 +8,6 @@ class DeveloperModeChecker {
       BuildContext context) async {
     bool developerMode = await FlutterJailbreakDetection.developerMode;
     if (developerMode) {
-      // If developer mode is detected, show the dialog
       _showDeveloperModeDialog(context);
     } else {
       print('Developer options are not enabled.');
