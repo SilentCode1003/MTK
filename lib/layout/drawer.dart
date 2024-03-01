@@ -2,13 +2,13 @@ import 'dart:convert';
 import 'package:eportal/layout/home.dart';
 import 'package:eportal/layout/profile.dart';
 import 'package:flutter/material.dart';
-import 'package:eportal/main.dart';
 import 'package:eportal/layout/cashadvance.dart';
 import 'package:eportal/layout/requestleave.dart';
 import 'package:eportal/layout/notification.dart';
 import 'package:eportal/layout/coop.dart';
 import 'package:eportal/model/userinfo.dart';
 import 'package:eportal/repository/helper.dart';
+import 'package:eportal/layout/overtime.dart';
 
 void main() {
   runApp(DrawerApp());
@@ -120,13 +120,13 @@ class _DrawerPageState extends State<DrawerPage> {
       ),
       drawer: Drawer(
         child: Container(
-          color: Colors.white, // Set the background color of the Drawer
+          color: Colors.white,
           child: ListView(
             padding: EdgeInsets.zero,
             children: [
               DrawerHeader(
                 decoration: BoxDecoration(
-                  color: Colors.white, // Set background color to white
+                  color: Colors.white,
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -173,6 +173,20 @@ class _DrawerPageState extends State<DrawerPage> {
                     );
                   },
                 ),
+                if (userinfo['jobstatus'] == 'apprentice')
+                ListTile(
+                  leading: const Icon(Icons.person),
+                  title: const Text('Overtime'),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Overtime(
+                        ),
+                      ),
+                    );
+                  },
+                ),
               if (userinfo['jobstatus'] == 'apprentice')
                 ListTile(
                   leading: Icon(Icons.logout),
@@ -189,7 +203,7 @@ class _DrawerPageState extends State<DrawerPage> {
                           ),
                           shape: RoundedRectangleBorder(
                             borderRadius:
-                                BorderRadius.circular(20.0), // Set button radius
+                                BorderRadius.circular(20.0),
                           ),
                           actions: [
                             SizedBox(
@@ -276,6 +290,21 @@ class _DrawerPageState extends State<DrawerPage> {
                       MaterialPageRoute(
                         builder: (context) => RequestLeave(
                           employeeid: employeeid,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                if (userinfo['jobstatus'] == 'regular' ||
+                  userinfo['jobstatus'] == 'probitionary')
+                ListTile(
+                  leading: Icon(Icons.access_time),
+                  title: const Text('Overtime'),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Overtime(
                         ),
                       ),
                     );
@@ -399,9 +428,7 @@ class _DrawerPageState extends State<DrawerPage> {
           ),
         ),
       ),
-      body: Center(
-        child: HomePage(employeeid: employeeid, departmentid: departmentid),
-      ),
+       body: HomePage(employeeid: employeeid, departmentid: departmentid),
     );
   }
 }

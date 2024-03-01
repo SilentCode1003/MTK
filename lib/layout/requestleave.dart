@@ -20,7 +20,7 @@ class RequestLeave extends StatefulWidget {
 }
 
 class _RequestLeaveState extends State<RequestLeave> {
-  String jobstatus = ''; // Add this line to define jobstatus
+  String jobstatus = '';
   String _formatDate(String date) {
     DateTime dateTime = DateTime.parse(date);
     return DateFormat.yMMMd('en_US').format(dateTime);

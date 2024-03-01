@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:eportal/component/developer_options_checker.dart';
+import 'package:eportal/main.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
   @override
@@ -24,19 +25,34 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => LoginPage(),
+              ),
+            );
+          },
+        ),
         title: Text(
           'Back',
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
+            color: Colors.black,
           ),
         ),
       ),
-      body: SingleChildScrollView(
+      body: Container(
+      color: Colors.white,
+       child: SingleChildScrollView(
         primary: true,
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(
-              20.0, 20.0, 20.0, 20.0), // Adjust the padding as needed
+          padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 20.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -80,8 +96,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   width: 320,
                   height: 50,
                   child: ElevatedButton(
-                    onPressed: () {
-                    },
+                    onPressed: () {},
                     style: ButtonStyle(
                       backgroundColor:
                           MaterialStateProperty.all<Color>(Colors.red),
@@ -100,6 +115,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
           ),
         ),
       ),
+      )
     );
   }
 }

@@ -23,7 +23,7 @@ class AnnouncementDetailsPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Announcement Details'),
+        title: Text('Notifications'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -45,12 +45,25 @@ class AnnouncementDetailsPage extends StatelessWidget {
               style: TextStyle(fontSize: 16),
             ),
             SizedBox(height: 10),
-            Container(
-              height: 200,
-              width: double.infinity,
-              child: Image.memory(
-                bytes,
-                fit: BoxFit.cover,
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => FullScreenImage(imageBytes: bytes),
+                  ),
+                );
+              },
+              child: Hero(
+                tag: 'imageHero',
+                child: Container(
+                  height: 200,
+                  width: double.infinity,
+                  child: Image.memory(
+                    bytes,
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
             ),
             SizedBox(height: 10),
@@ -59,6 +72,43 @@ class AnnouncementDetailsPage extends StatelessWidget {
               style: TextStyle(fontSize: 16),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class FullScreenImage extends StatelessWidget {
+  final Uint8List imageBytes;
+
+  FullScreenImage({required this.imageBytes});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Full Screen Image'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.close),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      ),
+      backgroundColor: Colors.black,
+      body: GestureDetector(
+        onTap: () {
+          Navigator.pop(context);
+        },
+        child: Center(
+          child: Hero(
+            tag: 'imageHero',
+            child: Image.memory(
+              imageBytes,
+            ),
+          ),
         ),
       ),
     );
@@ -82,7 +132,7 @@ class OffensesDetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Announcement Details'),
+        title: Text('Notifications'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -114,7 +164,7 @@ class AllDetailsPage extends StatelessWidget {
   final String title;
   final String description;
   final String targetDate;
-  final String? image; // Make image nullable
+  final String? image;
   final String? type;
 
   AllDetailsPage({
@@ -139,7 +189,7 @@ class AllDetailsPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Announcement Details'),
+        title: Text('Notifications'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -161,13 +211,23 @@ class AllDetailsPage extends StatelessWidget {
               style: TextStyle(fontSize: 16),
             ),
             SizedBox(height: 10),
-            if (bytes != null) // Check if bytes are available
-              Container(
-                height: 200,
-                width: double.infinity,
-                child: Image.memory(
-                  bytes,
-                  fit: BoxFit.cover,
+            if (bytes != null)
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => FullScreenImage(imageBytes: bytes!),
+                    ),
+                  );
+                },
+                child: Container(
+                  height: 200,
+                  width: double.infinity,
+                  child: Image.memory(
+                    bytes,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
           ],

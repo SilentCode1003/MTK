@@ -81,7 +81,7 @@ class _AttendanceState extends State<Attendance> {
     if (helper.getStatusString(APIStatus.success) == response.message) {
       final jsondata = json.encode(response.result);
 
-      usersattendance.clear(); // Clear existing data
+      usersattendance.clear();
 
       for (var attendanceinfo in json.decode(jsondata)) {
         DateTime attendanceDate =

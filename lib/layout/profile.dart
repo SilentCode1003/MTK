@@ -45,7 +45,7 @@ class _ProfileStatefulWidgetState extends State<Profile> {
 
   Future<void> _getUserInfo() async {
     Map<String, dynamic> userinfo =
-        await helper.readJsonToFile('metadata.json');
+    await helper.readJsonToFile('metadata.json');
     UserInfoModel user = UserInfoModel(
       userinfo['image'],
       userinfo['employeeid'],

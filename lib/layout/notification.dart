@@ -7,9 +7,9 @@ import 'package:eportal/api/notification.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest.dart' as tz;
-import 'package:timezone/timezone.dart' as tz;
 import 'package:eportal/layout/announcementdetails.dart';
 import 'package:eportal/component/developer_options_checker.dart';
+
 
 class Notifications extends StatefulWidget {
   final String employeeid;
@@ -26,7 +26,7 @@ class _NotificationsState extends State<Notifications> {
     DateTime dateTime = DateTime.parse(date);
     return DateFormat('MMM dd', 'en_US').format(dateTime);
   }
-
+  
   String employeeid = '';
   String disciplinaryid = '';
   String offenseid = '';
@@ -60,24 +60,37 @@ class _NotificationsState extends State<Notifications> {
   @override
   void initState() {
     _initializeLocalNotifications();
-    _getoffenses();
     _getannoucement();
+    _getoffenses();
+    // _scheduleLocalNotification('BAWAL TUMAE SA CR','Test', 5,);
     super.initState();
     _checkDeveloperOptions();
   }
-    void _checkDeveloperOptions() async {
+
+
+  void _checkDeveloperOptions() async {
     await DeveloperModeChecker.checkAndShowDeveloperModeDialog(context);
   }
 
-    Future<void> _scheduleLocalNotification(
+  Future<void> _checkStatus() async {
+    final announcementResponse = await UserNotifications().postAnnouncement();
+
+    if (announcementResponse.status == 200) {
+      print('status 200');
+    } else {
+      print('status not 200');
+    }
+  }
+
+  Future<void> _scheduleLocalNotification(
       String title, String body, int notificationId) async {
     // Cancel the previous notification if exists
     await flutterLocalNotificationsPlugin.cancel(notificationId);
 
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
-      '123', // Replace with your own channel ID
-      'HRMIS', // Replace with your own channel name
+      '123',
+      'HRMIS',
       importance: Importance.max,
       priority: Priority.high,
     );
@@ -163,16 +176,16 @@ class _NotificationsState extends State<Notifications> {
             _formatDate(announcementinfo['targetdate'].toString()),
             announcementinfo['image'].toString(),
             announcementinfo['type'].toString(),
-          );
+          ); 
           allnotification.add(notification);
         });
+         helper.writeJsonToFile(announcementinfo, 'notification.json');
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    
     return MaterialApp(
       title: '5L SOLUTION',
       theme: ThemeData(
@@ -226,9 +239,8 @@ class _NotificationsState extends State<Notifications> {
     );
   }
 
-
   Widget _buildNotificationList() {
-     if (allnotification.isEmpty) {
+    if (allnotification.isEmpty) {
       return Center(
         child: Text("No Announcement found."),
       );
@@ -246,7 +258,7 @@ class _NotificationsState extends State<Notifications> {
               MaterialPageRoute(
                 builder: (context) => AllDetailsPage(
                   title: allnotification[index].tittle,
-                  description: allnotification[index].tittle,
+                  description: allnotification[index].content,
                   targetDate: allnotification[index].date,
                   image: allnotification[index].image,
                   type: allnotification[index].type,
@@ -315,7 +327,7 @@ class _NotificationsState extends State<Notifications> {
                   title: offenses[index].actionid,
                   description: offenses[index].violation,
                   targetDate: offenses[index].date,
-                  type: offenses[index].violation,
+                  type: offenses[index].offenseid,
                 ),
               ),
             );
@@ -355,6 +367,4 @@ class _NotificationsState extends State<Notifications> {
       onTap: onTap,
     );
   }
-
-
 }
