@@ -76,6 +76,8 @@ class _IndexState extends State<Index> {
   String employeeid = '';
   int departmentid = 0;
   int _geofenceid = 0;
+  String devicein = '';
+  String deviceout = '';
   String _geofencename = '';
 
   @override
@@ -362,7 +364,7 @@ class _IndexState extends State<Index> {
               child: TextButton(
                 onPressed: () {
                     _clockout(
-                        widget.employeeid, _latitude, _longitude, _geofenceid);
+                        widget.employeeid, _latitude, _longitude, _geofenceid, deviceout);
                     // setState(() {
                     //   isLoggedIn = false;
                     //   timestatus = 'Time In';
@@ -554,7 +556,7 @@ class _IndexState extends State<Index> {
                         showLogoutDialog();
                       } else {
                         _clockin(widget.employeeid, _latitude, _longitude,
-                            _geofenceid);
+                            _geofenceid, devicein);
                         // setState(() {
                         //   isLoggedIn = true;
                         //   timestatus = 'Time Out';
@@ -577,10 +579,9 @@ class _IndexState extends State<Index> {
     );
   }
 
-  Future<void> _clockin(employeeid, latitude, longitude, geofenceid) async {
+  Future<void> _clockin(employeeid, latitude, longitude, geofenceid, devicein) async {
     try {
-      final results = await UserAttendance().clockin(employeeid,
-          latitude.toString(), longitude.toString(), geofenceid.toString());
+      final results = await UserAttendance().clockin(employeeid,latitude.toString(), longitude.toString(), geofenceid.toString(), devicein.toString());
 
       if (results.message == Helper().getStatusString(APIStatus.success)) {
         showDialog(
@@ -746,10 +747,9 @@ class _IndexState extends State<Index> {
     }
   }
 
-  Future<void> _clockout(employeeid, latitude, longitude, geofenceid) async {
+  Future<void> _clockout(employeeid, latitude, longitude, geofenceid, deviceout) async {
     try {
-      final results = await UserAttendance().clockout(employeeid,
-          latitude.toString(), longitude.toString(), geofenceid.toString());
+      final results = await UserAttendance().clockout(employeeid,latitude.toString(), longitude.toString(), geofenceid.toString(), deviceout.toString());
 
       if (results.message == Helper().getStatusString(APIStatus.success)) {
         showDialog(

@@ -561,3 +561,195 @@ class VersionModel {
     );
   }
 }
+
+class OvertimeModel {
+  final String approveot_id;
+  final String employeeid;
+  final String attendancedate;
+  final String clockin;
+  final String clockout;
+  final String totalhours;
+  final String payrolldate;
+  final String overtimestatus;
+  
+
+  OvertimeModel(
+    this.approveot_id,
+    this.employeeid,
+    this.attendancedate,
+    this.clockin,
+    this.clockout,
+    this.totalhours,
+    this.payrolldate,
+    this.overtimestatus,
+  );
+
+  factory OvertimeModel.fromJson(Map<String, dynamic> json) {
+    return OvertimeModel(
+      json['approveot_id'],
+      json['employeeid'],
+      json['attendancedate'],
+      json['clockin'],
+      json['clockout'],
+      json['totalhours'],
+      json['payrolldate'],
+      json['overtimestatus'],
+    );
+  }
+}
+
+class PayrolldateModel {
+  final String gp_payrolldate;
+  final String gp_cutoff;
+
+  PayrolldateModel(
+    this.gp_payrolldate,
+    this.gp_cutoff,
+  );
+  
+  factory PayrolldateModel.fromJson(Map<String, dynamic> json){
+    return PayrolldateModel(
+      json['gp_payrolldate'],
+      json['gp_cutoff'],
+    );
+  }
+}
+
+class PayslipModel {
+  final dynamic EmployeeFullName;
+  final dynamic PositionName;
+  final dynamic Department;
+  final dynamic EmployeeId;
+  final dynamic Salary;
+  final dynamic Allowances;
+  final dynamic PayrollDate;
+  final dynamic StartDate;
+  final dynamic Enddate;
+  final dynamic Total_Hours;
+  final dynamic Total_Minutes;
+  final dynamic NightDiff;
+  final dynamic NormalOt;
+  final dynamic EarlyOt;
+  final dynamic Late_Minutes;
+  final dynamic Late_Hours;
+  final dynamic HolidayOvertime;
+  final dynamic Regular_Hours;
+  final dynamic Per_Day;
+  final dynamic Work_Days;
+  final dynamic Rest_Day;
+  final dynamic Total_gp_status;
+  final dynamic Absent;
+  final dynamic NDpay;
+  final dynamic OTpay;
+  final dynamic EarlyOtpay;
+  final dynamic Compensation;
+  final dynamic ApprovedOt;
+  final dynamic Regular_Holiday_Compensation;
+  final dynamic Special_Holiday_Compensation;
+  final dynamic RegularHolidayOT;
+  final dynamic SpecialHolidayOT;
+  final dynamic Absent_Deductions;
+  final dynamic Overall_Net_Pay;
+  final dynamic Late_Deductions;
+  final dynamic SSS;
+  final dynamic PagIbig;
+  final dynamic PhilHealth;
+  final dynamic TIN;
+  final dynamic Health_Card;
+  final dynamic Total_AllDeductions;
+  final dynamic Total_Netpay;
+
+  PayslipModel(
+    this.EmployeeFullName,
+    this.PositionName,
+    this.Department,
+    this.EmployeeId,
+    this.Salary,
+    this.Allowances,
+    this.PayrollDate,
+    this.StartDate,
+    this.Enddate,
+    this.Total_Hours,
+    this.Total_Minutes,
+    this.NightDiff,
+    this.NormalOt,
+    this.EarlyOt,
+    this.Late_Minutes,
+    this.Late_Hours,
+    this.HolidayOvertime,
+    this.Regular_Hours,
+    this.Per_Day,
+    this.Work_Days,
+    this.Rest_Day,
+    this.Total_gp_status,
+    this.Absent,
+    this.NDpay,
+    this.OTpay,
+    this.EarlyOtpay,
+    this.Compensation,
+    this.ApprovedOt,
+    this.Regular_Holiday_Compensation,
+    this.Special_Holiday_Compensation,
+    this.RegularHolidayOT,
+    this.SpecialHolidayOT,
+    this.Absent_Deductions,
+    this.Overall_Net_Pay,
+    this.Late_Deductions,
+    this.SSS,
+    this.PagIbig,
+    this.PhilHealth,
+    this.TIN,
+    this.Health_Card,
+    this.Total_AllDeductions,
+    this.Total_Netpay,
+  );
+  
+  factory PayslipModel.fromJson(Map<String, dynamic> json){
+    return PayslipModel(
+      json['EmployeeFullName'],
+      json['PositionName'],
+      json['Department'],
+      json['EmployeeId'],
+      json['Salary'],
+      json['Allowances'],
+      json['PayrollDate'],
+      json['StartDate'],
+      json['Enddate'],
+      json['Total_Hours'],
+      json['Total_Minutes'],
+      json['NightDiff'],
+      json['NormalOt'],
+      json['EarlyOt'],
+      json['Late_Minutes'],
+      json['Late_Hours'],
+      json['HolidayOvertime'],
+      json['Regular_Hours'],
+      json['Per_Day'],
+      json['Work_Days'],
+      json['Rest_Day'],
+      json['Total_gp_status'],
+      json['Absent'],
+      json['NDpay'],
+      json['OTpay'],
+      json['EarlyOtpay'],
+      json['Compensation'],
+      json['ApprovedOt'],
+      json['Regular_Holiday_Compensation'],
+      json['Special_Holiday_Compensation'],
+      json['RegularHolidayOT'],
+      json['SpecialHolidayOT'],
+      json['Absent_Deductions'],
+      json['Overall_Net_Pay'],
+      json['Late_Deductions'],
+      json['SSS'],
+      json['PagIbig'],
+      json['PhilHealth'],
+      json['TIN'],
+      json['Health_Card'],
+      json['Total_AllDeductions'],
+      json['Total_Netpay'],
+      
+    );
+  }
+}
+

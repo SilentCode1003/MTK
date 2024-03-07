@@ -157,8 +157,6 @@ class _AttendanceState extends State<Attendance> {
             ),
             TextButton(
               onPressed: () {
-                // Perform the necessary actions for logout
-                // For example, you can call Navigator.of(context).pop() to pop the current route
                 Navigator.of(context).pop();
               },
               child: const Text('Logout'),

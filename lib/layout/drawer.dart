@@ -9,6 +9,7 @@ import 'package:eportal/layout/coop.dart';
 import 'package:eportal/model/userinfo.dart';
 import 'package:eportal/repository/helper.dart';
 import 'package:eportal/layout/overtime.dart';
+import 'package:eportal/layout/request.dart';
 
 void main() {
   runApp(DrawerApp());
@@ -21,15 +22,15 @@ class DrawerApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.white,
-        appBarTheme: AppBarTheme(
+        appBarTheme: const AppBarTheme(
           backgroundColor: Colors.white,
           iconTheme: IconThemeData(color: Colors.black),
         ),
-        textTheme: TextTheme(
+        textTheme: const TextTheme(
           bodyText2: TextStyle(color: Colors.black),
         ),
       ),
-      home: DrawerPage(),
+      home: const DrawerPage(),
     );
   }
 }
@@ -91,15 +92,15 @@ class _DrawerPageState extends State<DrawerPage> {
           '5L Solutions Supply & Allied Services Corp.',
           style: TextStyle(color: Colors.black),
         ),
-        backgroundColor: Color.fromARGB(255, 255, 255, 255),
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         elevation: 0,
         actions: [
           Padding(
             padding: const EdgeInsets.only(
               right: 16.0,
-            ), // Adjust the value as needed
+            ),
             child: IconButton(
-              icon: Icon(Icons.notifications),
+              icon: const Icon(Icons.notifications),
               color: Colors.black,
               onPressed: () {
                 Navigator.push(
@@ -114,7 +115,7 @@ class _DrawerPageState extends State<DrawerPage> {
             ),
           ),
         ],
-        iconTheme: IconThemeData(
+        iconTheme: const IconThemeData(
           color: Colors.black,
         ),
       ),
@@ -125,7 +126,7 @@ class _DrawerPageState extends State<DrawerPage> {
             padding: EdgeInsets.zero,
             children: [
               DrawerHeader(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Colors.white,
                 ),
                 child: Column(
@@ -143,14 +144,14 @@ class _DrawerPageState extends State<DrawerPage> {
                     const SizedBox(height: 15),
                     Text(
                       '$fullname',
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.black,
                         fontSize: 18,
                       ),
                     ),
                     Text(
                       '$departmentname',
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.black,
                         fontSize: 12,
                       ),
@@ -158,7 +159,6 @@ class _DrawerPageState extends State<DrawerPage> {
                   ],
                 ),
               ),
-              if (userinfo['jobstatus'] == 'apprentice')
                 ListTile(
                   leading: const Icon(Icons.person),
                   title: const Text('Profile'),
@@ -173,198 +173,57 @@ class _DrawerPageState extends State<DrawerPage> {
                     );
                   },
                 ),
-                if (userinfo['jobstatus'] == 'apprentice')
                 ListTile(
-                  leading: const Icon(Icons.person),
-                  title: const Text('Overtime'),
+                  leading: const Icon(Icons.file_copy),
+                  title: const Text('Request'),
                   onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => Overtime(
+                        builder: (context) => Request(
+                           employeeid: employeeid,
+                          jobstatus: jobstatus,
                         ),
                       ),
                     );
                   },
                 ),
-              if (userinfo['jobstatus'] == 'apprentice')
                 ListTile(
-                  leading: Icon(Icons.logout),
-                  title: Text('Logout'),
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          contentPadding:
-                              EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                          title: Center(
-                            child: Text('Are you sure you want to log out?', style: TextStyle(fontSize: 14),),
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(20.0),
-                          ),
-                          actions: [
-                            SizedBox(
-                              width: 120,
-                              height: 40,
-                              child: TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                style: ButtonStyle(
-                                  backgroundColor:
-                                      MaterialStateProperty.all<Color>(
-                                          Colors.grey),
-                                  shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                    ),
-                                  ),
-                                ),
-                                child: const Text(
-                                  'No',
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 18),
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 130,
-                              height: 40,
-                              child: TextButton(
-                                onPressed: () {
-                                  Navigator.pushReplacementNamed(
-                                      context, '/logout');
-                                },
-                                style: ButtonStyle(
-                                  backgroundColor:
-                                      MaterialStateProperty.all<Color>(
-                                          Colors.red),
-                                  shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                    ),
-                                  ),
-                                ),
-                                child: const Text(
-                                  'Yes',
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 18),
-                                ),
-                              ),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  },
-                ),
-              if (userinfo['jobstatus'] == 'regular' ||
-                  userinfo['jobstatus'] == 'probitionary')
-                ListTile(
-                  leading: const Icon(Icons.person),
-                  title: const Text('Profile'),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => Profile(
-                          employeeid: employeeid,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              if (userinfo['jobstatus'] == 'regular' ||
-                  userinfo['jobstatus'] == 'probitionary')
-                ListTile(
-                  leading: Icon(Icons.calendar_month),
-                  title: const Text('Leaves'),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => RequestLeave(
-                          employeeid: employeeid,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-                if (userinfo['jobstatus'] == 'regular' ||
-                  userinfo['jobstatus'] == 'probitionary')
-                ListTile(
-                  leading: Icon(Icons.access_time),
-                  title: const Text('Overtime'),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => Overtime(
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              if (userinfo['jobstatus'] == 'regular')
-                ListTile(
-                  leading: Icon(Icons.attach_money),
-                  title: const Text('Cash Advance'),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => RequestCash(
-                          employeeid: employeeid,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              if (userinfo['jobstatus'] == 'regular')
-                ListTile(
-                  leading: Icon(Icons.business),
+                  leading: const Icon(Icons.business),
                   title: const Text('Coop'),
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => Coop()),
+                      MaterialPageRoute(builder: (context) => const Coop()),
                     );
                   },
                 ),
-              if (userinfo['jobstatus'] == 'regular')
                 ListTile(
-                  leading: Icon(Icons.mobile_friendly),
+                  leading: const Icon(Icons.mobile_friendly),
                   title: const Text('Devices'),
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => Coop()),
+                      MaterialPageRoute(builder: (context) => const Coop()),
                     );
                   },
                 ),
-              if (userinfo['jobstatus'] == 'regular' ||
-                  userinfo['jobstatus'] == 'probitionary')
                 ListTile(
-                  leading: Icon(Icons.logout),
-                  title: Text('Logout'),
+                  leading: const Icon(Icons.logout),
+                  title: const Text('Logout'),
                   onTap: () {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
                           contentPadding:
-                              EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                          title: Center(
+                              const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                          title: const Center(
                             child: Text('Are you sure you want to log out?', style: TextStyle(fontSize: 15),),
                           ),
                           shape: RoundedRectangleBorder(
                             borderRadius:
-                                BorderRadius.circular(20.0), // Set button radius
+                                BorderRadius.circular(20.0),
                           ),
                           actions: [
                             SizedBox(

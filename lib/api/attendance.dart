@@ -43,13 +43,14 @@ class UserAttendance {
   }
 
   Future<ResponceModel> clockin(
-      String employeeid, String latitude, String longitude, String geofenceid) async {
+      String employeeid, String latitude, String longitude, String geofenceid, String devicein) async {
     final url = Uri.parse('${Config.apiUrl}${Config.clockinAPI}');
     final response = await http.post(url, body: {
       'employeeid': employeeid,
       'latitude': latitude,
       'longitude': longitude,
       'geofenceid': geofenceid,
+      'devicein': devicein, 
     });
 
     print(response.body);
@@ -65,13 +66,14 @@ class UserAttendance {
   }
 
   Future<ResponceModel> clockout(
-      String employeeid, String latitude, String longitude, String geofenceid) async {
+      String employeeid, String latitude, String longitude, String geofenceid, String deviceout) async {
     final url = Uri.parse('${Config.apiUrl}${Config.clockoutAPI}');
     final response = await http.post(url, body: {
       'employeeid': employeeid,
       'latitude': latitude,
       'longitude': longitude,
-      'geofenceid': geofenceid,     
+      'geofenceid': geofenceid,   
+      'deviceout': deviceout,  
     });
 
     print(response.body);
