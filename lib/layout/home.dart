@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:eportal/layout/attendance.dart';
 import 'package:eportal/layout/index.dart';
-import 'package:eportal/layout/salary.dart';
+import 'package:eportal/layout/paysliip.dart';
 import '../model/userinfo.dart';
 import '../repository/helper.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -197,7 +197,7 @@ class _HomePageState extends State<HomePage> {
           employeeid: widget.employeeid,
         );
       case 2:
-        return const Salary();
+        return Salary( employeeid: widget.employeeid,);
       default:
         return Container();
     }

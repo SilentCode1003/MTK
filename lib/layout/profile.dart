@@ -111,14 +111,14 @@ class _ProfileStatefulWidgetState extends State<Profile> {
               Positioned(
                 top: 160.0,
                 child: Text(
-                  '$fullname', // Replace with the actual name
+                  '$fullname',
                   style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
                 ),
               ),
               Positioned(
                 top: 190.0,
                 child: Text(
-                  '$position', // Replace with the actual name
+                  '$position',
                   style:
                       TextStyle(fontSize: 14.0, fontWeight: FontWeight.normal),
                 ),
@@ -126,7 +126,7 @@ class _ProfileStatefulWidgetState extends State<Profile> {
               Positioned(
                 top: 210.0,
                 child: Text(
-                  '$departmentname', // Replace with the actual name
+                  '$departmentname',
                   style:
                       TextStyle(fontSize: 14.0, fontWeight: FontWeight.normal),
                 ),
@@ -152,7 +152,6 @@ class _ProfileStatefulWidgetState extends State<Profile> {
                     ),
                     child: Row(
                       children: [
-                        // Icon of a person
                         Padding(
                           padding: const EdgeInsets.only(left: 10, right: 10),
                           child: Icon(
@@ -160,7 +159,6 @@ class _ProfileStatefulWidgetState extends State<Profile> {
                             color: Colors.black,
                           ),
                         ),
-                        // Text for basic information
                         Text(
                           'Basic Information',
                           style: TextStyle(
@@ -168,7 +166,6 @@ class _ProfileStatefulWidgetState extends State<Profile> {
                             fontSize: 14,
                           ),
                         ),
-                        // Greater-than icon with margin on the right side
                         Spacer(),
                         Padding(
                           padding: const EdgeInsets.only(right: 10),
@@ -203,7 +200,6 @@ class _ProfileStatefulWidgetState extends State<Profile> {
                     ),
                     child: Row(
                       children: [
-                        // Icon of a person
                         Padding(
                           padding: const EdgeInsets.only(left: 10, right: 10),
                           child: Icon(
@@ -211,7 +207,6 @@ class _ProfileStatefulWidgetState extends State<Profile> {
                             color: Colors.black,
                           ),
                         ),
-                        // Text for basic information
                         Text(
                           'Work Information',
                           style: TextStyle(
@@ -219,7 +214,6 @@ class _ProfileStatefulWidgetState extends State<Profile> {
                             fontSize: 14,
                           ),
                         ),
-                        // Greater-than icon with margin on the right side
                         Spacer(),
                         Padding(
                           padding: const EdgeInsets.only(right: 10),
@@ -254,7 +248,6 @@ class _ProfileStatefulWidgetState extends State<Profile> {
                     ),
                     child: Row(
                       children: [
-                        // Icon of a person
                         Padding(
                           padding: const EdgeInsets.only(left: 10, right: 10),
                           child: Icon(
@@ -262,7 +255,6 @@ class _ProfileStatefulWidgetState extends State<Profile> {
                             color: Colors.black,
                           ),
                         ),
-                        // Text for basic information
                         Text(
                           'Work Scheduled',
                           style: TextStyle(
@@ -270,7 +262,6 @@ class _ProfileStatefulWidgetState extends State<Profile> {
                             fontSize: 14,
                           ),
                         ),
-                        // Greater-than icon with margin on the right side
                         Spacer(),
                         Padding(
                           padding: const EdgeInsets.only(right: 10),
@@ -305,7 +296,6 @@ class _ProfileStatefulWidgetState extends State<Profile> {
                     ),
                     child: Row(
                       children: [
-                        // Icon of a person
                         Padding(
                           padding: const EdgeInsets.only(left: 10, right: 10),
                           child: Icon(
@@ -313,7 +303,6 @@ class _ProfileStatefulWidgetState extends State<Profile> {
                             color: Colors.black,
                           ),
                         ),
-                        // Text for basic information
                         Text(
                           'Goverment Information',
                           style: TextStyle(
@@ -321,7 +310,6 @@ class _ProfileStatefulWidgetState extends State<Profile> {
                             fontSize: 14,
                           ),
                         ),
-                        // Greater-than icon with margin on the right side
                         Spacer(),
                         Padding(
                           padding: const EdgeInsets.only(right: 10),
@@ -356,7 +344,6 @@ class _ProfileStatefulWidgetState extends State<Profile> {
                     ),
                     child: Row(
                       children: [
-                        // Icon of a person
                         Padding(
                           padding: const EdgeInsets.only(left: 10, right: 10),
                           child: Icon(

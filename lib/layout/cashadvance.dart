@@ -130,25 +130,25 @@ class _RequestCashState extends State<RequestCash> {
           'Cash Advance',
           style: TextStyle(color: Colors.black),
         ),
-        backgroundColor: Color.fromARGB(255, 255, 255, 255),
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => DrawerPage()),
+              MaterialPageRoute(builder: (context) => const DrawerPage()),
             );
           },
         ),
       ),
       body: Container(
-        color: Color.fromARGB(255, 255, 255, 255),
+        color: const Color.fromARGB(255, 255, 255, 255),
         child: Column(
           children: <Widget>[
             Expanded(
               child: userscash.isEmpty
-                  ? Center(
+                  ? const Center(
                       child: Text(
                         'No Cash Advance applications',
                         style: TextStyle(fontSize: 20),
@@ -161,14 +161,14 @@ class _RequestCashState extends State<RequestCash> {
                           onTap: () {
                             showModalBottomSheet(
                               context: context,
-                              shape: RoundedRectangleBorder(
+                              shape: const RoundedRectangleBorder(
                                 borderRadius: BorderRadius.vertical(
                                   top: Radius.circular(25),
                                 ),
                               ),
                               builder: (BuildContext context) {
                                 return Container(
-                                  decoration: BoxDecoration(
+                                  decoration: const BoxDecoration(
                                     borderRadius: BorderRadius.vertical(
                                       top: Radius.circular(25),
                                     ),
@@ -179,8 +179,8 @@ class _RequestCashState extends State<RequestCash> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Center(
-                                          child: const Text(
+                                        const Center(
+                                          child: Text(
                                             'Cash Details',
                                             style: TextStyle(
                                               fontSize: 28,
@@ -193,7 +193,7 @@ class _RequestCashState extends State<RequestCash> {
                                           alignment: Alignment.centerLeft,
                                           child: Text(
                                             '₱ ${userscash[index].amount}',
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               fontSize: 25,
                                               fontWeight: FontWeight.bold,
                                             ),
@@ -204,7 +204,7 @@ class _RequestCashState extends State<RequestCash> {
                                           alignment: Alignment.centerLeft,
                                           child: Text(
                                             'Start Date:     ${userscash[index].requestdate}',
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               fontSize: 22,
                                               fontWeight: FontWeight.normal,
                                             ),
@@ -214,7 +214,7 @@ class _RequestCashState extends State<RequestCash> {
                                           alignment: Alignment.centerLeft,
                                           child: Text(
                                             'End Date:     ${userscash[index].requestdate}',
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               fontSize: 22,
                                               fontWeight: FontWeight.normal,
                                             ),
@@ -224,7 +224,7 @@ class _RequestCashState extends State<RequestCash> {
                                           alignment: Alignment.centerLeft,
                                           child: Text(
                                             'Applied Date: ${userscash[index].approvaldate}',
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               fontSize: 22,
                                               fontWeight: FontWeight.normal,
                                             ),
@@ -234,7 +234,7 @@ class _RequestCashState extends State<RequestCash> {
                                           alignment: Alignment.centerLeft,
                                           child: Text(
                                             'Reason: ${userscash[index].purpose}',
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               fontSize: 22,
                                               fontWeight: FontWeight.normal,
                                             ),
@@ -265,7 +265,7 @@ class _RequestCashState extends State<RequestCash> {
                                             ),
                                           ),
                                         ),
-                                        SizedBox(height: 50),
+                                        const SizedBox(height: 50),
                                         if (userscash[index].status ==
                                             'Pending')
                                           Center(
@@ -283,9 +283,9 @@ class _RequestCashState extends State<RequestCash> {
                                                   borderRadius:
                                                       BorderRadius.circular(20),
                                                 ),
-                                                minimumSize: Size(250, 50),
+                                                minimumSize: const Size(250, 50),
                                               ),
-                                              child: Text(
+                                              child: const Text(
                                                 'Cancel Cash Application',
                                                 style: TextStyle(fontSize: 18),
                                               ),
@@ -309,7 +309,7 @@ class _RequestCashState extends State<RequestCash> {
                                     child: ListTile(
                                       title: Text(
                                         '₱ ${userscash[index].amount}',
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontSize: 22.0,
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -320,11 +320,11 @@ class _RequestCashState extends State<RequestCash> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          SizedBox(height: 7.0),
+                                          const SizedBox(height: 7.0),
                                           Text(
                                             'Approved Date: ${userscash[index].approvaldate}',
                                           ),
-                                          SizedBox(height: 5.0),
+                                          const SizedBox(height: 5.0),
                                           Text(
                                             'Applied Date: ${userscash[index].requestdate}',
                                           )
@@ -368,7 +368,7 @@ class _RequestCashState extends State<RequestCash> {
         onPressed: () {
           _showCashApplicationForm(context);
         },
-        child: Icon(
+        child: const Icon(
           Icons.add,
           color: Colors.white,
         ),
@@ -481,15 +481,15 @@ class _RequestCashState extends State<RequestCash> {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: Text('Incomplete Form'),
-                        content: Text(
+                        title: const Text('Incomplete Form'),
+                        content: const Text(
                             'Please fill up all the required fields before submitting.'),
                         actions: <Widget>[
                           TextButton(
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
-                            child: Text('OK'),
+                            child: const Text('OK'),
                           ),
                         ],
                       );
