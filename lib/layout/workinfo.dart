@@ -45,7 +45,7 @@ class _WorkinfoStatefulWidgetState extends State<Workinfo> {
 Future<void> _getWorkInfo() async {
   final response = await Profileinfo().getworkinfo(employeeid);
   if (helper.getStatusString(APIStatus.success) == response.message) {
-    final jsonData = response.result as List<dynamic>;
+    final jsonData = response.result;
     for (var basicInfos in jsonData) {
       setState(() {
         ProfileWorkinfo basicInfo = ProfileWorkinfo(
@@ -112,7 +112,7 @@ Future<void> _getWorkInfo() async {
                 padding: const EdgeInsets.only(
                     left: 8.0, right: 8.0, bottom: 8.0), // Adjust as needed
                 child: Text(
-                  '$departmentid',
+                  departmentid,
                   style: const TextStyle(fontSize: 18),
                 ),
               ),
@@ -128,7 +128,7 @@ Future<void> _getWorkInfo() async {
                 padding: const EdgeInsets.only(
                     left: 8.0, right: 8.0, bottom: 8.0), // Adjust as needed
                 child: Text(
-                  '$position',
+                  position,
                   style: const TextStyle(fontSize: 18),
                 ),
               ),
@@ -144,7 +144,7 @@ Future<void> _getWorkInfo() async {
                 padding: const EdgeInsets.only(
                     left: 8.0, right: 8.0, bottom: 8.0), // Adjust as needed
                 child: Text(
-                  '$jobstatus',
+                  jobstatus,
                   style: const TextStyle(fontSize: 18),
                 ),
               ),
@@ -160,7 +160,7 @@ Future<void> _getWorkInfo() async {
                 padding: const EdgeInsets.only(
                     left: 8.0, right: 8.0, bottom: 8.0), // Adjust as needed
                 child: Text(
-                  '$departmenthead',
+                  departmenthead,
                   style: const TextStyle(fontSize: 18),
                 ),
               ),
@@ -176,7 +176,7 @@ Future<void> _getWorkInfo() async {
                 padding: const EdgeInsets.only(
                     left: 8.0, right: 8.0, bottom: 8.0), // Adjust as needed
                 child: Text(
-                  '$hiredate',
+                  hiredate,
                   style: const TextStyle(fontSize: 18),
                 ),
               ),
@@ -192,7 +192,7 @@ Future<void> _getWorkInfo() async {
                 padding: const EdgeInsets.only(
                     left: 8.0, right: 8.0, bottom: 8.0), // Adjust as needed
                 child: Text(
-                  '$tenure',
+                  tenure,
                   style: const TextStyle(fontSize: 18),
                 ),
               ),

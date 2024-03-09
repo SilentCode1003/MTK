@@ -159,12 +159,12 @@ class _RequestLeaveState extends State<RequestLeave> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => DrawerPage()),
+                MaterialPageRoute(builder: (context) => const DrawerPage()),
               );
             },
           ),
         ),
-        body: Center(
+        body: const Center(
           child: Text(
             'No leave assignment for probationary employees.',
             style: TextStyle(fontSize: 20),
@@ -179,25 +179,25 @@ class _RequestLeaveState extends State<RequestLeave> {
           'Leaves',
           style: TextStyle(color: Colors.black),
         ),
-        backgroundColor: Color.fromARGB(255, 255, 255, 255),
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => DrawerPage()),
+              MaterialPageRoute(builder: (context) => const DrawerPage()),
             );
           },
         ),
       ),
       body: Container(
-      color: Color.fromARGB(255, 255, 255, 255),
+      color: const Color.fromARGB(255, 255, 255, 255),
      child: Column(
         children: <Widget>[
           Expanded(
             child: userleaves.isEmpty
-                ? Center(
+                ? const Center(
                     child: Text(
                       'No leave applications',
                       style: TextStyle(fontSize: 20),
@@ -211,14 +211,14 @@ class _RequestLeaveState extends State<RequestLeave> {
                           print('Leave ID: ${userleaves[index].leaveid}');
                           showModalBottomSheet(
                             context: context,
-                            shape: RoundedRectangleBorder(
+                            shape: const RoundedRectangleBorder(
                               borderRadius: BorderRadius.vertical(
                                 top: Radius.circular(25),
                               ),
                             ),
                             builder: (BuildContext context) {
                               return Container(
-                                decoration: BoxDecoration(
+                                decoration: const BoxDecoration(
                                   borderRadius: BorderRadius.vertical(
                                     top: Radius.circular(25),
                                   ),
@@ -229,8 +229,8 @@ class _RequestLeaveState extends State<RequestLeave> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Center(
-                                        child: const Text(
+                                      const Center(
+                                        child: Text(
                                           'Leave Details',
                                           style: TextStyle(
                                             fontSize: 28,
@@ -242,8 +242,8 @@ class _RequestLeaveState extends State<RequestLeave> {
                                       Align(
                                         alignment: Alignment.centerLeft,
                                         child: Text(
-                                          '${userleaves[index].leavetype}',
-                                          style: TextStyle(
+                                          userleaves[index].leavetype,
+                                          style: const TextStyle(
                                             fontSize: 25,
                                             fontWeight: FontWeight.bold,
                                           ),
@@ -254,7 +254,7 @@ class _RequestLeaveState extends State<RequestLeave> {
                                         alignment: Alignment.centerLeft,
                                         child: Text(
                                           'Start Date:     ${userleaves[index].leavestartdate}',
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontSize: 22,
                                             fontWeight: FontWeight.normal,
                                           ),
@@ -264,7 +264,7 @@ class _RequestLeaveState extends State<RequestLeave> {
                                         alignment: Alignment.centerLeft,
                                         child: Text(
                                           'End Date:     ${userleaves[index].leaveenddate}',
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontSize: 22,
                                             fontWeight: FontWeight.normal,
                                           ),
@@ -274,7 +274,7 @@ class _RequestLeaveState extends State<RequestLeave> {
                                         alignment: Alignment.centerLeft,
                                         child: Text(
                                           'Applied Date: ${userleaves[index].applieddate}',
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontSize: 22,
                                             fontWeight: FontWeight.normal,
                                           ),
@@ -284,7 +284,7 @@ class _RequestLeaveState extends State<RequestLeave> {
                                         alignment: Alignment.centerLeft,
                                         child: Text(
                                           'Reason: ${userleaves[index].reason}',
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontSize: 22,
                                             fontWeight: FontWeight.normal,
                                           ),
@@ -315,13 +315,13 @@ class _RequestLeaveState extends State<RequestLeave> {
                                           ),
                                         ),
                                       ),
-                                      SizedBox(height: 50), // Add some space
+                                      const SizedBox(height: 50), // Add some space
 
                                       // Conditionally show the button based on the status
                                       if (userleaves[index].status == 'Pending')
                                         Center(
                                           child: Container(
-                                            margin: EdgeInsets.only(
+                                            margin: const EdgeInsets.only(
                                                 bottom:
                                                     20), // Adjust the margin value as needed
                                             child: ElevatedButton(
@@ -337,14 +337,14 @@ class _RequestLeaveState extends State<RequestLeave> {
                                                 Navigator.pop(context);
                                               },
                                               style: ElevatedButton.styleFrom(
-                                                primary: Colors.red,
+                                                backgroundColor: Colors.red,
                                                 shape: RoundedRectangleBorder(
                                                   borderRadius:
                                                       BorderRadius.circular(20),
                                                 ),
-                                                minimumSize: Size(250, 50),
+                                                minimumSize: const Size(250, 50),
                                               ),
-                                              child: Text(
+                                              child: const Text(
                                                 'Cancel Leave Application',
                                                 style: TextStyle(fontSize: 18),
                                               ),
@@ -369,7 +369,7 @@ class _RequestLeaveState extends State<RequestLeave> {
                                   child: ListTile(
                                     title: Text(
                                       userleaves[index].leavetype,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontSize: 22.0,
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -380,11 +380,11 @@ class _RequestLeaveState extends State<RequestLeave> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        SizedBox(height: 7.0),
+                                        const SizedBox(height: 7.0),
                                         Text(
                                           '${userleaves[index].leavestartdate} to ${userleaves[index].leaveenddate}',
                                         ),
-                                        SizedBox(height: 5.0),
+                                        const SizedBox(height: 5.0),
                                         Text(
                                           'Applied Date: ${userleaves[index].applieddate}',
                                         )
@@ -428,26 +428,26 @@ class _RequestLeaveState extends State<RequestLeave> {
         onPressed: () {
           _showLeaveApplicationForm(context);
         },
-        child: Icon(
+        backgroundColor: const Color.fromARGB(255, 215, 36, 24),
+        child: const Icon(
           Icons.add,
           color: Colors.white,
         ),
-        backgroundColor: const Color.fromARGB(255, 215, 36, 24),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 
   Future<void> _showLeaveApplicationForm(BuildContext context) async {
-    TextEditingController _startDateController = TextEditingController();
-    TextEditingController _endDateController = TextEditingController();
-    TextEditingController _reasonController = TextEditingController();
+    TextEditingController startDateController = TextEditingController();
+    TextEditingController endDateController = TextEditingController();
+    TextEditingController reasonController = TextEditingController();
     String? selectedLeaveType;
 
     Future<void> _requestleave() async {
-      String startdate = _startDateController.text;
-      String enddate = _endDateController.text;
-      String reason = _reasonController.text;
+      String startdate = startDateController.text;
+      String enddate = endDateController.text;
+      String reason = reasonController.text;
 
       try {
         final response = await Leave().request(widget.employeeid, startdate,
@@ -511,9 +511,9 @@ class _RequestLeaveState extends State<RequestLeave> {
           // Add your validation logic here.
           // For example, check if the selectedLeaveType, startDate, endDate, and reason are not empty.
           return selectedLeaveType != null &&
-              _startDateController.text.isNotEmpty &&
-              _endDateController.text.isNotEmpty &&
-              _reasonController.text.isNotEmpty;
+              startDateController.text.isNotEmpty &&
+              endDateController.text.isNotEmpty &&
+              reasonController.text.isNotEmpty;
         }
 
         return AlertDialog(
@@ -546,7 +546,7 @@ class _RequestLeaveState extends State<RequestLeave> {
                 ),
                 const SizedBox(height: 10),
                 TextFormField(
-                  controller: _startDateController,
+                  controller: startDateController,
                   decoration: const InputDecoration(labelText: 'Start Date'),
                   onTap: () async {
                     DateTime? pickedDate = await showDatePicker(
@@ -557,14 +557,14 @@ class _RequestLeaveState extends State<RequestLeave> {
                     );
 
                     if (pickedDate != null && pickedDate != DateTime.now()) {
-                      _startDateController.text =
+                      startDateController.text =
                           DateFormat('yyyy-MM-dd').format(pickedDate);
                     }
                   },
                 ),
                 const SizedBox(height: 10),
                 TextFormField(
-                  controller: _endDateController,
+                  controller: endDateController,
                   decoration: const InputDecoration(labelText: 'End Date'),
                   onTap: () async {
                     DateTime? pickedDate = await showDatePicker(
@@ -575,14 +575,14 @@ class _RequestLeaveState extends State<RequestLeave> {
                     );
 
                     if (pickedDate != null && pickedDate != DateTime.now()) {
-                      _endDateController.text =
+                      endDateController.text =
                           DateFormat('yyyy-MM-dd').format(pickedDate);
                     }
                   },
                 ),
                 const SizedBox(height: 10),
                 TextFormField(
-                  controller: _reasonController,
+                  controller: reasonController,
                   decoration: const InputDecoration(labelText: 'Reason'),
                   maxLines: 3,
                 ),
@@ -600,15 +600,15 @@ class _RequestLeaveState extends State<RequestLeave> {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: Text('Incomplete Form'),
-                        content: Text(
+                        title: const Text('Incomplete Form'),
+                        content: const Text(
                             'Please fill up all the required fields before submitting.'),
                         actions: <Widget>[
                           TextButton(
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
-                            child: Text('OK'),
+                            child: const Text('OK'),
                           ),
                         ],
                       );
@@ -617,7 +617,7 @@ class _RequestLeaveState extends State<RequestLeave> {
                 }
               },
               style: TextButton.styleFrom(
-                primary: Colors.black,
+                foregroundColor: Colors.black,
               ),
               child: const Text('Submit'),
             ),
@@ -626,7 +626,7 @@ class _RequestLeaveState extends State<RequestLeave> {
                 Navigator.of(context).pop();
               },
               style: TextButton.styleFrom(
-                primary: Colors.black,
+                foregroundColor: Colors.black,
               ),
               child: const Text('Cancel'),
             ),
@@ -638,6 +638,8 @@ class _RequestLeaveState extends State<RequestLeave> {
 }
 
 class ShimmerLoading extends StatelessWidget {
+  const ShimmerLoading({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(

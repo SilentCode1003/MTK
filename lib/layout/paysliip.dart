@@ -206,7 +206,7 @@ Future<void> getpayrolldate() async {
                                           Expanded(
                                             child: ListTile(
                                               title: Text(
-                                                '${dateinfo[index].gp_cutoff}',
+                                                dateinfo[index].gp_cutoff,
                                                 style: const TextStyle(
                                                   fontSize: 22.0,
                                                   fontWeight: FontWeight.bold,
@@ -220,7 +220,7 @@ Future<void> getpayrolldate() async {
                                                 children: [
                                                   const SizedBox(height: 7.0),
                                                   Text(
-                                                    '${dateinfo[index].gp_payrolldate}',
+                                                    dateinfo[index].gp_payrolldate,
                                                   ),
                                                 ],
                                               ),

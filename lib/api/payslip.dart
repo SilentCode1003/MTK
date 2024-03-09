@@ -4,10 +4,10 @@ import '../config.dart';
 import 'package:http/http.dart' as http;
 
 class Payroll{
-  Future<ResponceModel> getdate(String gp_payrolldate) async {
+  Future<ResponceModel> getdate(String gpPayrolldate) async {
     final url = Uri.parse('${Config.apiUrl}${Config.payrolldateAPI}');
     final response = await http.post(url, body: {
-      'gp_payrolldate': gp_payrolldate,
+      'gp_payrolldate': gpPayrolldate,
     });
 
     final responseData = json.decode(response.body);

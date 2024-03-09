@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:eportal/main.dart';
@@ -111,7 +110,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       ),
     );
 
-    if (confirm == null || !confirm) {
+    if (!confirm) {
       return;
     }
 
@@ -137,7 +136,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     context,
                     MaterialPageRoute(
                         builder: (context) =>
-                            LoginPage()), // Replace MyApp with your main.dart class
+                            const LoginPage()), // Replace MyApp with your main.dart class
                   );
                 },
                 child: const Text('OK'),
@@ -150,7 +149,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           context: context,
           builder: (ctx) => AlertDialog(
             title: Text(response.message),
-            content: Text('Incorrect Current Password'),
+            content: const Text('Incorrect Current Password'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(ctx),
@@ -209,7 +208,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           'Change Password',
           style: TextStyle(color: Colors.black),
         ),
-        backgroundColor: Color.fromARGB(255, 255, 255, 255),
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
@@ -232,7 +231,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               Padding(
                 padding: const EdgeInsets.only(top: 45.0),
                 child: Center(
-                  child: Container(
+                  child: SizedBox(
                     width: 200,
                     height: 150,
                     child: Image.asset('assets/changepass.png'),
@@ -250,7 +249,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   controller: oldPasswordController,
                   obscureText: _isPasswordObscuredold,
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(),
+                    border: const OutlineInputBorder(),
                     labelText: 'Current Password',
                     hintText: 'Enter secure Current password',
                     suffixIcon: IconButton(
@@ -277,7 +276,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   controller: newPasswordController,
                   obscureText: _isPasswordObscurednew,
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(),
+                    border: const OutlineInputBorder(),
                     labelText: 'New Password',
                     hintText: 'Enter new password',
                     suffixIcon: IconButton(
@@ -305,7 +304,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   focusNode: confirmPasswordFocusNode,
                   obscureText: _isPasswordObscuredconfirm,
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(),
+                    border: const OutlineInputBorder(),
                     labelText: 'Confirm Password',
                     hintText: 'Enter confirm password',
                     errorText: _passwordError, // Display the password error
@@ -334,17 +333,17 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     _changepass();
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: const Color.fromARGB(255, 215, 36, 24),
+                    backgroundColor: const Color.fromARGB(255, 215, 36, 24),
                   ),
                   child: isLoading
-                      ? Row(
+                      ? const Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             CircularProgressIndicator(color: Colors.white),
-                            const SizedBox(width: 10),
+                            SizedBox(width: 10),
                           ],
                         )
-                      : Text(
+                      : const Text(
                           'Submit',
                           style: TextStyle(color: Colors.white, fontSize: 25),
                         ),

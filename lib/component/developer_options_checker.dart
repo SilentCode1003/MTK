@@ -29,8 +29,8 @@ class DeveloperModeChecker {
             borderRadius:
                 BorderRadius.circular(20.0), // Adjust the value as needed
           ),
-          title: Center(child: Text('Warning!'),), 
-          content: Padding( padding: EdgeInsets.only(left: 25), child: Text(
+          title: const Center(child: Text('Warning!'),), 
+          content: const Padding( padding: EdgeInsets.only(left: 25), child: Text(
               'Disable developer options to continue.'),) ,
           actions: [
             SizedBox(

@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:eportal/layout/profile.dart';
@@ -49,7 +48,7 @@ class _TraininginfoStatefulWidgetState extends State<Traininginfo> {
 Future<void> _gettraininginfo() async {
   final response = await Profileinfo().gettraininginfo(widget.employeeid);
   if (helper.getStatusString(APIStatus.success) == response.message) {
-    final jsonData = response.result as List<dynamic>; // Ensure response.result is a list
+    final jsonData = response.result; // Ensure response.result is a list
     for (var trainingData in jsonData) {
       setState(() {
         ProfileTraininginfo traininginfo = ProfileTraininginfo(
@@ -77,7 +76,7 @@ Future<void> _gettraininginfo() async {
             'Trainings',
             style: TextStyle(color: Colors.black),
           ),
-          backgroundColor: Color.fromARGB(255, 255, 255, 255),
+          backgroundColor: const Color.fromARGB(255, 255, 255, 255),
           elevation: 0,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back, color: Colors.black),
@@ -93,12 +92,12 @@ Future<void> _gettraininginfo() async {
           ),
         ),
         body: Container(
-          color: Color.fromARGB(255, 255, 255, 255),
+          color: const Color.fromARGB(255, 255, 255, 255),
        child: Column(
           children: <Widget>[
             Expanded(
               child: traininginfos.isEmpty
-                  ? Center(
+                  ? const Center(
                       child: Text(
                         'No training attended.',
                         style: TextStyle(
@@ -108,7 +107,7 @@ Future<void> _gettraininginfo() async {
                   : ListView.builder(
                       itemCount: traininginfos.length,
                       shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
+                      physics: const NeverScrollableScrollPhysics(),
                       itemBuilder: (BuildContext context, int index) {
                         return Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -118,8 +117,8 @@ Future<void> _gettraininginfo() async {
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
-                                  '${traininginfos[index].name}',
-                                  style: TextStyle(
+                                  traininginfos[index].name,
+                                  style: const TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold),
                                 ),
@@ -131,10 +130,10 @@ Future<void> _gettraininginfo() async {
                                     bottom: 8.0),
                                 child: Text(
                                   '${traininginfos[index].startdate} to ${traininginfos[index].enddate}',
-                                  style: TextStyle(fontSize: 18),
+                                  style: const TextStyle(fontSize: 18),
                                 ),
                               ),
-                              Divider(),
+                              const Divider(),
                             ],
                           ),
                         );

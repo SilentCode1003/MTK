@@ -40,18 +40,18 @@ class _CoopState extends State<Coop> {
             'Coop',
             style: TextStyle(color: Colors.black),
           ),
-          backgroundColor: Color.fromARGB(255, 255, 255, 255),
+          backgroundColor: const Color.fromARGB(255, 255, 255, 255),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back, color: Colors.black),
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => DrawerPage()),
+                MaterialPageRoute(builder: (context) => const DrawerPage()),
               );
             },
           ),
         ),
-        body: SingleChildScrollView(
+        body: const SingleChildScrollView(
           child: Column(
             children: [
               // Add your widgets here

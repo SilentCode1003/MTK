@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: false,
       ),
       home: const OpeningPage(),
-      routes: {'/logout': ((context) => LoginPage())},
+      routes: {'/logout': ((context) => const LoginPage())},
     );
   }
 }
@@ -50,10 +50,10 @@ class _OpeningPageState extends State<OpeningPage> {
   }
 
   Future<void> _loadLoginPage() async {
-    await Future.delayed(Duration(seconds: 3));
+    await Future.delayed(const Duration(seconds: 3));
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => LoginPage()),
+      MaterialPageRoute(builder: (context) => const LoginPage()),
     );
   }
 
@@ -65,7 +65,7 @@ class _OpeningPageState extends State<OpeningPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
+            SizedBox(
               width: 250,
               height: 200,
               child: Column(
@@ -74,9 +74,9 @@ class _OpeningPageState extends State<OpeningPage> {
                 ],
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Container(
-              child: CircularProgressIndicator(
+              child: const CircularProgressIndicator(
                 valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
               ),
             ),
@@ -88,6 +88,8 @@ class _OpeningPageState extends State<OpeningPage> {
 }
 
 class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -158,15 +160,15 @@ class _LoginPageState extends State<LoginPage> {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: Text('Update Available'),
-              content: Text(
+              title: const Text('Update Available'),
+              content: const Text(
                   'A new version of the app is available. Please update to the latest version.'),
               actions: <Widget>[
                 TextButton(
                   onPressed: () async {
                     Navigator.of(context).pop();
                   },
-                  child: Text('Later'),
+                  child: const Text('Later'),
                 ),
                 TextButton(
                   onPressed: () async {
@@ -176,7 +178,7 @@ class _LoginPageState extends State<LoginPage> {
                         path:'drive/u/4/folders/1vcBLiuf2xJUH_p15TUJm8B5Y7B2je8Ap');
                     _launchInBrowser(toLaunch);
                   },
-                  child: Text('OK'),
+                  child: const Text('OK'),
                 ),
               ],
             );
@@ -225,7 +227,7 @@ class _LoginPageState extends State<LoginPage> {
 
     var connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.none) {
-      await Future.delayed(Duration(seconds: 3));
+      await Future.delayed(const Duration(seconds: 3));
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -233,10 +235,10 @@ class _LoginPageState extends State<LoginPage> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20.0),
             ),
-            title: Center(
+            title: const Center(
               child: Text('No Connection!'),
             ),
-            content: Padding(
+            content: const Padding(
               padding: EdgeInsets.only(left: 50),
               child: Text(
                 'Please check your internet connection and try again.',
@@ -291,7 +293,7 @@ class _LoginPageState extends State<LoginPage> {
         }
         _saveRememberedCredentials();
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => DrawerPage()),
+          MaterialPageRoute(builder: (_) => const DrawerPage()),
         );
       } else {
         showDialog(
@@ -348,12 +350,12 @@ class _LoginPageState extends State<LoginPage> {
     return (await showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: Text('Are you sure?'),
-            content: Text('Do you want to exit the app?'),
+            title: const Text('Are you sure?'),
+            content: const Text('Do you want to exit the app?'),
             actions: <Widget>[
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: Text('No'),
+                child: const Text('No'),
               ),
               TextButton(
                 onPressed: () {
@@ -362,7 +364,7 @@ class _LoginPageState extends State<LoginPage> {
                     exit(0);
                   }
                 },
-                child: Text('Yes'),
+                child: const Text('Yes'),
               ),
             ],
           ),
@@ -385,7 +387,7 @@ class _LoginPageState extends State<LoginPage> {
                     Padding(
                       padding: const EdgeInsets.only(top: 60.0),
                       child: Center(
-                        child: Container(
+                        child: SizedBox(
                           width: 200,
                           height: 150,
                           child: Image.asset('assets/5L.png'),
@@ -393,10 +395,10 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 15),
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
                       child: TextField(
                         controller: _usernameController,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'Username',
                           hintText: 'Enter valid Username',
@@ -414,7 +416,7 @@ class _LoginPageState extends State<LoginPage> {
                         obscureText: _isPasswordObscured,
                         controller: _passwordController,
                         decoration: InputDecoration(
-                          border: OutlineInputBorder(),
+                          border: const OutlineInputBorder(),
                           labelText: 'Password',
                           hintText: 'Enter secure password',
                           suffixIcon: IconButton(
@@ -442,18 +444,18 @@ class _LoginPageState extends State<LoginPage> {
                           _login();
                         },
                         style: ElevatedButton.styleFrom(
-                          primary: const Color.fromARGB(255, 215, 36, 24),
+                          backgroundColor: const Color.fromARGB(255, 215, 36, 24),
                         ),
                         child: isLoading
-                            ? Row(
+                            ? const Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   CircularProgressIndicator(
                                       color: Colors.white),
-                                  const SizedBox(width: 10),
+                                  SizedBox(width: 10),
                                 ],
                               )
-                            : Text(
+                            : const Text(
                                 'Login',
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 25),
@@ -465,11 +467,11 @@ class _LoginPageState extends State<LoginPage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => ForgotPasswordPage(),
+                            builder: (context) => const ForgotPasswordPage(),
                           ),
                         );
                       },
-                      child: Text(
+                      child: const Text(
                         'Forgot Password',
                         style: TextStyle(color: Colors.red, fontSize: 15),
                       ),
@@ -482,7 +484,7 @@ class _LoginPageState extends State<LoginPage> {
               padding: const EdgeInsets.all(8.0),
               child: Text(
                 'App Version: $_appVersion',
-                style: TextStyle(fontSize: 16, color: Colors.black),
+                style: const TextStyle(fontSize: 16, color: Colors.black),
               ),
             ),
           ],

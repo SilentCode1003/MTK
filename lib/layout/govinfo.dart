@@ -63,7 +63,7 @@ class _GovinfoStatefulWidgetState extends State<Govinfo> {
             'Goverment Information',
             style: TextStyle(color: Colors.black),
           ),
-          backgroundColor: Color.fromARGB(255, 255, 255, 255),
+          backgroundColor: const Color.fromARGB(255, 255, 255, 255),
           elevation: 0,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back, color: Colors.black),
@@ -79,12 +79,12 @@ class _GovinfoStatefulWidgetState extends State<Govinfo> {
           ),
         ),
         body: Container(
-          color: Color.fromARGB(255, 255, 255, 255),
+          color: const Color.fromARGB(255, 255, 255, 255),
         child: Column(
           children: <Widget>[
             Expanded(
             child: govinfos.isEmpty
-                ? Center(
+                ? const Center(
                     child: Text(
                       'No government information available.',
                       style:
@@ -94,7 +94,7 @@ class _GovinfoStatefulWidgetState extends State<Govinfo> {
                 : ListView.builder(
                     itemCount: govinfos.length,
                     shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     itemBuilder: (BuildContext context, int index) {
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -104,8 +104,8 @@ class _GovinfoStatefulWidgetState extends State<Govinfo> {
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
-                                '${govinfos[index].idtype}',
-                                style: TextStyle(
+                                govinfos[index].idtype,
+                                style: const TextStyle(
                                     fontSize: 14, fontWeight: FontWeight.bold),
                               ),
                             ),
@@ -115,11 +115,11 @@ class _GovinfoStatefulWidgetState extends State<Govinfo> {
                                   right: 8.0,
                                   bottom: 8.0), // Adjust as needed
                               child: Text(
-                                '${govinfos[index].idnumber}',
-                                style: TextStyle(fontSize: 18),
+                                govinfos[index].idnumber,
+                                style: const TextStyle(fontSize: 18),
                               ),
                             ),
-                            Divider(),
+                            const Divider(),
                           ],
                         ),
                       );

@@ -123,7 +123,7 @@ class _BasicinfoStatefulWidgetState extends State<Basicinformation> {
                   padding: const EdgeInsets.only(
                       left: 8.0, right: 8.0, bottom: 8.0), // Adjust as needed
                   child: Text(
-                    '$employeeid',
+                    employeeid,
                     style: const TextStyle(fontSize: 18),
                   ),
                 ),
@@ -139,7 +139,7 @@ class _BasicinfoStatefulWidgetState extends State<Basicinformation> {
                   padding: const EdgeInsets.only(
                       left: 8.0, right: 8.0, bottom: 8.0), // Adjust as needed
                   child: Text(
-                    '$lastname',
+                    lastname,
                     style: const TextStyle(fontSize: 18),
                   ),
                 ),
@@ -155,7 +155,7 @@ class _BasicinfoStatefulWidgetState extends State<Basicinformation> {
                   padding: const EdgeInsets.only(
                       left: 8.0, right: 8.0, bottom: 8.0), // Adjust as needed
                   child: Text(
-                    '$firstname',
+                    firstname,
                     style: const TextStyle(fontSize: 18),
                   ),
                 ),
@@ -171,7 +171,7 @@ class _BasicinfoStatefulWidgetState extends State<Basicinformation> {
                   padding: const EdgeInsets.only(
                       left: 8.0, right: 8.0, bottom: 8.0), // Adjust as needed
                   child: Text(
-                    '$middlename',
+                    middlename,
                     style: const TextStyle(fontSize: 18),
                   ),
                 ),
@@ -187,7 +187,7 @@ class _BasicinfoStatefulWidgetState extends State<Basicinformation> {
                   padding: const EdgeInsets.only(
                       left: 8.0, right: 8.0, bottom: 8.0), // Adjust as needed
                   child: Text(
-                    '$gender',
+                    gender,
                     style: const TextStyle(fontSize: 18),
                   ),
                 ),
@@ -203,7 +203,7 @@ class _BasicinfoStatefulWidgetState extends State<Basicinformation> {
                   padding: const EdgeInsets.only(
                       left: 8.0, right: 8.0, bottom: 8.0), // Adjust as needed
                   child: Text(
-                    '$civilstatus',
+                    civilstatus,
                     style: const TextStyle(fontSize: 18),
                   ),
                 ),
@@ -219,7 +219,7 @@ class _BasicinfoStatefulWidgetState extends State<Basicinformation> {
                   padding: const EdgeInsets.only(
                       left: 8.0, right: 8.0, bottom: 8.0), // Adjust as needed
                   child: Text(
-                    '$address',
+                    address,
                     style: const TextStyle(fontSize: 18),
                   ),
                 ),
@@ -235,7 +235,7 @@ class _BasicinfoStatefulWidgetState extends State<Basicinformation> {
                   padding: const EdgeInsets.only(
                       left: 8.0, right: 8.0, bottom: 8.0), // Adjust as needed
                   child: Text(
-                    '$birthday',
+                    birthday,
                     style: const TextStyle(fontSize: 18),
                   ),
                 ),
@@ -251,7 +251,7 @@ class _BasicinfoStatefulWidgetState extends State<Basicinformation> {
                   padding: const EdgeInsets.only(
                       left: 8.0, right: 8.0, bottom: 8.0), // Adjust as needed
                   child: Text(
-                    '$phone',
+                    phone,
                     style: const TextStyle(fontSize: 18),
                   ),
                 ),
@@ -267,7 +267,7 @@ class _BasicinfoStatefulWidgetState extends State<Basicinformation> {
                   padding: const EdgeInsets.only(
                       left: 8.0, right: 8.0, bottom: 8.0), // Adjust as needed
                   child: Text(
-                    '$email',
+                    email,
                     style: const TextStyle(fontSize: 18),
                   ),
                 ),
@@ -283,7 +283,7 @@ class _BasicinfoStatefulWidgetState extends State<Basicinformation> {
                   padding: const EdgeInsets.only(
                       left: 8.0, right: 8.0, bottom: 8.0), // Adjust as needed
                   child: Text(
-                    '$ercontactname',
+                    ercontactname,
                     style: const TextStyle(fontSize: 14),
                   ),
                 ),
@@ -299,7 +299,7 @@ class _BasicinfoStatefulWidgetState extends State<Basicinformation> {
                   padding: const EdgeInsets.only(
                       left: 8.0, right: 8.0, bottom: 8.0), // Adjust as needed
                   child: Text(
-                    '$ercontactphone',
+                    ercontactphone,
                     style: const TextStyle(fontSize: 18),
                   ),
                 ),

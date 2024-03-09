@@ -3,6 +3,8 @@ import 'package:eportal/component/developer_options_checker.dart';
 import 'package:eportal/main.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
+  const ForgotPasswordPage({super.key});
+
   @override
   _ForgotPasswordPageState createState() => _ForgotPasswordPageState();
 }
@@ -28,17 +30,17 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => LoginPage(),
+                builder: (context) => const LoginPage(),
               ),
             );
           },
         ),
-        title: Text(
+        title: const Text(
           'Back',
           style: TextStyle(
             fontSize: 18,
@@ -57,7 +59,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Padding(
+              const Padding(
                 padding: EdgeInsets.only(left: 15),
                 child: Text(
                   'Forget password?',
@@ -67,8 +69,8 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
-              Padding(
+              const SizedBox(height: 20),
+              const Padding(
                 padding: EdgeInsets.only(left: 15),
                 child: Text(
                   'Enter your registered email below. Your Password will be reset and a new one will be sent to you via Email',
@@ -77,21 +79,21 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 15),
+                padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: TextField(
                   controller: _emailController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Email',
                     hintText: 'Enter your email',
                   ),
                 ),
               ),
-              SizedBox(height: 15),
+              const SizedBox(height: 15),
               Padding(
-                padding: EdgeInsets.only(left: 15),
+                padding: const EdgeInsets.only(left: 15),
                 child: SizedBox(
                   width: 320,
                   height: 50,
@@ -101,7 +103,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                       backgroundColor:
                           MaterialStateProperty.all<Color>(Colors.red),
                     ),
-                    child: Text(
+                    child: const Text(
                       'Reset Password',
                       style: TextStyle(
                         color: Colors.white,

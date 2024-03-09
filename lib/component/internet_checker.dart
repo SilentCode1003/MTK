@@ -13,8 +13,8 @@ Future<void> checkInternetConnection(BuildContext context) async {
               borderRadius:
                   BorderRadius.circular(20.0), // Adjust the value as needed
             ),
-          title: Center(child: Text('No Connection!'),),
-          content: Padding( padding: EdgeInsets.only(left: 50), 
+          title: const Center(child: Text('No Connection!'),),
+          content: const Padding( padding: EdgeInsets.only(left: 50), 
           child: Text('Please check your internet connection and try again.',
             style: TextStyle(fontWeight: FontWeight.normal),
           ),),

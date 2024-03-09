@@ -43,7 +43,7 @@ class _HomePageState extends State<HomePage> {
 
     var connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.none) {
-      await Future.delayed(Duration(seconds: 3));
+      await Future.delayed(const Duration(seconds: 3));
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -51,10 +51,10 @@ class _HomePageState extends State<HomePage> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20.0),
             ),
-            title: Center(
+            title: const Center(
               child: Text('No Connection!'),
             ),
-            content: Padding(
+            content: const Padding(
               padding: EdgeInsets.only(left: 50),
               child: Text(
                 'Please check your internet connection and try again.',
@@ -230,13 +230,13 @@ class _HomePageState extends State<HomePage> {
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  Text(
+                  const Text(
                     'View Payslip',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 10),
-                  Text('Enter your password'),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 10),
+                  const Text('Enter your password'),
+                  const SizedBox(height: 15),
                   TextField(
                     obscureText: _isPasswordObscured,
                     controller: passwordController,
@@ -247,7 +247,7 @@ class _HomePageState extends State<HomePage> {
                       });
                     },
                     decoration: InputDecoration(
-                      border: OutlineInputBorder(),
+                      border: const OutlineInputBorder(),
                       labelText: 'Password',
                       hintText: 'Enter secure password',
                       suffixIcon: IconButton(
@@ -341,7 +341,7 @@ class MyBottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
-      items: [
+      items: const [
         BottomNavigationBarItem(
           icon: Icon(Icons.home),
           label: 'Home',
