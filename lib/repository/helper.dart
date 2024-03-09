@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter_multi_formatter/formatters/formatter_utils.dart';
 import 'package:intl/intl.dart';
 import 'dart:io';
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:path_provider/path_provider.dart';
 
 enum APIStatus { success, error }
@@ -19,7 +18,7 @@ class Helper {
   }
 
   String GetYesterdayDatetime() {
-    DateTime yesterday = DateTime.now().subtract(Duration(days: 1));
+    DateTime yesterday = DateTime.now().subtract(const Duration(days: 1));
     String formattedDateTime = DateFormat('yyyy-MM-dd HH:mm').format(yesterday);
     return formattedDateTime;
   }
@@ -114,5 +113,19 @@ class Helper {
     DateTime currentDateTime = DateTime.now();
     String formattedDateTime = DateFormat('yyyy-MM-dd').format(currentDateTime);
     return formattedDateTime;
+  }
+}
+
+Future<String> getDownloadDir() async {
+  try {
+    Directory? downloadsDirectory = await getExternalStorageDirectory();
+    String finalpath = downloadsDirectory!.path;
+    String removepath = '/Android/data/com.example.eportal/files';
+    String cleanPath = finalpath.replaceAll(removepath, '');
+    print('Downloads directory: $cleanPath');
+    return cleanPath;
+  } catch (e) {
+    print('Error getting downloads directory: $e');
+    return '';
   }
 }

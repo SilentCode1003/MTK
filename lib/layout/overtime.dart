@@ -69,18 +69,18 @@ class _OvertimeState extends State<Overtime> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => DrawerPage()),
+              MaterialPageRoute(builder: (context) => const DrawerPage()),
             );
           },
         ),
       ),
       body: Container(
-        color: Color.fromARGB(255, 255, 255, 255),
+        color: const Color.fromARGB(255, 255, 255, 255),
         child: Column(
           children: <Widget>[
             Expanded(
               child: otinfo.isEmpty
-                  ? Center(
+                  ? const Center(
                       child: Text(
                         'No Overtime',
                         style: TextStyle(fontSize: 20),
@@ -93,14 +93,14 @@ class _OvertimeState extends State<Overtime> {
                           onTap: () {
                             showModalBottomSheet(
                               context: context,
-                              shape: RoundedRectangleBorder(
+                              shape: const RoundedRectangleBorder(
                                 borderRadius: BorderRadius.vertical(
                                   top: Radius.circular(25),
                                 ),
                               ),
                               builder: (BuildContext context) {
                                 return Container(
-                                  decoration: BoxDecoration(
+                                  decoration: const BoxDecoration(
                                     borderRadius: BorderRadius.vertical(
                                       top: Radius.circular(25),
                                     ),
@@ -111,8 +111,8 @@ class _OvertimeState extends State<Overtime> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Center(
-                                          child: const Text(
+                                        const Center(
+                                          child: Text(
                                             'Cash Details',
                                             style: TextStyle(
                                               fontSize: 28,
@@ -125,7 +125,7 @@ class _OvertimeState extends State<Overtime> {
                                           alignment: Alignment.centerLeft,
                                           child: Text(
                                             '₱ ${otinfo[index].totalhours}',
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               fontSize: 25,
                                               fontWeight: FontWeight.bold,
                                             ),
@@ -136,7 +136,7 @@ class _OvertimeState extends State<Overtime> {
                                           alignment: Alignment.centerLeft,
                                           child: Text(
                                             'Start Date:     ${otinfo[index].payrolldate}',
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               fontSize: 22,
                                               fontWeight: FontWeight.normal,
                                             ),
@@ -146,7 +146,7 @@ class _OvertimeState extends State<Overtime> {
                                           alignment: Alignment.centerLeft,
                                           child: Text(
                                             'End Date:     ${otinfo[index].payrolldate}',
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               fontSize: 22,
                                               fontWeight: FontWeight.normal,
                                             ),
@@ -156,7 +156,7 @@ class _OvertimeState extends State<Overtime> {
                                           alignment: Alignment.centerLeft,
                                           child: Text(
                                             'Applied Date: ${otinfo[index].payrolldate}',
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               fontSize: 22,
                                               fontWeight: FontWeight.normal,
                                             ),
@@ -166,7 +166,7 @@ class _OvertimeState extends State<Overtime> {
                                           alignment: Alignment.centerLeft,
                                           child: Text(
                                             'Reason: ${otinfo[index].totalhours}',
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               fontSize: 22,
                                               fontWeight: FontWeight.normal,
                                             ),
@@ -197,10 +197,10 @@ class _OvertimeState extends State<Overtime> {
                                             ),
                                           ),
                                         ),
-                                        SizedBox(height: 50),
+                                        const SizedBox(height: 50),
                                         if (otinfo[index].overtimestatus ==
                                             'Pending')
-                                          Center(
+                                          const Center(
                                             // child: ElevatedButton(
                                             //   onPressed: () {
                                             //     _cancelLeaveApplication(
@@ -241,7 +241,7 @@ class _OvertimeState extends State<Overtime> {
                                     child: ListTile(
                                       title: Text(
                                         '${otinfo[index].totalhours} Hours',
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontSize: 22.0,
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -252,11 +252,11 @@ class _OvertimeState extends State<Overtime> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          SizedBox(height: 7.0),
+                                          const SizedBox(height: 7.0),
                                           Text(
                                             'Time: ${otinfo[index].clockin} - ${otinfo[index].clockout}',
                                           ),
-                                          SizedBox(height: 5.0),
+                                          const SizedBox(height: 5.0),
                                           Text(
                                             'Date: ${otinfo[index].attendancedate}',
                                           )

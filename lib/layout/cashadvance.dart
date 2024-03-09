@@ -278,7 +278,7 @@ class _RequestCashState extends State<RequestCash> {
                                                 Navigator.pop(context);
                                               },
                                               style: ElevatedButton.styleFrom(
-                                                primary: Colors.red,
+                                                backgroundColor: Colors.red,
                                                 shape: RoundedRectangleBorder(
                                                   borderRadius:
                                                       BorderRadius.circular(20),
@@ -368,24 +368,24 @@ class _RequestCashState extends State<RequestCash> {
         onPressed: () {
           _showCashApplicationForm(context);
         },
+        backgroundColor: const Color.fromARGB(255, 215, 36, 24),
         child: const Icon(
           Icons.add,
           color: Colors.white,
         ),
-        backgroundColor: const Color.fromARGB(255, 215, 36, 24),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 
   Future<void> _showCashApplicationForm(BuildContext context) async {
-    TextEditingController _amountController = TextEditingController();
+    TextEditingController amountController = TextEditingController();
     
-    TextEditingController _purposeController = TextEditingController();
+    TextEditingController purposeController = TextEditingController();
 
     Future<void> _requestcash() async {
-      String amount = _amountController.text;
-      String purpose = _purposeController.text;
+      String amount = amountController.text;
+      String purpose = purposeController.text;
 
       print('$amount $purpose');
 
@@ -447,8 +447,8 @@ class _RequestCashState extends State<RequestCash> {
       context: context,
       builder: (BuildContext context) {
         bool _validateFields() {
-          return _amountController.text.isNotEmpty &&
-              _purposeController.text.isNotEmpty;
+          return amountController.text.isNotEmpty &&
+              purposeController.text.isNotEmpty;
         }
 
         return AlertDialog(
@@ -458,13 +458,13 @@ class _RequestCashState extends State<RequestCash> {
               children: <Widget>[
                 const SizedBox(height: 10),
                 TextFormField(
-                  controller: _amountController,
+                  controller: amountController,
                   decoration: const InputDecoration(labelText: 'Amount'),
                   keyboardType: TextInputType.datetime,
                 ),
                 const SizedBox(height: 10),
                 TextFormField(
-                  controller: _purposeController,
+                  controller: purposeController,
                   decoration: const InputDecoration(labelText: 'Purpose'),
                   maxLines: 3,
                 ),
@@ -498,7 +498,7 @@ class _RequestCashState extends State<RequestCash> {
                 }
               },
               style: TextButton.styleFrom(
-                primary: Colors.black,
+                foregroundColor: Colors.black,
               ),
               child: const Text('Submit'),
             ),
@@ -507,7 +507,7 @@ class _RequestCashState extends State<RequestCash> {
                 Navigator.of(context).pop();
               },
               style: TextButton.styleFrom(
-                primary: Colors.black,
+                foregroundColor: Colors.black,
               ),
               child: const Text('Cancel'),
             ),

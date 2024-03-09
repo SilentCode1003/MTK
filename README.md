@@ -1,18 +1,42 @@
-# eportal
+# Chronus MTK (Mobile Timekeeping App)
 
-A new Flutter project.
+Mobile timekeeping refers to the practice of using mobile devices, such as smartphones or tablets, to track and manage time-related activities. This can include tasks like logging work hours, recording billable hours for clients, tracking project time, or managing attendance.
 
-## Getting Started
+Mobile timekeeping applications and software typically offer features such as clocking in and out, timesheet management, project tracking, GPS tracking for remote workers, and integration with other business systems like payroll or billing. These tools provide convenience and flexibility, allowing employees to track their time and managers to monitor and analyze time-related data from anywhere with internet access.
 
-This project is a starting point for a Flutter application.
+Overall, mobile timekeeping streamlines time management processes, improves accuracy, and enhances productivity for both employees and employers.
 
-A few resources to get you started if this is your first Flutter project:
+## Version Updates
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### 1.0.0
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Added feature geofence
+- Added employee's attendance view
 
+### 1.1.0
 
+- Added employe profile view
+- Added announcement notification
+- Added change password
+
+### 1.2.0
+
+- Added employee's work schedule view
+- Added employee's training view
+
+### 1.3.0
+
+- change application icon
+- fix bug on change page
+
+### 1.4.0
+
+- Added payslip view
+
+### 1.4.1
+
+- Added download payslip
+
+### 1.4.2
+
+- Revise to download pdf and save to Downlod folder in android

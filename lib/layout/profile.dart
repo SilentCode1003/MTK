@@ -76,24 +76,24 @@ class _ProfileStatefulWidgetState extends State<Profile> {
           'Profile',
           style: TextStyle(color: Colors.black),
         ),
-        backgroundColor: Color.fromARGB(255, 255, 255, 255),
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         elevation: 0, // Set elevation to 0 to remove the shadow
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => DrawerPage()),
+              MaterialPageRoute(builder: (context) => const DrawerPage()),
             );
           },
         ),
       ),
       body: Container(
-        color: Color.fromARGB(255, 255, 255, 255),
+        color: const Color.fromARGB(255, 255, 255, 255),
         child: Stack(
           alignment: Alignment.topCenter,
           children: [
-            if (isLoading) ShimmerLoading(),
+            if (isLoading) const ShimmerLoading(),
             if (!isLoading) ...[
               Positioned(
                 top: 20.0,
@@ -111,24 +111,24 @@ class _ProfileStatefulWidgetState extends State<Profile> {
               Positioned(
                 top: 160.0,
                 child: Text(
-                  '$fullname',
-                  style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+                  fullname,
+                  style: const TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
                 ),
               ),
               Positioned(
                 top: 190.0,
                 child: Text(
-                  '$position',
+                  position,
                   style:
-                      TextStyle(fontSize: 14.0, fontWeight: FontWeight.normal),
+                      const TextStyle(fontSize: 14.0, fontWeight: FontWeight.normal),
                 ),
               ),
               Positioned(
                 top: 210.0,
                 child: Text(
-                  '$departmentname',
+                  departmentname,
                   style:
-                      TextStyle(fontSize: 14.0, fontWeight: FontWeight.normal),
+                      const TextStyle(fontSize: 14.0, fontWeight: FontWeight.normal),
                 ),
               ),
               Positioned(
@@ -150,10 +150,10 @@ class _ProfileStatefulWidgetState extends State<Profile> {
                       color: const Color.fromARGB(255, 244, 242, 242),
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    child: Row(
+                    child: const Row(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(left: 10, right: 10),
+                          padding: EdgeInsets.only(left: 10, right: 10),
                           child: Icon(
                             Icons.person,
                             color: Colors.black,
@@ -168,7 +168,7 @@ class _ProfileStatefulWidgetState extends State<Profile> {
                         ),
                         Spacer(),
                         Padding(
-                          padding: const EdgeInsets.only(right: 10),
+                          padding: EdgeInsets.only(right: 10),
                           child: Icon(
                             Icons.chevron_right,
                             color: Colors.black,
@@ -198,10 +198,10 @@ class _ProfileStatefulWidgetState extends State<Profile> {
                       color: const Color.fromARGB(255, 244, 242, 242),
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    child: Row(
+                    child: const Row(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(left: 10, right: 10),
+                          padding: EdgeInsets.only(left: 10, right: 10),
                           child: Icon(
                             Icons.work,
                             color: Colors.black,
@@ -216,7 +216,7 @@ class _ProfileStatefulWidgetState extends State<Profile> {
                         ),
                         Spacer(),
                         Padding(
-                          padding: const EdgeInsets.only(right: 10),
+                          padding: EdgeInsets.only(right: 10),
                           child: Icon(
                             Icons.chevron_right,
                             color: Colors.black,
@@ -246,10 +246,10 @@ class _ProfileStatefulWidgetState extends State<Profile> {
                       color: const Color.fromARGB(255, 244, 242, 242),
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    child: Row(
+                    child: const Row(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(left: 10, right: 10),
+                          padding: EdgeInsets.only(left: 10, right: 10),
                           child: Icon(
                             Icons.calendar_month,
                             color: Colors.black,
@@ -264,7 +264,7 @@ class _ProfileStatefulWidgetState extends State<Profile> {
                         ),
                         Spacer(),
                         Padding(
-                          padding: const EdgeInsets.only(right: 10),
+                          padding: EdgeInsets.only(right: 10),
                           child: Icon(
                             Icons.chevron_right,
                             color: Colors.black,
@@ -294,10 +294,10 @@ class _ProfileStatefulWidgetState extends State<Profile> {
                       color: const Color.fromARGB(255, 244, 242, 242),
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    child: Row(
+                    child: const Row(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(left: 10, right: 10),
+                          padding: EdgeInsets.only(left: 10, right: 10),
                           child: Icon(
                             Icons.description,
                             color: Colors.black,
@@ -312,7 +312,7 @@ class _ProfileStatefulWidgetState extends State<Profile> {
                         ),
                         Spacer(),
                         Padding(
-                          padding: const EdgeInsets.only(right: 10),
+                          padding: EdgeInsets.only(right: 10),
                           child: Icon(
                             Icons.chevron_right,
                             color: Colors.black,
@@ -342,10 +342,10 @@ class _ProfileStatefulWidgetState extends State<Profile> {
                       color: const Color.fromARGB(255, 244, 242, 242),
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    child: Row(
+                    child: const Row(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(left: 10, right: 10),
+                          padding: EdgeInsets.only(left: 10, right: 10),
                           child: Icon(
                             Icons.assignment,
                             color: Colors.black,
@@ -362,7 +362,7 @@ class _ProfileStatefulWidgetState extends State<Profile> {
                         // Greater-than icon with margin on the right side
                         Spacer(),
                         Padding(
-                          padding: const EdgeInsets.only(right: 10),
+                          padding: EdgeInsets.only(right: 10),
                           child: Icon(
                             Icons.chevron_right,
                             color: Colors.black,
@@ -392,11 +392,11 @@ class _ProfileStatefulWidgetState extends State<Profile> {
                       color: const Color.fromARGB(255, 244, 242, 242),
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    child: Row(
+                    child: const Row(
                       children: [
                         // Icon of a person
                         Padding(
-                          padding: const EdgeInsets.only(left: 10, right: 10),
+                          padding: EdgeInsets.only(left: 10, right: 10),
                           child: Icon(
                             Icons.lock,
                             color: Colors.black,
@@ -413,7 +413,7 @@ class _ProfileStatefulWidgetState extends State<Profile> {
                         // Greater-than icon with margin on the right side
                         Spacer(),
                         Padding(
-                          padding: const EdgeInsets.only(right: 10),
+                          padding: EdgeInsets.only(right: 10),
                           child: Icon(
                             Icons.chevron_right,
                             color: Colors.black,
@@ -441,6 +441,8 @@ class _ProfileStatefulWidgetState extends State<Profile> {
 }
 
 class ShimmerLoading extends StatelessWidget {
+  const ShimmerLoading({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
@@ -450,17 +452,17 @@ class ShimmerLoading extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CircleAvatar(
+            const CircleAvatar(
               radius: 60,
               backgroundColor: Colors.white,
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Container(
               width: 120,
               height: 20,
               color: Colors.white,
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Container(
               width: 80,
               height: 20,

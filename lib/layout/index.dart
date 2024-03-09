@@ -140,8 +140,8 @@ class _IndexState extends State<Index> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Location Services Disabled'),
-          content: Text('Please enable location services to use this app.'),
+          title: const Text('Location Services Disabled'),
+          content: const Text('Please enable location services to use this app.'),
           actions: <Widget>[
             TextButton(
               child: const Text('Cancel'),
@@ -150,7 +150,7 @@ class _IndexState extends State<Index> {
               },
             ),
             TextButton(
-              child: Text('Open Location Settings'),
+              child: const Text('Open Location Settings'),
               onPressed: () {
                 Geolocator.openLocationSettings();
                 Navigator.of(context).pop();
@@ -325,8 +325,8 @@ class _IndexState extends State<Index> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          title: Center(
+          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          title: const Center(
             child: Text(
               'Are you sure you want to clock out?',
               style: TextStyle(fontSize: 14),
@@ -398,8 +398,8 @@ class _IndexState extends State<Index> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          title: Center(
+          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          title: const Center(
             child: Text(
               'Are you sure you want to exit?',
               style: TextStyle(fontSize: 15),
@@ -483,8 +483,8 @@ class _IndexState extends State<Index> {
         return AlertDialog(
           title: _geofencename.isNotEmpty
               ? Center(
-                  child: Text(_geofencename, style: TextStyle(fontSize: 20)))
-              : Center(
+                  child: Text(_geofencename, style: const TextStyle(fontSize: 20)))
+              : const Center(
                   child: Text('Please move to your assigned location',
                       style: TextStyle(fontSize: 15))),
           content: SizedBox(
@@ -592,7 +592,7 @@ class _IndexState extends State<Index> {
             ),
             title: Column(
               children: [
-                Icon(
+                const Icon(
                   Icons.check_circle_outline,
                   color: Colors.green,
                   size: 80,
@@ -608,7 +608,7 @@ class _IndexState extends State<Index> {
                 Center(
                   child: Text(
                     '${DateFormat('MMM dd').format(clockInDateTime)} ${DateFormat('h:mm a').format(clockInDateTime)}',
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.black,
                       fontSize: 16,
                       fontWeight: FontWeight.normal,
@@ -622,7 +622,7 @@ class _IndexState extends State<Index> {
                   child: Text(
                     _geofencename,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.normal,
                       color: Colors.black,
@@ -674,15 +674,15 @@ class _IndexState extends State<Index> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20.0),
             ),
-            title: Column(
+            title: const Column(
               children: [
                 Icon(
                   Icons.error_outline,
                   color: Colors.red,
                   size: 80,
                 ),
-                const SizedBox(height: 5),
-                const Text(
+                SizedBox(height: 5),
+                Text(
                   'Already have Attendance',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
@@ -760,7 +760,7 @@ class _IndexState extends State<Index> {
             ),
             title: Column(
               children: [
-                Icon(
+                const Icon(
                   Icons.check_circle_outline,
                   color: Colors.green,
                   size: 80,
@@ -776,7 +776,7 @@ class _IndexState extends State<Index> {
                 Center(
                   child: Text(
                     '${DateFormat('MMM dd').format(clockInDateTime)} ${DateFormat('h:mm a').format(clockInDateTime)}',
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.black,
                       fontSize: 16,
                       fontWeight: FontWeight.normal,
@@ -790,7 +790,7 @@ class _IndexState extends State<Index> {
                   child: Text(
                     _geofencename,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.normal,
                       color: Colors.black,
@@ -896,7 +896,7 @@ class _IndexState extends State<Index> {
       child: Scaffold(
         body: SingleChildScrollView(
           child: Container(
-            color: Color.fromARGB(255, 255, 255, 255),
+            color: const Color.fromARGB(255, 255, 255, 255),
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -906,7 +906,7 @@ class _IndexState extends State<Index> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         "Today's Status",
                         style: TextStyle(
                           fontSize: 20,
@@ -914,7 +914,7 @@ class _IndexState extends State<Index> {
                           fontFamily: 'NexaRegular',
                         ),
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       Container(
                         height: 150,
                         width: double.infinity,
@@ -926,19 +926,19 @@ class _IndexState extends State<Index> {
                               color: Colors.grey.withOpacity(0.5),
                               spreadRadius: 5,
                               blurRadius: 7,
-                              offset: Offset(0, 3),
+                              offset: const Offset(0, 3),
                             ),
                           ],
                         ),
-                        padding: EdgeInsets.all(14.0),
+                        padding: const EdgeInsets.all(14.0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                SizedBox(height: 20),
-                                Text(
+                                const SizedBox(height: 20),
+                                const Text(
                                   'Time In',
                                   style: TextStyle(
                                     fontSize: 30,
@@ -946,22 +946,22 @@ class _IndexState extends State<Index> {
                                     color: Colors.black,
                                   ),
                                 ),
-                                SizedBox(height: 8),
+                                const SizedBox(height: 8),
                                 Text(
-                                  '$ma_clockin',
-                                  style: TextStyle(
+                                  ma_clockin,
+                                  style: const TextStyle(
                                     fontSize: 20,
                                     color: Colors.green,
                                   ),
                                 ),
                               ],
                             ),
-                            SizedBox(width: 50),
+                            const SizedBox(width: 50),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                SizedBox(height: 20),
-                                Text(
+                                const SizedBox(height: 20),
+                                const Text(
                                   'Time Out',
                                   style: TextStyle(
                                     fontSize: 30,
@@ -969,10 +969,10 @@ class _IndexState extends State<Index> {
                                     color: Colors.black,
                                   ),
                                 ),
-                                SizedBox(height: 8),
+                                const SizedBox(height: 8),
                                 Text(
-                                  '$ma_clockout',
-                                  style: TextStyle(
+                                  ma_clockout,
+                                  style: const TextStyle(
                                     fontSize: 20,
                                     color: Colors.red,
                                   ),
@@ -984,7 +984,7 @@ class _IndexState extends State<Index> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -1022,14 +1022,14 @@ class _IndexState extends State<Index> {
                                       ),
                                     ),
                                   )
-                                : SizedBox
+                                : const SizedBox
                                     .shrink();
                           }
                         },
                       ),
                     ],
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Center(
                     child: currentLocation.isEmpty
                         ? Shimmer.fromColors(
@@ -1047,14 +1047,14 @@ class _IndexState extends State<Index> {
                         : Text(
                             currentLocation,
                             textAlign: TextAlign.center,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.normal,
                               color: Colors.black,
                             ),
                           ),
                   ),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   Center(
                     child: GestureDetector(
                       onTap: () {
@@ -1079,7 +1079,7 @@ class _IndexState extends State<Index> {
                               color: isLoggedIn ? Colors.red : Colors.green,
                               size: 80,
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 10,
                             ),
                             Center(

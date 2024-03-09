@@ -88,7 +88,7 @@ class _ScheduleStatefulWidgetState extends State<Schedule> {
           'Work Schedule',
           style: TextStyle(color: Colors.black),
         ),
-        backgroundColor: Color.fromARGB(255, 255, 255, 255),
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
@@ -105,14 +105,14 @@ class _ScheduleStatefulWidgetState extends State<Schedule> {
         ),
       ),
       body: Container(
-        color: Color.fromARGB(255, 255, 255, 255),
+        color: const Color.fromARGB(255, 255, 255, 255),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
+              const Padding(
                 padding:
-                    const EdgeInsets.only(top: 16.0, left: 40.0,),
+                    EdgeInsets.only(top: 16.0, left: 40.0,),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -124,7 +124,7 @@ class _ScheduleStatefulWidgetState extends State<Schedule> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(right: 40.00),
+                      padding: EdgeInsets.only(right: 40.00),
                       child: Text(
                         'Admin',
                         style: TextStyle(
@@ -136,8 +136,8 @@ class _ScheduleStatefulWidgetState extends State<Schedule> {
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(
+              const Padding(
+                padding: EdgeInsets.only(
                   top: 16.0,
                   left: 40.0,
                 ),
@@ -152,7 +152,7 @@ class _ScheduleStatefulWidgetState extends State<Schedule> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(right: 40.0),
+                      padding: EdgeInsets.only(right: 40.0),
                       child: Text(
                         '9 Hours per shift',
                         style: TextStyle(
@@ -164,23 +164,23 @@ class _ScheduleStatefulWidgetState extends State<Schedule> {
                   ],
                 ),
               ),
-              Divider(),
-              SizedBox(height: 10),
+              const Divider(),
+              const SizedBox(height: 10),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Center(
                   child: Container(
                     width: 325,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.vertical(
+                      borderRadius: const BorderRadius.vertical(
                         top: Radius.circular(15),
                         bottom: Radius.circular(15),
                       ),
                       color: Colors.white,
                       border: Border.all(color: Colors.black, width: 2),
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                    child: const Padding(
+                      padding: EdgeInsets.all(8.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -188,9 +188,9 @@ class _ScheduleStatefulWidgetState extends State<Schedule> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
-                                padding: const EdgeInsets.only(left: 10.0),
+                                padding: EdgeInsets.only(left: 10.0),
                                 child: Center(
-                                  child: const Text(
+                                  child: Text(
                                     'Sunday',
                                     style: TextStyle(
                                       fontSize: 16,
@@ -199,11 +199,11 @@ class _ScheduleStatefulWidgetState extends State<Schedule> {
                                   ),
                                 ),
                               ),
-                              const SizedBox(height: 10.0),
+                              SizedBox(height: 10.0),
                               Row(
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.only(left: 10.0),
+                                    padding: EdgeInsets.only(left: 10.0),
                                     child: Text(
                                       'Time in:',
                                       style: TextStyle(
@@ -225,7 +225,7 @@ class _ScheduleStatefulWidgetState extends State<Schedule> {
                               Row(
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.only(left: 10.0),
+                                    padding: EdgeInsets.only(left: 10.0),
                                     child: Text(
                                       'Time out:',
                                       style: TextStyle(
@@ -252,14 +252,14 @@ class _ScheduleStatefulWidgetState extends State<Schedule> {
                   ),
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Center(
                   child: Container(
                     width: 325,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.vertical(
+                      borderRadius: const BorderRadius.vertical(
                         top: Radius.circular(15),
                         bottom: Radius.circular(15),
                       ),
@@ -274,10 +274,10 @@ class _ScheduleStatefulWidgetState extends State<Schedule> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.only(left: 10.0),
+                              const Padding(
+                                padding: EdgeInsets.only(left: 10.0),
                                 child: Center(
-                                  child: const Text(
+                                  child: Text(
                                     'Monday',
                                     style: TextStyle(
                                       fontSize: 16,
@@ -289,8 +289,8 @@ class _ScheduleStatefulWidgetState extends State<Schedule> {
                               const SizedBox(height: 10.0),
                               Row(
                                 children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 10.0),
+                                  const Padding(
+                                    padding: EdgeInsets.only(left: 10.0),
                                     child: Text(
                                       'Time in:',
                                       style: TextStyle(
@@ -299,10 +299,10 @@ class _ScheduleStatefulWidgetState extends State<Schedule> {
                                       ),
                                     ),
                                   ),
-                                  SizedBox(width: 160),
+                                  const SizedBox(width: 160),
                                   Text(
-                                    '$monday'.split(' ')[1],
-                                    style: TextStyle(
+                                    monday.split(' ')[1],
+                                    style: const TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.normal,
                                     ),
@@ -311,8 +311,8 @@ class _ScheduleStatefulWidgetState extends State<Schedule> {
                               ),
                               Row(
                                 children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 10.0),
+                                  const Padding(
+                                    padding: EdgeInsets.only(left: 10.0),
                                     child: Text(
                                       'Time out:',
                                       style: TextStyle(
@@ -321,10 +321,10 @@ class _ScheduleStatefulWidgetState extends State<Schedule> {
                                       ),
                                     ),
                                   ),
-                                  SizedBox(width: 150),
+                                  const SizedBox(width: 150),
                                   Text(
-                                    '$monday'.split(' ')[3],
-                                    style: TextStyle(
+                                    monday.split(' ')[3],
+                                    style: const TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.normal,
                                     ),
@@ -339,22 +339,22 @@ class _ScheduleStatefulWidgetState extends State<Schedule> {
                   ),
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Center(
                   child: Container(
                     width: 325,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.vertical(
+                      borderRadius: const BorderRadius.vertical(
                         top: Radius.circular(15),
                         bottom: Radius.circular(15),
                       ),
                       color: Colors.white,
                       border: Border.all(color: Colors.black, width: 2),
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                    child: const Padding(
+                      padding: EdgeInsets.all(8.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -362,9 +362,9 @@ class _ScheduleStatefulWidgetState extends State<Schedule> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
-                                padding: const EdgeInsets.only(left: 10.0),
+                                padding: EdgeInsets.only(left: 10.0),
                                 child: Center(
-                                  child: const Text(
+                                  child: Text(
                                     'Tuesday',
                                     style: TextStyle(
                                       fontSize: 16,
@@ -373,11 +373,11 @@ class _ScheduleStatefulWidgetState extends State<Schedule> {
                                   ),
                                 ),
                               ),
-                              const SizedBox(height: 10.0),
+                              SizedBox(height: 10.0),
                               Row(
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.only(left: 10.0),
+                                    padding: EdgeInsets.only(left: 10.0),
                                     child: Text(
                                       'Time in:',
                                       style: TextStyle(
@@ -399,7 +399,7 @@ class _ScheduleStatefulWidgetState extends State<Schedule> {
                               Row(
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.only(left: 10.0),
+                                    padding: EdgeInsets.only(left: 10.0),
                                     child: Text(
                                       'Time out:',
                                       style: TextStyle(
@@ -426,22 +426,22 @@ class _ScheduleStatefulWidgetState extends State<Schedule> {
                   ),
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Center(
                   child: Container(
                     width: 325,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.vertical(
+                      borderRadius: const BorderRadius.vertical(
                         top: Radius.circular(15),
                         bottom: Radius.circular(15),
                       ),
                       color: Colors.white,
                       border: Border.all(color: Colors.black, width: 2),
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                    child: const Padding(
+                      padding: EdgeInsets.all(8.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -449,9 +449,9 @@ class _ScheduleStatefulWidgetState extends State<Schedule> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
-                                padding: const EdgeInsets.only(left: 10.0),
+                                padding: EdgeInsets.only(left: 10.0),
                                 child: Center(
-                                  child: const Text(
+                                  child: Text(
                                     'Wednesday',
                                     style: TextStyle(
                                       fontSize: 16,
@@ -460,11 +460,11 @@ class _ScheduleStatefulWidgetState extends State<Schedule> {
                                   ),
                                 ),
                               ),
-                              const SizedBox(height: 10.0),
+                              SizedBox(height: 10.0),
                               Row(
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.only(left: 10.0),
+                                    padding: EdgeInsets.only(left: 10.0),
                                     child: Text(
                                       'Time in:',
                                       style: TextStyle(
@@ -486,7 +486,7 @@ class _ScheduleStatefulWidgetState extends State<Schedule> {
                               Row(
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.only(left: 10.0),
+                                    padding: EdgeInsets.only(left: 10.0),
                                     child: Text(
                                       'Time out:',
                                       style: TextStyle(
@@ -513,22 +513,22 @@ class _ScheduleStatefulWidgetState extends State<Schedule> {
                   ),
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Center(
                   child: Container(
                     width: 325,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.vertical(
+                      borderRadius: const BorderRadius.vertical(
                         top: Radius.circular(15),
                         bottom: Radius.circular(15),
                       ),
                       color: Colors.white,
                       border: Border.all(color: Colors.black, width: 2),
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                    child: const Padding(
+                      padding: EdgeInsets.all(8.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -536,9 +536,9 @@ class _ScheduleStatefulWidgetState extends State<Schedule> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
-                                padding: const EdgeInsets.only(left: 10.0),
+                                padding: EdgeInsets.only(left: 10.0),
                                 child: Center(
-                                  child: const Text(
+                                  child: Text(
                                     'Thursday',
                                     style: TextStyle(
                                       fontSize: 16,
@@ -547,11 +547,11 @@ class _ScheduleStatefulWidgetState extends State<Schedule> {
                                   ),
                                 ),
                               ),
-                              const SizedBox(height: 10.0),
+                              SizedBox(height: 10.0),
                               Row(
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.only(left: 10.0),
+                                    padding: EdgeInsets.only(left: 10.0),
                                     child: Text(
                                       'Time in:',
                                       style: TextStyle(
@@ -573,7 +573,7 @@ class _ScheduleStatefulWidgetState extends State<Schedule> {
                               Row(
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.only(left: 10.0),
+                                    padding: EdgeInsets.only(left: 10.0),
                                     child: Text(
                                       'Time out:',
                                       style: TextStyle(
@@ -600,22 +600,22 @@ class _ScheduleStatefulWidgetState extends State<Schedule> {
                   ),
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Center(
                   child: Container(
                     width: 325,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.vertical(
+                      borderRadius: const BorderRadius.vertical(
                         top: Radius.circular(15),
                         bottom: Radius.circular(15),
                       ),
                       color: Colors.white,
                       border: Border.all(color: Colors.black, width: 2),
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                    child: const Padding(
+                      padding: EdgeInsets.all(8.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -623,9 +623,9 @@ class _ScheduleStatefulWidgetState extends State<Schedule> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
-                                padding: const EdgeInsets.only(left: 10.0),
+                                padding: EdgeInsets.only(left: 10.0),
                                 child: Center(
-                                  child: const Text(
+                                  child: Text(
                                     'Friday',
                                     style: TextStyle(
                                       fontSize: 16,
@@ -634,11 +634,11 @@ class _ScheduleStatefulWidgetState extends State<Schedule> {
                                   ),
                                 ),
                               ),
-                              const SizedBox(height: 10.0),
+                              SizedBox(height: 10.0),
                               Row(
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.only(left: 10.0),
+                                    padding: EdgeInsets.only(left: 10.0),
                                     child: Text(
                                       'Time in:',
                                       style: TextStyle(
@@ -660,7 +660,7 @@ class _ScheduleStatefulWidgetState extends State<Schedule> {
                               Row(
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.only(left: 10.0),
+                                    padding: EdgeInsets.only(left: 10.0),
                                     child: Text(
                                       'Time out:',
                                       style: TextStyle(
@@ -687,22 +687,22 @@ class _ScheduleStatefulWidgetState extends State<Schedule> {
                   ),
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Center(
                   child: Container(
                     width: 325,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.vertical(
+                      borderRadius: const BorderRadius.vertical(
                         top: Radius.circular(15),
                         bottom: Radius.circular(15),
                       ),
                       color: Colors.white,
                       border: Border.all(color: Colors.black, width: 2),
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                    child: const Padding(
+                      padding: EdgeInsets.all(8.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -710,9 +710,9 @@ class _ScheduleStatefulWidgetState extends State<Schedule> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
-                                padding: const EdgeInsets.only(left: 10.0),
+                                padding: EdgeInsets.only(left: 10.0),
                                 child: Center(
-                                  child: const Text(
+                                  child: Text(
                                     'Saturday',
                                     style: TextStyle(
                                       fontSize: 16,
@@ -721,11 +721,11 @@ class _ScheduleStatefulWidgetState extends State<Schedule> {
                                   ),
                                 ),
                               ),
-                              const SizedBox(height: 10.0),
+                              SizedBox(height: 10.0),
                               Row(
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.only(left: 10.0),
+                                    padding: EdgeInsets.only(left: 10.0),
                                     child: Text(
                                       'Time in:',
                                       style: TextStyle(
@@ -747,7 +747,7 @@ class _ScheduleStatefulWidgetState extends State<Schedule> {
                               Row(
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.only(left: 10.0),
+                                    padding: EdgeInsets.only(left: 10.0),
                                     child: Text(
                                       'Time out:',
                                       style: TextStyle(

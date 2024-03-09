@@ -89,9 +89,9 @@ class _AttendanceState extends State<Attendance> {
 
         if (selectedDateRange == null ||
             (attendanceDate.isAfter(
-                    selectedDateRange!.start.subtract(Duration(days: 1))) &&
+                    selectedDateRange!.start.subtract(const Duration(days: 1))) &&
                 attendanceDate
-                    .isBefore(selectedDateRange!.end.add(Duration(days: 1))))) {
+                    .isBefore(selectedDateRange!.end.add(const Duration(days: 1))))) {
           setState(() {
             AttendanceModel userattendance = AttendanceModel(
               attendanceinfo['employeeid'],
@@ -235,7 +235,7 @@ class _AttendanceState extends State<Attendance> {
                   ],
                 ),
                 child: usersattendance.isEmpty
-                    ? Center(
+                    ? const Center(
                         child: Text(
                           'No Attendance',
                           style: TextStyle(fontSize: 20),
@@ -251,7 +251,7 @@ class _AttendanceState extends State<Attendance> {
                             onTap: () {
                               showModalBottomSheet(
                                 context: context,
-                                shape: RoundedRectangleBorder(
+                                shape: const RoundedRectangleBorder(
                                   borderRadius: BorderRadius.vertical(
                                     top: Radius.circular(25),
                                   ),
@@ -259,7 +259,7 @@ class _AttendanceState extends State<Attendance> {
                                 builder: (BuildContext context) {
                                   return SingleChildScrollView(
                                     child: Container(
-                                      decoration: BoxDecoration(
+                                      decoration: const BoxDecoration(
                                         borderRadius: BorderRadius.vertical(
                                           top: Radius.circular(25),
                                         ),
@@ -267,8 +267,8 @@ class _AttendanceState extends State<Attendance> {
                                       child: Column(
                                         children: [
                                           Container(
-                                            padding: EdgeInsets.all(16),
-                                            child: Text(
+                                            padding: const EdgeInsets.all(16),
+                                            child: const Text(
                                               'Time Tracking',
                                               style: TextStyle(
                                                 fontSize: 20,
@@ -277,37 +277,37 @@ class _AttendanceState extends State<Attendance> {
                                             ),
                                           ),
                                           ListTile(
-                                            leading: Icon(Icons.timer),
+                                            leading: const Icon(Icons.timer),
                                             title: Text(
                                               'Clock In:  ${usersattendance[index].clockin} ${usersattendance[index].attendancedateIn}',
                                             ),
                                           ),
                                           ListTile(
-                                            leading: Icon(Icons.timer_off),
+                                            leading: const Icon(Icons.timer_off),
                                             title: Text(
                                               'Clock Out:  ${usersattendance[index].clockout} ${usersattendance[index].attendancedateOut}',
                                             ),
                                           ),
                                           ListTile(
-                                            leading: Icon(Icons.location_city),
+                                            leading: const Icon(Icons.location_city),
                                             title: Text(
                                               'Location In:  ${usersattendance[index].geofencenameIn}',
                                             ),
                                           ),
                                           ListTile(
-                                            leading: Icon(Icons.location_city),
+                                            leading: const Icon(Icons.location_city),
                                             title: Text(
                                               'Location Out:  ${usersattendance[index].geofencenameOut}',
                                             ),
                                           ),
                                           ListTile(
-                                            leading: Icon(Icons.phone_android),
+                                            leading: const Icon(Icons.phone_android),
                                             title: Text(
                                               'Device:  ${usersattendance[index].devicein}',
                                             ),
                                           ),
                                           ListTile(
-                                            leading: Icon(Icons.access_time),
+                                            leading: const Icon(Icons.access_time),
                                             title: Text(
                                               'Total Hours:  ${usersattendance[index].totalhours}',
                                             ),
@@ -328,7 +328,7 @@ class _AttendanceState extends State<Attendance> {
                                   children: [
                                     Container(
                                       width: 120,
-                                      decoration: BoxDecoration(
+                                      decoration: const BoxDecoration(
                                         color: Colors.red,
                                         borderRadius: BorderRadius.only(
                                           topLeft: Radius.circular(8.0),
@@ -340,7 +340,7 @@ class _AttendanceState extends State<Attendance> {
                                             CrossAxisAlignment.center,
                                         children: [
                                           Padding(
-                                            padding: EdgeInsets.fromLTRB(
+                                            padding: const EdgeInsets.fromLTRB(
                                                 8.0, 20.0, 8.0, 1.0),
                                             child: Column(
                                               crossAxisAlignment:
@@ -351,7 +351,7 @@ class _AttendanceState extends State<Attendance> {
                                                           .attendancedateIn
                                                           .split(' ')[
                                                       0], // Extracting the day part
-                                                  style: TextStyle(
+                                                  style: const TextStyle(
                                                     color: Colors.white,
                                                     fontSize: 40,
                                                     fontWeight: FontWeight.bold,
@@ -362,7 +362,7 @@ class _AttendanceState extends State<Attendance> {
                                                           .attendancedateIn
                                                           .split(' ')[
                                                       1], // Extracting the month part
-                                                  style: TextStyle(
+                                                  style: const TextStyle(
                                                     color: Colors.white,
                                                     fontSize:
                                                         20, // You can adjust the font size for the month
@@ -376,7 +376,7 @@ class _AttendanceState extends State<Attendance> {
                                     ),
                                     Expanded(
                                       child: Padding(
-                                        padding: EdgeInsets.all(16.0),
+                                        padding: const EdgeInsets.all(16.0),
                                         child: Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
@@ -385,8 +385,8 @@ class _AttendanceState extends State<Attendance> {
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.center,
                                               children: [
-                                                SizedBox(height: 15),
-                                                Padding(
+                                                const SizedBox(height: 15),
+                                                const Padding(
                                                   padding: EdgeInsets.only(
                                                       bottom: 8.0),
                                                   child: Text(
@@ -400,8 +400,8 @@ class _AttendanceState extends State<Attendance> {
                                                   ),
                                                 ),
                                                 Text(
-                                                  '${userAttendance.clockin}',
-                                                  style: TextStyle(
+                                                  userAttendance.clockin,
+                                                  style: const TextStyle(
                                                     fontSize: 16,
                                                     color: Colors.green,
                                                     fontWeight: FontWeight.bold,
@@ -409,13 +409,13 @@ class _AttendanceState extends State<Attendance> {
                                                 ),
                                               ],
                                             ),
-                                            SizedBox(width: 40),
+                                            const SizedBox(width: 40),
                                             Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.center,
                                               children: [
-                                                SizedBox(height: 15),
-                                                Padding(
+                                                const SizedBox(height: 15),
+                                                const Padding(
                                                   padding: EdgeInsets.only(
                                                       bottom: 8.0),
                                                   child: Text(
@@ -429,8 +429,8 @@ class _AttendanceState extends State<Attendance> {
                                                   ),
                                                 ),
                                                 Text(
-                                                  '${userAttendance.clockout}',
-                                                  style: TextStyle(
+                                                  userAttendance.clockout,
+                                                  style: const TextStyle(
                                                     fontSize: 16,
                                                     color: Colors.red,
                                                     fontWeight: FontWeight.bold,

@@ -111,7 +111,7 @@ class _NotificationsState extends State<Notifications> {
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/ic_launcher');
 
-    final InitializationSettings initializationSettings =
+    const InitializationSettings initializationSettings =
         InitializationSettings(
       android: initializationSettingsAndroid,
     );
@@ -201,18 +201,18 @@ class _NotificationsState extends State<Notifications> {
               'Notifications',
               style: TextStyle(color: Colors.black),
             ),
-            backgroundColor: Color.fromARGB(255, 255, 255, 255),
+            backgroundColor: const Color.fromARGB(255, 255, 255, 255),
             leading: IconButton(
               icon: const Icon(Icons.arrow_back, color: Colors.black),
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => DrawerPage()),
+                  MaterialPageRoute(builder: (context) => const DrawerPage()),
                 );
               },
             ),
             bottom: TabBar(
-              tabs: [
+              tabs: const [
                 Tab(text: 'All'),
                 Tab(text: 'Announcements'),
                 Tab(text: 'Offenses'),
@@ -241,7 +241,7 @@ class _NotificationsState extends State<Notifications> {
 
   Widget _buildNotificationList() {
     if (allnotification.isEmpty) {
-      return Center(
+      return const Center(
         child: Text("No Announcement found."),
       );
     }
@@ -273,7 +273,7 @@ class _NotificationsState extends State<Notifications> {
 
   Widget _buildAnnouncementList() {
     if (announcements.isEmpty) {
-      return Center(
+      return const Center(
         child: Text("No Announcement found."),
       );
     }
@@ -307,7 +307,7 @@ class _NotificationsState extends State<Notifications> {
 
   Widget _buildOffensesList({required String employeeid}) {
     if (offenses.isEmpty) {
-      return Center(
+      return const Center(
         child: Text("No offenses found."),
       );
     }
@@ -346,7 +346,7 @@ class _NotificationsState extends State<Notifications> {
     return ListTile(
       title: Text(
         title,
-        style: TextStyle(
+        style: const TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 20.0,
           overflow: TextOverflow.ellipsis,
@@ -354,16 +354,16 @@ class _NotificationsState extends State<Notifications> {
       ),
       subtitle: Text(
         subtitle,
-        style: TextStyle(overflow: TextOverflow.ellipsis),
+        style: const TextStyle(overflow: TextOverflow.ellipsis),
       ),
       trailing: Text(
         trailing,
-        style: TextStyle(
+        style: const TextStyle(
           fontWeight: FontWeight.normal,
           fontSize: 14.0,
         ),
       ),
-      contentPadding: EdgeInsets.all(9.0),
+      contentPadding: const EdgeInsets.all(9.0),
       onTap: onTap,
     );
   }

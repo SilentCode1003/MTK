@@ -2,20 +2,19 @@ import 'dart:convert';
 import 'package:eportal/layout/home.dart';
 import 'package:eportal/layout/profile.dart';
 import 'package:flutter/material.dart';
-import 'package:eportal/layout/cashadvance.dart';
-import 'package:eportal/layout/requestleave.dart';
 import 'package:eportal/layout/notification.dart';
 import 'package:eportal/layout/coop.dart';
 import 'package:eportal/model/userinfo.dart';
 import 'package:eportal/repository/helper.dart';
-import 'package:eportal/layout/overtime.dart';
 import 'package:eportal/layout/request.dart';
 
 void main() {
-  runApp(DrawerApp());
+  runApp(const DrawerApp());
 }
 
 class DrawerApp extends StatelessWidget {
+  const DrawerApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -27,7 +26,7 @@ class DrawerApp extends StatelessWidget {
           iconTheme: IconThemeData(color: Colors.black),
         ),
         textTheme: const TextTheme(
-          bodyText2: TextStyle(color: Colors.black),
+          bodyMedium: TextStyle(color: Colors.black),
         ),
       ),
       home: const DrawerPage(),
@@ -143,14 +142,14 @@ class _DrawerPageState extends State<DrawerPage> {
                     ),
                     const SizedBox(height: 15),
                     Text(
-                      '$fullname',
+                      fullname,
                       style: const TextStyle(
                         color: Colors.black,
                         fontSize: 18,
                       ),
                     ),
                     Text(
-                      '$departmentname',
+                      departmentname,
                       style: const TextStyle(
                         color: Colors.black,
                         fontSize: 12,

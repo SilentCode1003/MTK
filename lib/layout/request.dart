@@ -33,23 +33,23 @@ class RequestState extends State<Request> {
           'Request',
           style: TextStyle(color: Colors.black),
         ),
-        backgroundColor: Color.fromARGB(255, 255, 255, 255),
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => DrawerPage()),
+              MaterialPageRoute(builder: (context) => const DrawerPage()),
             );
           },
         ),
       ),
       body: Container(
-        color: Color.fromARGB(255, 255, 255, 255),
+        color: const Color.fromARGB(255, 255, 255, 255),
         child: Stack(
           children: [
-            Positioned(
+            const Positioned(
               left: 35.0,
               top: 16.0,
               child: Text(
@@ -77,14 +77,14 @@ class RequestState extends State<Request> {
                     showDialog(
                       context: context,
                       builder: (context) => AlertDialog(
-                        title: Text('Sorry'),
-                        content: Text('Your job status isn\'t regular.'),
+                        title: const Text('Sorry'),
+                        content: const Text('Your job status isn\'t regular.'),
                         actions: <Widget>[
                           TextButton(
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
-                            child: Text('OK'),
+                            child: const Text('OK'),
                           ),
                         ],
                       ),
@@ -102,7 +102,7 @@ class RequestState extends State<Request> {
                       width: 1.0,
                     ),
                   ),
-                  child: Row(
+                  child: const Row(
                     children: [
                       Padding(
                         padding: EdgeInsets.only(left: 20, top: 0),
@@ -161,7 +161,7 @@ class RequestState extends State<Request> {
                       width: 1.0,
                     ),
                   ),
-                  child: Row(
+                  child: const Row(
                     children: [
                       Padding(
                         padding: EdgeInsets.only(left: 20, top: 0),
@@ -220,7 +220,7 @@ class RequestState extends State<Request> {
                       width: 1.0,
                     ),
                   ),
-                  child: Row(
+                  child: const Row(
                     children: [
                       Padding(
                         padding: EdgeInsets.only(left: 20, top: 0),
@@ -273,14 +273,14 @@ class RequestState extends State<Request> {
                     showDialog(
                       context: context,
                       builder: (context) => AlertDialog(
-                        title: Text('Sorry'),
-                        content: Text('Your job status isn\'t regular.'),
+                        title: const Text('Sorry'),
+                        content: const Text('Your job status isn\'t regular.'),
                         actions: <Widget>[
                           TextButton(
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
-                            child: Text('OK'),
+                            child: const Text('OK'),
                           ),
                         ],
                       ),
@@ -298,7 +298,7 @@ class RequestState extends State<Request> {
                       width: 1.0,
                     ),
                   ),
-                  child: Row(
+                  child: const Row(
                     children: [
                       Padding(
                         padding: EdgeInsets.only(left: 20, top: 0),

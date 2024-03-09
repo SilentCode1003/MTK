@@ -9,7 +9,7 @@ class AnnouncementDetailsPage extends StatelessWidget {
   final String image;
   final String type;
 
-  AnnouncementDetailsPage({
+  const AnnouncementDetailsPage({super.key, 
     required this.title,
     required this.description,
     required this.targetDate,
@@ -56,7 +56,7 @@ class AnnouncementDetailsPage extends StatelessWidget {
               },
               child: Hero(
                 tag: 'imageHero',
-                child: Container(
+                child: SizedBox(
                   height: 200,
                   width: double.infinity,
                   child: Image.memory(
@@ -81,7 +81,7 @@ class AnnouncementDetailsPage extends StatelessWidget {
 class FullScreenImage extends StatelessWidget {
   final Uint8List imageBytes;
 
-  FullScreenImage({required this.imageBytes});
+  const FullScreenImage({super.key, required this.imageBytes});
 
   @override
   Widget build(BuildContext context) {
@@ -121,7 +121,7 @@ class OffensesDetailsPage extends StatelessWidget {
   final String targetDate;
   final String type;
 
-  OffensesDetailsPage({
+  const OffensesDetailsPage({super.key, 
     required this.title,
     required this.description,
     required this.targetDate,
@@ -167,7 +167,7 @@ class AllDetailsPage extends StatelessWidget {
   final String? image;
   final String? type;
 
-  AllDetailsPage({
+  const AllDetailsPage({super.key, 
     required this.title,
     required this.description,
     required this.targetDate,
@@ -221,7 +221,7 @@ class AllDetailsPage extends StatelessWidget {
                     ),
                   );
                 },
-                child: Container(
+                child: SizedBox(
                   height: 200,
                   width: double.infinity,
                   child: Image.memory(

@@ -7,9 +7,11 @@ import 'package:eportal/repository/helper.dart';
 import 'package:eportal/model/userinfo.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
-import 'package:pdf/widgets.dart' as pdfLib;
+import 'package:pdf/widgets.dart' as pw;
 import 'dart:io';
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter/services.dart' show ByteData, Uint8List, rootBundle;
+import 'package:path/path.dart' as path;
+import 'package:image/image.dart' as img;
 
 class Payslipdetails extends StatefulWidget {
   final String employeeid;
@@ -85,303 +87,301 @@ class _PayslipdetailsState extends State<Payslipdetails> {
 
   Future<void> _generatePDF(BuildContext context) async {
     try {
-      final pdf = pdfLib.Document();
+      final pdf = pw.Document();
+      ByteData imageData = await rootBundle.load('assets/5L.png');
+      Uint8List bytes = Uint8List.view(imageData.buffer);
 
-      final image = pdfLib.MemoryImage(File('assets/5L.png').readAsBytesSync(),
-      );
+      final pdfImage = pw.MemoryImage(bytes);
+
+      // final image = pw.MemoryImage(File('assets/5L.png').readAsBytesSync());
 
       pdf.addPage(
-        pdfLib.Page(
+        pw.Page(
           build: (context) {
-            return pdfLib.Container(
-              child: pdfLib.Column(
-                mainAxisAlignment: pdfLib.MainAxisAlignment.start,
-                crossAxisAlignment: pdfLib.CrossAxisAlignment.center,
+            return pw.Container(
+              child: pw.Column(
+                mainAxisAlignment: pw.MainAxisAlignment.start,
+                crossAxisAlignment: pw.CrossAxisAlignment.center,
                 children: [
-                  pdfLib.Row(
-                    mainAxisAlignment: pdfLib.MainAxisAlignment.start,
-                    crossAxisAlignment: pdfLib.CrossAxisAlignment.center,
+                  pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.start,
+                    crossAxisAlignment: pw.CrossAxisAlignment.center,
                     children: [
-                      pdfLib.Container(
-                        width: 100,
-                        height: 100,
-                        child: pdfLib.Image(image),
-                      ),
-                      pdfLib.Container(
-                        padding: pdfLib.EdgeInsets.only(left: 2.0),
-                        child: pdfLib.Text(
+                      pw.Container(
+                          width: 100, height: 100, child: pw.Image(pdfImage)),
+                      pw.Container(
+                        padding: const pw.EdgeInsets.only(left: 2.0),
+                        child: pw.Text(
                           '5L Solutions Supply & Allied Services Corp',
-                          style: pdfLib.TextStyle(fontSize: 20.0),
+                          style: const pw.TextStyle(fontSize: 20.0),
                         ),
                       ),
                     ],
                   ),
-                  pdfLib.SizedBox(height: 1),
-                  pdfLib.Row(
-                    mainAxisAlignment: pdfLib.MainAxisAlignment.center,
-                    crossAxisAlignment: pdfLib.CrossAxisAlignment.center,
+                  pw.SizedBox(height: 1),
+                  pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.center,
+                    crossAxisAlignment: pw.CrossAxisAlignment.center,
                     children: [
-                      pdfLib.Text(
+                      pw.Text(
                         'Payslip',
-                        style: pdfLib.TextStyle(fontSize: 16.0),
+                        style: const pw.TextStyle(fontSize: 16.0),
                       ),
                     ],
                   ),
-                  pdfLib.SizedBox(height: 7),
-                  pdfLib.Row(
-                    mainAxisAlignment: pdfLib.MainAxisAlignment.center,
-                    crossAxisAlignment: pdfLib.CrossAxisAlignment.center,
+                  pw.SizedBox(height: 7),
+                  pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.center,
+                    crossAxisAlignment: pw.CrossAxisAlignment.center,
                     children: [
-                      pdfLib.Text(
+                      pw.Text(
                         '$StartDate - $Enddate',
-                        style: pdfLib.TextStyle(fontSize: 14.0),
+                        style: const pw.TextStyle(fontSize: 14.0),
                       ),
                     ],
                   ),
-                  pdfLib.SizedBox(height: 15),
-                  pdfLib.Row(
-                    mainAxisAlignment: pdfLib.MainAxisAlignment.start,
-                    crossAxisAlignment: pdfLib.CrossAxisAlignment.start,
+                  pw.SizedBox(height: 15),
+                  pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.start,
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
                     children: [
-                      pdfLib.Container(
+                      pw.Container(
                         width: 250, // Adjust width as needed
                         height: 20, // Adjust height as needed
-                        child: pdfLib.Row(
-                          mainAxisAlignment: pdfLib.MainAxisAlignment.start,
-                          crossAxisAlignment: pdfLib.CrossAxisAlignment.center,
+                        child: pw.Row(
+                          mainAxisAlignment: pw.MainAxisAlignment.start,
+                          crossAxisAlignment: pw.CrossAxisAlignment.center,
                           children: [
-                            pdfLib.Text(
+                            pw.Text(
                               'Name: ',
-                              style: pdfLib.TextStyle(fontSize: 14.0),
+                              style: const pw.TextStyle(fontSize: 14.0),
                             ),
-                            pdfLib.Text(
+                            pw.Text(
                               '$EmployeeFullName',
-                              style: pdfLib.TextStyle(fontSize: 14.0),
+                              style: const pw.TextStyle(fontSize: 14.0),
                             ),
                           ],
                         ),
                       ),
-                      pdfLib.SizedBox(width: 5),
-                      pdfLib.Container(
+                      pw.SizedBox(width: 5),
+                      pw.Container(
                         width: 250,
                         height: 20,
-                        child: pdfLib.Row(
-                          mainAxisAlignment: pdfLib.MainAxisAlignment.start,
-                          crossAxisAlignment: pdfLib.CrossAxisAlignment.center,
+                        child: pw.Row(
+                          mainAxisAlignment: pw.MainAxisAlignment.start,
+                          crossAxisAlignment: pw.CrossAxisAlignment.center,
                           children: [
-                            pdfLib.Text(
+                            pw.Text(
                               'SSS: ',
-                              style: pdfLib.TextStyle(fontSize: 14.0),
+                              style: const pw.TextStyle(fontSize: 14.0),
                             ),
-                            pdfLib.Text(
+                            pw.Text(
                               '1234567889',
-                              style: pdfLib.TextStyle(fontSize: 14.0),
+                              style: const pw.TextStyle(fontSize: 14.0),
                             ),
                           ],
                         ),
                       ),
                     ],
                   ),
-                  pdfLib.SizedBox(height: 5),
-                  pdfLib.Row(
-                    mainAxisAlignment: pdfLib.MainAxisAlignment.start,
-                    crossAxisAlignment: pdfLib.CrossAxisAlignment.start,
+                  pw.SizedBox(height: 5),
+                  pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.start,
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
                     children: [
-                      pdfLib.Container(
+                      pw.Container(
                         width: 250, // Adjust width as needed
                         height: 20, // Adjust height as needed
-                        child: pdfLib.Row(
-                          mainAxisAlignment: pdfLib.MainAxisAlignment.start,
-                          crossAxisAlignment: pdfLib.CrossAxisAlignment.center,
+                        child: pw.Row(
+                          mainAxisAlignment: pw.MainAxisAlignment.start,
+                          crossAxisAlignment: pw.CrossAxisAlignment.center,
                           children: [
-                            pdfLib.Text(
+                            pw.Text(
                               'Employee ID: ',
-                              style: pdfLib.TextStyle(fontSize: 14.0),
+                              style: const pw.TextStyle(fontSize: 14.0),
                             ),
-                            pdfLib.Text(
+                            pw.Text(
                               '$employeeid',
-                              style: pdfLib.TextStyle(fontSize: 14.0),
+                              style: const pw.TextStyle(fontSize: 14.0),
                             ),
                           ],
                         ),
                       ),
-                      pdfLib.SizedBox(width: 5),
-                      pdfLib.Container(
+                      pw.SizedBox(width: 5),
+                      pw.Container(
                         width: 250, // Adjust width as needed
                         height: 20, // Adjust height as needed
-                        child: pdfLib.Row(
-                          mainAxisAlignment: pdfLib.MainAxisAlignment.start,
-                          crossAxisAlignment: pdfLib.CrossAxisAlignment.center,
+                        child: pw.Row(
+                          mainAxisAlignment: pw.MainAxisAlignment.start,
+                          crossAxisAlignment: pw.CrossAxisAlignment.center,
                           children: [
-                            pdfLib.Text(
+                            pw.Text(
                               'TIN: ',
-                              style: pdfLib.TextStyle(fontSize: 14.0),
+                              style: const pw.TextStyle(fontSize: 14.0),
                             ),
-                            pdfLib.Text(
+                            pw.Text(
                               '1234567890',
-                              style: pdfLib.TextStyle(fontSize: 14.0),
+                              style: const pw.TextStyle(fontSize: 14.0),
                             ),
                           ],
                         ),
                       ),
                     ],
                   ),
-                  pdfLib.SizedBox(height: 5),
-                  pdfLib.Row(
-                    mainAxisAlignment: pdfLib.MainAxisAlignment.start,
-                    crossAxisAlignment: pdfLib.CrossAxisAlignment.start,
+                  pw.SizedBox(height: 5),
+                  pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.start,
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
                     children: [
-                      pdfLib.Container(
+                      pw.Container(
                         width: 250, // Adjust width as needed
                         height: 20, // Adjust height as needed
-                        child: pdfLib.Row(
-                          mainAxisAlignment: pdfLib.MainAxisAlignment.start,
-                          crossAxisAlignment: pdfLib.CrossAxisAlignment.center,
+                        child: pw.Row(
+                          mainAxisAlignment: pw.MainAxisAlignment.start,
+                          crossAxisAlignment: pw.CrossAxisAlignment.center,
                           children: [
-                            pdfLib.Text(
+                            pw.Text(
                               'Department: ',
-                              style: pdfLib.TextStyle(fontSize: 14.0),
+                              style: const pw.TextStyle(fontSize: 14.0),
                             ),
-                            pdfLib.Text(
+                            pw.Text(
                               '$Department',
-                              style: pdfLib.TextStyle(fontSize: 14.0),
+                              style: const pw.TextStyle(fontSize: 14.0),
                             ),
                           ],
                         ),
                       ),
-                      pdfLib.SizedBox(width: 5),
-                      pdfLib.Container(
+                      pw.SizedBox(width: 5),
+                      pw.Container(
                         width: 250, // Adjust width as needed
                         height: 20, // Adjust height as needed
-                        child: pdfLib.Row(
-                          mainAxisAlignment: pdfLib.MainAxisAlignment.start,
-                          crossAxisAlignment: pdfLib.CrossAxisAlignment.center,
+                        child: pw.Row(
+                          mainAxisAlignment: pw.MainAxisAlignment.start,
+                          crossAxisAlignment: pw.CrossAxisAlignment.center,
                           children: [
-                            pdfLib.Text(
+                            pw.Text(
                               'PhilHealth: ',
-                              style: pdfLib.TextStyle(fontSize: 14.0),
+                              style: const pw.TextStyle(fontSize: 14.0),
                             ),
-                            pdfLib.Text(
+                            pw.Text(
                               '1234567890',
-                              style: pdfLib.TextStyle(fontSize: 14.0),
+                              style: const pw.TextStyle(fontSize: 14.0),
                             ),
                           ],
                         ),
                       ),
                     ],
                   ),
-                  pdfLib.SizedBox(height: 5),
-                  pdfLib.Row(
-                    mainAxisAlignment: pdfLib.MainAxisAlignment.start,
-                    crossAxisAlignment: pdfLib.CrossAxisAlignment.start,
+                  pw.SizedBox(height: 5),
+                  pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.start,
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
                     children: [
-                      pdfLib.Container(
+                      pw.Container(
                         width: 250, // Adjust width as needed
                         height: 20, // Adjust height as needed
-                        child: pdfLib.Row(
-                          mainAxisAlignment: pdfLib.MainAxisAlignment.start,
-                          crossAxisAlignment: pdfLib.CrossAxisAlignment.center,
+                        child: pw.Row(
+                          mainAxisAlignment: pw.MainAxisAlignment.start,
+                          crossAxisAlignment: pw.CrossAxisAlignment.center,
                           children: [
-                            pdfLib.Text(
+                            pw.Text(
                               'Position: ',
-                              style: pdfLib.TextStyle(fontSize: 14.0),
+                              style: const pw.TextStyle(fontSize: 14.0),
                             ),
-                            pdfLib.Text(
+                            pw.Text(
                               '$PositionName',
-                              style: pdfLib.TextStyle(fontSize: 14.0),
+                              style: const pw.TextStyle(fontSize: 14.0),
                             ),
                           ],
                         ),
                       ),
-                      pdfLib.SizedBox(width: 5),
-                      pdfLib.Container(
+                      pw.SizedBox(width: 5),
+                      pw.Container(
                         width: 250, // Adjust width as needed
                         height: 20, // Adjust height as needed
-                        child: pdfLib.Row(
-                          mainAxisAlignment: pdfLib.MainAxisAlignment.start,
-                          crossAxisAlignment: pdfLib.CrossAxisAlignment.center,
+                        child: pw.Row(
+                          mainAxisAlignment: pw.MainAxisAlignment.start,
+                          crossAxisAlignment: pw.CrossAxisAlignment.center,
                           children: [
-                            pdfLib.Text(
+                            pw.Text(
                               'Pag-Ibig: ',
-                              style: pdfLib.TextStyle(fontSize: 14.0),
+                              style: const pw.TextStyle(fontSize: 14.0),
                             ),
-                            pdfLib.Text(
+                            pw.Text(
                               '1234567890',
-                              style: pdfLib.TextStyle(fontSize: 14.0),
+                              style: const pw.TextStyle(fontSize: 14.0),
                             ),
                           ],
                         ),
                       ),
                     ],
                   ),
-                  pdfLib.SizedBox(height: 20),
-                  pdfLib.Row(
-                    mainAxisAlignment: pdfLib.MainAxisAlignment.start,
-                    crossAxisAlignment: pdfLib.CrossAxisAlignment.start,
+                  pw.SizedBox(height: 20),
+                  pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.start,
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
                     children: [
-                      pdfLib.Container(
+                      pw.Container(
                         width: 253, // Adjust width as needed
                         height: 30, // Adjust height as needed
-                        decoration: pdfLib.BoxDecoration(
-                          border: pdfLib.Border.all(
+                        decoration: pw.BoxDecoration(
+                          border: pw.Border.all(
                             width: 1.0,
                           ),
                         ),
-                        child: pdfLib.Row(
-                          mainAxisAlignment:
-                              pdfLib.MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: pdfLib.CrossAxisAlignment.center,
+                        child: pw.Row(
+                          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: pw.CrossAxisAlignment.center,
                           children: [
-                            pdfLib.Padding(
-                              padding: pdfLib.EdgeInsets.only(left: 5.0),
-                              child: pdfLib.Text(
+                            pw.Padding(
+                              padding: const pw.EdgeInsets.only(left: 5.0),
+                              child: pw.Text(
                                 'COMPENSATION',
-                                style: pdfLib.TextStyle(
+                                style: pw.TextStyle(
                                     fontSize: 14.0,
-                                    fontWeight: pdfLib.FontWeight.bold),
+                                    fontWeight: pw.FontWeight.bold),
                               ),
                             ),
-                            pdfLib.Padding(
-                              padding: pdfLib.EdgeInsets.only(right: 5.0),
-                              child: pdfLib.Text(
+                            pw.Padding(
+                              padding: const pw.EdgeInsets.only(right: 5.0),
+                              child: pw.Text(
                                 'AMOUNT',
-                                style: pdfLib.TextStyle(
+                                style: pw.TextStyle(
                                     fontSize: 14.0,
-                                    fontWeight: pdfLib.FontWeight.bold),
+                                    fontWeight: pw.FontWeight.bold),
                               ),
                             ),
                           ],
                         ),
                       ),
-                      pdfLib.Container(
+                      pw.Container(
                         width: 252, // Adjust width as needed
                         height: 30, // Adjust height as needed
-                        decoration: pdfLib.BoxDecoration(
-                          border: pdfLib.Border.all(
+                        decoration: pw.BoxDecoration(
+                          border: pw.Border.all(
                             width: 1.0,
                           ),
                         ),
-                        child: pdfLib.Row(
-                          mainAxisAlignment:
-                              pdfLib.MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: pdfLib.CrossAxisAlignment.center,
+                        child: pw.Row(
+                          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: pw.CrossAxisAlignment.center,
                           children: [
-                            pdfLib.Padding(
-                              padding: pdfLib.EdgeInsets.only(left: 5.0),
-                              child: pdfLib.Text(
+                            pw.Padding(
+                              padding: const pw.EdgeInsets.only(left: 5.0),
+                              child: pw.Text(
                                 'DEDUCTION',
-                                style: pdfLib.TextStyle(
+                                style: pw.TextStyle(
                                     fontSize: 14.0,
-                                    fontWeight: pdfLib.FontWeight.bold),
+                                    fontWeight: pw.FontWeight.bold),
                               ),
                             ),
-                            pdfLib.Padding(
-                              padding: pdfLib.EdgeInsets.only(right: 5.0),
-                              child: pdfLib.Text(
+                            pw.Padding(
+                              padding: const pw.EdgeInsets.only(right: 5.0),
+                              child: pw.Text(
                                 'AMOUNT',
-                                style: pdfLib.TextStyle(
+                                style: pw.TextStyle(
                                     fontSize: 14.0,
-                                    fontWeight: pdfLib.FontWeight.bold),
+                                    fontWeight: pw.FontWeight.bold),
                               ),
                             ),
                           ],
@@ -389,131 +389,126 @@ class _PayslipdetailsState extends State<Payslipdetails> {
                       ),
                     ],
                   ),
-                  pdfLib.Row(
-                    mainAxisAlignment: pdfLib.MainAxisAlignment.start,
-                    crossAxisAlignment: pdfLib.CrossAxisAlignment.start,
+                  pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.start,
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
                     children: [
-                      pdfLib.Container(
+                      pw.Container(
                         width: 253, // Adjust width as needed
                         height: 275, // Adjust height as needed
-                        decoration: pdfLib.BoxDecoration(
-                          border: pdfLib.Border.all(
+                        decoration: pw.BoxDecoration(
+                          border: pw.Border.all(
                             width: 1.0,
                           ),
                         ),
-                        child: pdfLib.Column(
+                        child: pw.Column(
                           children: [
-                            pdfLib.SizedBox(height: 10),
-                            pdfLib.Row(
+                            pw.SizedBox(height: 10),
+                            pw.Row(
                               mainAxisAlignment:
-                                  pdfLib.MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment:
-                                  pdfLib.CrossAxisAlignment.center,
+                                  pw.MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: pw.CrossAxisAlignment.center,
                               children: [
-                                pdfLib.Padding(
-                                  padding: pdfLib.EdgeInsets.only(left: 5.0),
-                                  child: pdfLib.Text(
+                                pw.Padding(
+                                  padding: const pw.EdgeInsets.only(left: 5.0),
+                                  child: pw.Text(
                                     'Basic Salary:',
-                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                    style: const pw.TextStyle(fontSize: 14.0),
                                   ),
                                 ),
-                                pdfLib.Padding(
-                                  padding: pdfLib.EdgeInsets.only(right: 5.0),
-                                  child: pdfLib.Text(
+                                pw.Padding(
+                                  padding: const pw.EdgeInsets.only(right: 5.0),
+                                  child: pw.Text(
                                     '$Salary',
-                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                    style: const pw.TextStyle(fontSize: 14.0),
                                   ),
                                 ),
                               ],
                             ),
-                            pdfLib.SizedBox(height: 5),
-                            pdfLib.Row(
+                            pw.SizedBox(height: 5),
+                            pw.Row(
                               mainAxisAlignment:
-                                  pdfLib.MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment:
-                                  pdfLib.CrossAxisAlignment.center,
+                                  pw.MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: pw.CrossAxisAlignment.center,
                               children: [
-                                pdfLib.Padding(
-                                  padding: pdfLib.EdgeInsets.only(left: 5.0),
-                                  child: pdfLib.Text(
+                                pw.Padding(
+                                  padding: const pw.EdgeInsets.only(left: 5.0),
+                                  child: pw.Text(
                                     'Allowance:',
-                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                    style: const pw.TextStyle(fontSize: 14.0),
                                   ),
                                 ),
-                                pdfLib.Padding(
-                                  padding: pdfLib.EdgeInsets.only(right: 5.0),
-                                  child: pdfLib.Text(
+                                pw.Padding(
+                                  padding: const pw.EdgeInsets.only(right: 5.0),
+                                  child: pw.Text(
                                     '$Allowances',
-                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                    style: const pw.TextStyle(fontSize: 14.0),
                                   ),
                                 ),
                               ],
                             ),
-                            pdfLib.SizedBox(height: 5),
-                            pdfLib.Row(
+                            pw.SizedBox(height: 5),
+                            pw.Row(
                               mainAxisAlignment:
-                                  pdfLib.MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment:
-                                  pdfLib.CrossAxisAlignment.center,
+                                  pw.MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: pw.CrossAxisAlignment.center,
                               children: [
-                                pdfLib.Padding(
-                                  padding: pdfLib.EdgeInsets.only(left: 5.0),
-                                  child: pdfLib.Text(
+                                pw.Padding(
+                                  padding: const pw.EdgeInsets.only(left: 5.0),
+                                  child: pw.Text(
                                     'Holiday:',
-                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                    style: const pw.TextStyle(fontSize: 14.0),
                                   ),
                                 ),
-                                pdfLib.Padding(
-                                  padding: pdfLib.EdgeInsets.only(right: 5.0),
-                                  child: pdfLib.Text(
+                                pw.Padding(
+                                  padding: const pw.EdgeInsets.only(right: 5.0),
+                                  child: pw.Text(
                                     '$RegularHolidayOT',
-                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                    style: const pw.TextStyle(fontSize: 14.0),
                                   ),
                                 ),
                               ],
                             ),
-                            pdfLib.SizedBox(height: 5),
-                            pdfLib.Row(
+                            pw.SizedBox(height: 5),
+                            pw.Row(
                               mainAxisAlignment:
-                                  pdfLib.MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment:
-                                  pdfLib.CrossAxisAlignment.center,
+                                  pw.MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: pw.CrossAxisAlignment.center,
                               children: [
-                                pdfLib.Padding(
-                                  padding: pdfLib.EdgeInsets.only(left: 5.0),
-                                  child: pdfLib.Text(
+                                pw.Padding(
+                                  padding: const pw.EdgeInsets.only(left: 5.0),
+                                  child: pw.Text(
                                     'OverTime',
-                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                    style: const pw.TextStyle(fontSize: 14.0),
                                   ),
                                 ),
-                                pdfLib.Padding(
-                                  padding: pdfLib.EdgeInsets.only(right: 5.0),
-                                  child: pdfLib.Text(
+                                pw.Padding(
+                                  padding: const pw.EdgeInsets.only(right: 5.0),
+                                  child: pw.Text(
                                     '$ApprovedOt',
-                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                    style: const pw.TextStyle(fontSize: 14.0),
                                   ),
                                 ),
                               ],
                             ),
-                            pdfLib.SizedBox(height: 5),
-                            pdfLib.Row(
+                            pw.SizedBox(height: 5),
+                            pw.Row(
                               mainAxisAlignment:
-                                  pdfLib.MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment:
-                                  pdfLib.CrossAxisAlignment.center,
+                                  pw.MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: pw.CrossAxisAlignment.center,
                               children: [
-                                pdfLib.Padding(
-                                  padding: pdfLib.EdgeInsets.only(left: 5.0),
-                                  child: pdfLib.Text(
+                                pw.Padding(
+                                  padding: const pw.EdgeInsets.only(left: 5.0),
+                                  child: pw.Text(
                                     'Night Differential',
-                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                    style: const pw.TextStyle(fontSize: 14.0),
                                   ),
                                 ),
-                                pdfLib.Padding(
-                                  padding: pdfLib.EdgeInsets.only(right: 5.0),
-                                  child: pdfLib.Text(
+                                pw.Padding(
+                                  padding: const pw.EdgeInsets.only(right: 5.0),
+                                  child: pw.Text(
                                     '$NDpay',
-                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                    style: const pw.TextStyle(fontSize: 14.0),
                                   ),
                                 ),
                               ],
@@ -521,288 +516,276 @@ class _PayslipdetailsState extends State<Payslipdetails> {
                           ],
                         ),
                       ),
-                      pdfLib.Container(
+                      pw.Container(
                         width: 253, // Adjust width as needed
                         height: 275, // Adjust height as needed
-                        decoration: pdfLib.BoxDecoration(
-                          border: pdfLib.Border.all(
+                        decoration: pw.BoxDecoration(
+                          border: pw.Border.all(
                             width: 1.0,
                           ),
                         ),
-                        child: pdfLib.Column(
+                        child: pw.Column(
                           children: [
-                            pdfLib.SizedBox(height: 10),
-                            pdfLib.Row(
+                            pw.SizedBox(height: 10),
+                            pw.Row(
                               mainAxisAlignment:
-                                  pdfLib.MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment:
-                                  pdfLib.CrossAxisAlignment.start,
+                                  pw.MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: pw.CrossAxisAlignment.start,
                               children: [
-                                pdfLib.Padding(
-                                  padding: pdfLib.EdgeInsets.only(left: 5.0),
-                                  child: pdfLib.Text(
+                                pw.Padding(
+                                  padding: const pw.EdgeInsets.only(left: 5.0),
+                                  child: pw.Text(
                                     'Absences:',
-                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                    style: const pw.TextStyle(fontSize: 14.0),
                                   ),
                                 ),
-                                pdfLib.Padding(
-                                  padding: pdfLib.EdgeInsets.only(right: 5.0),
-                                  child: pdfLib.Text(
+                                pw.Padding(
+                                  padding: const pw.EdgeInsets.only(right: 5.0),
+                                  child: pw.Text(
                                     '$Absent_Deductions',
-                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                    style: const pw.TextStyle(fontSize: 14.0),
                                   ),
                                 ),
                               ],
                             ),
-                            pdfLib.SizedBox(height: 5),
-                            pdfLib.Row(
+                            pw.SizedBox(height: 5),
+                            pw.Row(
                               mainAxisAlignment:
-                                  pdfLib.MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment:
-                                  pdfLib.CrossAxisAlignment.start,
+                                  pw.MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: pw.CrossAxisAlignment.start,
                               children: [
-                                pdfLib.Padding(
-                                  padding: pdfLib.EdgeInsets.only(left: 5.0),
-                                  child: pdfLib.Text(
+                                pw.Padding(
+                                  padding: const pw.EdgeInsets.only(left: 5.0),
+                                  child: pw.Text(
                                     'Late/Undertime:',
-                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                    style: const pw.TextStyle(fontSize: 14.0),
                                   ),
                                 ),
-                                pdfLib.Padding(
-                                  padding: pdfLib.EdgeInsets.only(right: 5.0),
-                                  child: pdfLib.Text(
+                                pw.Padding(
+                                  padding: const pw.EdgeInsets.only(right: 5.0),
+                                  child: pw.Text(
                                     '$Late_Deductions',
-                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                    style: const pw.TextStyle(fontSize: 14.0),
                                   ),
                                 ),
                               ],
                             ),
-                            pdfLib.SizedBox(height: 5),
-                            pdfLib.Row(
+                            pw.SizedBox(height: 5),
+                            pw.Row(
                               mainAxisAlignment:
-                                  pdfLib.MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment:
-                                  pdfLib.CrossAxisAlignment.start,
+                                  pw.MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: pw.CrossAxisAlignment.start,
                               children: [
-                                pdfLib.Padding(
-                                  padding: pdfLib.EdgeInsets.only(left: 5.0),
-                                  child: pdfLib.Text(
+                                pw.Padding(
+                                  padding: const pw.EdgeInsets.only(left: 5.0),
+                                  child: pw.Text(
                                     'SSS:',
-                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                    style: const pw.TextStyle(fontSize: 14.0),
                                   ),
                                 ),
-                                pdfLib.Padding(
-                                  padding: pdfLib.EdgeInsets.only(right: 5.0),
-                                  child: pdfLib.Text(
+                                pw.Padding(
+                                  padding: const pw.EdgeInsets.only(right: 5.0),
+                                  child: pw.Text(
                                     '$SSS',
-                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                    style: const pw.TextStyle(fontSize: 14.0),
                                   ),
                                 ),
                               ],
                             ),
-                            pdfLib.SizedBox(height: 5),
-                            pdfLib.Row(
+                            pw.SizedBox(height: 5),
+                            pw.Row(
                               mainAxisAlignment:
-                                  pdfLib.MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment:
-                                  pdfLib.CrossAxisAlignment.start,
+                                  pw.MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: pw.CrossAxisAlignment.start,
                               children: [
-                                pdfLib.Padding(
-                                  padding: pdfLib.EdgeInsets.only(left: 5.0),
-                                  child: pdfLib.Text(
+                                pw.Padding(
+                                  padding: const pw.EdgeInsets.only(left: 5.0),
+                                  child: pw.Text(
                                     'SSS Loan:',
-                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                    style: const pw.TextStyle(fontSize: 14.0),
                                   ),
                                 ),
-                                pdfLib.Padding(
-                                  padding: pdfLib.EdgeInsets.only(right: 5.0),
-                                  child: pdfLib.Text(
+                                pw.Padding(
+                                  padding: const pw.EdgeInsets.only(right: 5.0),
+                                  child: pw.Text(
                                     '0',
-                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                    style: const pw.TextStyle(fontSize: 14.0),
                                   ),
                                 ),
                               ],
                             ),
-                            pdfLib.SizedBox(height: 5),
-                            pdfLib.Row(
+                            pw.SizedBox(height: 5),
+                            pw.Row(
                               mainAxisAlignment:
-                                  pdfLib.MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment:
-                                  pdfLib.CrossAxisAlignment.start,
+                                  pw.MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: pw.CrossAxisAlignment.start,
                               children: [
-                                pdfLib.Padding(
-                                  padding: pdfLib.EdgeInsets.only(left: 5.0),
-                                  child: pdfLib.Text(
+                                pw.Padding(
+                                  padding: const pw.EdgeInsets.only(left: 5.0),
+                                  child: pw.Text(
                                     'PhilHealth:',
-                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                    style: const pw.TextStyle(fontSize: 14.0),
                                   ),
                                 ),
-                                pdfLib.Padding(
-                                  padding: pdfLib.EdgeInsets.only(right: 5.0),
-                                  child: pdfLib.Text(
+                                pw.Padding(
+                                  padding: const pw.EdgeInsets.only(right: 5.0),
+                                  child: pw.Text(
                                     '$PhilHealth',
-                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                    style: const pw.TextStyle(fontSize: 14.0),
                                   ),
                                 ),
                               ],
                             ),
-                            pdfLib.SizedBox(height: 5),
-                            pdfLib.Row(
+                            pw.SizedBox(height: 5),
+                            pw.Row(
                               mainAxisAlignment:
-                                  pdfLib.MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment:
-                                  pdfLib.CrossAxisAlignment.start,
+                                  pw.MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: pw.CrossAxisAlignment.start,
                               children: [
-                                pdfLib.Padding(
-                                  padding: pdfLib.EdgeInsets.only(left: 5.0),
-                                  child: pdfLib.Text(
+                                pw.Padding(
+                                  padding: const pw.EdgeInsets.only(left: 5.0),
+                                  child: pw.Text(
                                     'HDMF:',
-                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                    style: const pw.TextStyle(fontSize: 14.0),
                                   ),
                                 ),
-                                pdfLib.Padding(
-                                  padding: pdfLib.EdgeInsets.only(right: 5.0),
-                                  child: pdfLib.Text(
+                                pw.Padding(
+                                  padding: const pw.EdgeInsets.only(right: 5.0),
+                                  child: pw.Text(
                                     '$PagIbig',
-                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                    style: const pw.TextStyle(fontSize: 14.0),
                                   ),
                                 ),
                               ],
                             ),
-                            pdfLib.SizedBox(height: 5),
-                            pdfLib.Row(
+                            pw.SizedBox(height: 5),
+                            pw.Row(
                               mainAxisAlignment:
-                                  pdfLib.MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment:
-                                  pdfLib.CrossAxisAlignment.start,
+                                  pw.MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: pw.CrossAxisAlignment.start,
                               children: [
-                                pdfLib.Padding(
-                                  padding: pdfLib.EdgeInsets.only(left: 5.0),
-                                  child: pdfLib.Text(
+                                pw.Padding(
+                                  padding: const pw.EdgeInsets.only(left: 5.0),
+                                  child: pw.Text(
                                     'HDMF Loan:',
-                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                    style: const pw.TextStyle(fontSize: 14.0),
                                   ),
                                 ),
-                                pdfLib.Padding(
-                                  padding: pdfLib.EdgeInsets.only(right: 5.0),
-                                  child: pdfLib.Text(
+                                pw.Padding(
+                                  padding: const pw.EdgeInsets.only(right: 5.0),
+                                  child: pw.Text(
                                     '$Late_Deductions',
-                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                    style: const pw.TextStyle(fontSize: 14.0),
                                   ),
                                 ),
                               ],
                             ),
-                            pdfLib.SizedBox(height: 5),
-                            pdfLib.Row(
+                            pw.SizedBox(height: 5),
+                            pw.Row(
                               mainAxisAlignment:
-                                  pdfLib.MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment:
-                                  pdfLib.CrossAxisAlignment.start,
+                                  pw.MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: pw.CrossAxisAlignment.start,
                               children: [
-                                pdfLib.Padding(
-                                  padding: pdfLib.EdgeInsets.only(left: 5.0),
-                                  child: pdfLib.Text(
+                                pw.Padding(
+                                  padding: const pw.EdgeInsets.only(left: 5.0),
+                                  child: pw.Text(
                                     'Tax:',
-                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                    style: const pw.TextStyle(fontSize: 14.0),
                                   ),
                                 ),
-                                pdfLib.Padding(
-                                  padding: pdfLib.EdgeInsets.only(right: 5.0),
-                                  child: pdfLib.Text(
+                                pw.Padding(
+                                  padding: const pw.EdgeInsets.only(right: 5.0),
+                                  child: pw.Text(
                                     '$TIN',
-                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                    style: const pw.TextStyle(fontSize: 14.0),
                                   ),
                                 ),
                               ],
                             ),
-                            pdfLib.SizedBox(height: 5),
-                            pdfLib.Row(
+                            pw.SizedBox(height: 5),
+                            pw.Row(
                               mainAxisAlignment:
-                                  pdfLib.MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment:
-                                  pdfLib.CrossAxisAlignment.start,
+                                  pw.MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: pw.CrossAxisAlignment.start,
                               children: [
-                                pdfLib.Padding(
-                                  padding: pdfLib.EdgeInsets.only(left: 5.0),
-                                  child: pdfLib.Text(
+                                pw.Padding(
+                                  padding: const pw.EdgeInsets.only(left: 5.0),
+                                  child: pw.Text(
                                     'Health Card:',
-                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                    style: const pw.TextStyle(fontSize: 14.0),
                                   ),
                                 ),
-                                pdfLib.Padding(
-                                  padding: pdfLib.EdgeInsets.only(right: 5.0),
-                                  child: pdfLib.Text(
+                                pw.Padding(
+                                  padding: const pw.EdgeInsets.only(right: 5.0),
+                                  child: pw.Text(
                                     '$Health_Card',
-                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                    style: const pw.TextStyle(fontSize: 14.0),
                                   ),
                                 ),
                               ],
                             ),
-                            pdfLib.SizedBox(height: 5),
-                            pdfLib.Row(
+                            pw.SizedBox(height: 5),
+                            pw.Row(
                               mainAxisAlignment:
-                                  pdfLib.MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment:
-                                  pdfLib.CrossAxisAlignment.start,
+                                  pw.MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: pw.CrossAxisAlignment.start,
                               children: [
-                                pdfLib.Padding(
-                                  padding: pdfLib.EdgeInsets.only(left: 5.0),
-                                  child: pdfLib.Text(
+                                pw.Padding(
+                                  padding: const pw.EdgeInsets.only(left: 5.0),
+                                  child: pw.Text(
                                     'Cash Advance:',
-                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                    style: const pw.TextStyle(fontSize: 14.0),
                                   ),
                                 ),
-                                pdfLib.Padding(
-                                  padding: pdfLib.EdgeInsets.only(right: 5.0),
-                                  child: pdfLib.Text(
+                                pw.Padding(
+                                  padding: const pw.EdgeInsets.only(right: 5.0),
+                                  child: pw.Text(
                                     '0',
-                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                    style: const pw.TextStyle(fontSize: 14.0),
                                   ),
                                 ),
                               ],
                             ),
-                            pdfLib.SizedBox(height: 5),
-                            pdfLib.Row(
+                            pw.SizedBox(height: 5),
+                            pw.Row(
                               mainAxisAlignment:
-                                  pdfLib.MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment:
-                                  pdfLib.CrossAxisAlignment.start,
+                                  pw.MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: pw.CrossAxisAlignment.start,
                               children: [
-                                pdfLib.Padding(
-                                  padding: pdfLib.EdgeInsets.only(left: 5.0),
-                                  child: pdfLib.Text(
+                                pw.Padding(
+                                  padding: const pw.EdgeInsets.only(left: 5.0),
+                                  child: pw.Text(
                                     'Coop Contribution:',
-                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                    style: const pw.TextStyle(fontSize: 14.0),
                                   ),
                                 ),
-                                pdfLib.Padding(
-                                  padding: pdfLib.EdgeInsets.only(right: 5.0),
-                                  child: pdfLib.Text(
+                                pw.Padding(
+                                  padding: const pw.EdgeInsets.only(right: 5.0),
+                                  child: pw.Text(
                                     '0',
-                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                    style: const pw.TextStyle(fontSize: 14.0),
                                   ),
                                 ),
                               ],
                             ),
-                            pdfLib.SizedBox(height: 5),
-                            pdfLib.Row(
+                            pw.SizedBox(height: 5),
+                            pw.Row(
                               mainAxisAlignment:
-                                  pdfLib.MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment:
-                                  pdfLib.CrossAxisAlignment.start,
+                                  pw.MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: pw.CrossAxisAlignment.start,
                               children: [
-                                pdfLib.Padding(
-                                  padding: pdfLib.EdgeInsets.only(left: 5.0),
-                                  child: pdfLib.Text(
+                                pw.Padding(
+                                  padding: const pw.EdgeInsets.only(left: 5.0),
+                                  child: pw.Text(
                                     'Coop Loan',
-                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                    style: const pw.TextStyle(fontSize: 14.0),
                                   ),
                                 ),
-                                pdfLib.Padding(
-                                  padding: pdfLib.EdgeInsets.only(right: 5.0),
-                                  child: pdfLib.Text(
+                                pw.Padding(
+                                  padding: const pw.EdgeInsets.only(right: 5.0),
+                                  child: pw.Text(
                                     '0',
-                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                    style: const pw.TextStyle(fontSize: 14.0),
                                   ),
                                 ),
                               ],
@@ -812,73 +795,71 @@ class _PayslipdetailsState extends State<Payslipdetails> {
                       ),
                     ],
                   ),
-                  pdfLib.Row(
-                    mainAxisAlignment: pdfLib.MainAxisAlignment.start,
-                    crossAxisAlignment: pdfLib.CrossAxisAlignment.start,
+                  pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.start,
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
                     children: [
-                      pdfLib.Container(
+                      pw.Container(
                         width: 253, // Adjust width as needed
                         height: 30, // Adjust height as needed
-                        decoration: pdfLib.BoxDecoration(
-                          border: pdfLib.Border.all(
+                        decoration: pw.BoxDecoration(
+                          border: pw.Border.all(
                             width: 1.0,
                           ),
                         ),
-                        child: pdfLib.Row(
-                          mainAxisAlignment:
-                              pdfLib.MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: pdfLib.CrossAxisAlignment.center,
+                        child: pw.Row(
+                          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: pw.CrossAxisAlignment.center,
                           children: [
-                            pdfLib.Padding(
-                              padding: pdfLib.EdgeInsets.only(left: 5.0),
-                              child: pdfLib.Text(
+                            pw.Padding(
+                              padding: const pw.EdgeInsets.only(left: 5.0),
+                              child: pw.Text(
                                 'TOTAL COMPENSATION:',
-                                style: pdfLib.TextStyle(
+                                style: pw.TextStyle(
                                     fontSize: 14.0,
-                                    fontWeight: pdfLib.FontWeight.bold),
+                                    fontWeight: pw.FontWeight.bold),
                               ),
                             ),
-                            pdfLib.Padding(
-                              padding: pdfLib.EdgeInsets.only(right: 5.0),
-                              child: pdfLib.Text(
+                            pw.Padding(
+                              padding: const pw.EdgeInsets.only(right: 5.0),
+                              child: pw.Text(
                                 '$Overall_Net_Pay',
-                                style: pdfLib.TextStyle(
+                                style: pw.TextStyle(
                                     fontSize: 14.0,
-                                    fontWeight: pdfLib.FontWeight.bold),
+                                    fontWeight: pw.FontWeight.bold),
                               ),
                             ),
                           ],
                         ),
                       ),
-                      pdfLib.Container(
+                      pw.Container(
                         width: 253, // Adjust width as needed
                         height: 30, // Adjust height as needed
-                        decoration: pdfLib.BoxDecoration(
-                          border: pdfLib.Border.all(
+                        decoration: pw.BoxDecoration(
+                          border: pw.Border.all(
                             width: 1.0,
                           ),
                         ),
-                        child: pdfLib.Row(
-                          mainAxisAlignment:
-                              pdfLib.MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: pdfLib.CrossAxisAlignment.center,
+                        child: pw.Row(
+                          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: pw.CrossAxisAlignment.center,
                           children: [
-                            pdfLib.Padding(
-                              padding: pdfLib.EdgeInsets.only(left: 5.0),
-                              child: pdfLib.Text(
+                            pw.Padding(
+                              padding: const pw.EdgeInsets.only(left: 5.0),
+                              child: pw.Text(
                                 'TOTAL DEDUCTION:',
-                                style: pdfLib.TextStyle(
+                                style: pw.TextStyle(
                                     fontSize: 14.0,
-                                    fontWeight: pdfLib.FontWeight.bold),
+                                    fontWeight: pw.FontWeight.bold),
                               ),
                             ),
-                            pdfLib.Padding(
-                              padding: pdfLib.EdgeInsets.only(right: 5.0),
-                              child: pdfLib.Text(
+                            pw.Padding(
+                              padding: const pw.EdgeInsets.only(right: 5.0),
+                              child: pw.Text(
                                 '$Total_AllDeductions',
-                                style: pdfLib.TextStyle(
+                                style: pw.TextStyle(
                                     fontSize: 14.0,
-                                    fontWeight: pdfLib.FontWeight.bold),
+                                    fontWeight: pw.FontWeight.bold),
                               ),
                             ),
                           ],
@@ -886,39 +867,38 @@ class _PayslipdetailsState extends State<Payslipdetails> {
                       ),
                     ],
                   ),
-                  pdfLib.Row(
-                    mainAxisAlignment: pdfLib.MainAxisAlignment.start,
-                    crossAxisAlignment: pdfLib.CrossAxisAlignment.start,
+                  pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.start,
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
                     children: [
-                      pdfLib.Container(
+                      pw.Container(
                         width: 506,
                         height: 30,
-                        decoration: pdfLib.BoxDecoration(
-                          border: pdfLib.Border.all(
+                        decoration: pw.BoxDecoration(
+                          border: pw.Border.all(
                             width: 1.0,
                           ),
                         ),
-                        child: pdfLib.Row(
-                          mainAxisAlignment:
-                              pdfLib.MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: pdfLib.CrossAxisAlignment.center,
+                        child: pw.Row(
+                          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: pw.CrossAxisAlignment.center,
                           children: [
-                            pdfLib.Padding(
-                              padding: pdfLib.EdgeInsets.only(left: 5.0),
-                              child: pdfLib.Text(
+                            pw.Padding(
+                              padding: const pw.EdgeInsets.only(left: 5.0),
+                              child: pw.Text(
                                 'TOTAL NETPAY:',
-                                style: pdfLib.TextStyle(
+                                style: pw.TextStyle(
                                     fontSize: 14.0,
-                                    fontWeight: pdfLib.FontWeight.bold),
+                                    fontWeight: pw.FontWeight.bold),
                               ),
                             ),
-                            pdfLib.Padding(
-                              padding: pdfLib.EdgeInsets.only(right: 5.0),
-                              child: pdfLib.Text(
+                            pw.Padding(
+                              padding: const pw.EdgeInsets.only(right: 5.0),
+                              child: pw.Text(
                                 '$Total_Netpay',
-                                style: pdfLib.TextStyle(
+                                style: pw.TextStyle(
                                     fontSize: 14.0,
-                                    fontWeight: pdfLib.FontWeight.bold),
+                                    fontWeight: pw.FontWeight.bold),
                               ),
                             ),
                           ],
@@ -933,27 +913,34 @@ class _PayslipdetailsState extends State<Payslipdetails> {
         ),
       );
 
-      final String dir = (await getApplicationDocumentsDirectory()).path;
-      String path = '$dir/payslip.pdf';
+      pdf.save();
+
+      // final String dir = (await getExternalStorageDirectory())!.path;
+      final dir = await getDownloadDir();
+      // final Directory? dir = await getExternalStorageDirectory();
+      String filepath = '$dir/Download/payslip.pdf';
       int count = 1;
-      while (await File(path).exists()) {
-        path = '$dir/payslip($count).pdf';
+      while (await File(filepath).exists()) {
+        filepath = '$dir/Download/payslip($count).pdf';
         count++;
       }
-      final File file = File(path);
+
+      print(filepath);
+
+      final File file = File(filepath);
       await file.writeAsBytes(await pdf.save());
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('PDF downloaded successfully as $path'),
-          duration: Duration(seconds: 2),
+          content: Text('PDF downloaded successfully as $filepath'),
+          duration: const Duration(seconds: 2),
         ),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Failed to download PDF: $e'),
-          duration: Duration(seconds: 2),
+          duration: const Duration(seconds: 10),
         ),
       );
     }
