@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:eportal/layout/profile.dart';
 import 'package:eportal/repository/helper.dart';
@@ -83,7 +81,7 @@ Future<void> _getWorkInfo() async {
           'Work Information',
           style: TextStyle(color: Colors.black),
         ),
-        backgroundColor: Color.fromARGB(255, 255, 255, 255),
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
@@ -96,15 +94,15 @@ Future<void> _getWorkInfo() async {
         ),
       ),
       body: Container(
-      color: Color.fromARGB(255, 255, 255, 255),
+      color: const Color.fromARGB(255, 255, 255, 255),
       child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
+              const Padding(
+                padding: EdgeInsets.all(8.0),
                 child: Text(
                   'Department',
                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
@@ -115,12 +113,12 @@ Future<void> _getWorkInfo() async {
                     left: 8.0, right: 8.0, bottom: 8.0), // Adjust as needed
                 child: Text(
                   '$departmentid',
-                  style: TextStyle(fontSize: 18),
+                  style: const TextStyle(fontSize: 18),
                 ),
               ),
-              Divider(),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
+              const Divider(),
+              const Padding(
+                padding: EdgeInsets.all(8.0),
                 child: Text(
                   'Position',
                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
@@ -131,12 +129,12 @@ Future<void> _getWorkInfo() async {
                     left: 8.0, right: 8.0, bottom: 8.0), // Adjust as needed
                 child: Text(
                   '$position',
-                  style: TextStyle(fontSize: 18),
+                  style: const TextStyle(fontSize: 18),
                 ),
               ),
-              Divider(),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
+              const Divider(),
+              const Padding(
+                padding: EdgeInsets.all(8.0),
                 child: Text(
                   'Job Status',
                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
@@ -147,12 +145,12 @@ Future<void> _getWorkInfo() async {
                     left: 8.0, right: 8.0, bottom: 8.0), // Adjust as needed
                 child: Text(
                   '$jobstatus',
-                  style: TextStyle(fontSize: 18),
+                  style: const TextStyle(fontSize: 18),
                 ),
               ),
-              Divider(),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
+              const Divider(),
+              const Padding(
+                padding: EdgeInsets.all(8.0),
                 child: Text(
                   'Head Department',
                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
@@ -163,12 +161,12 @@ Future<void> _getWorkInfo() async {
                     left: 8.0, right: 8.0, bottom: 8.0), // Adjust as needed
                 child: Text(
                   '$departmenthead',
-                  style: TextStyle(fontSize: 18),
+                  style: const TextStyle(fontSize: 18),
                 ),
               ),
-              Divider(),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
+              const Divider(),
+              const Padding(
+                padding: EdgeInsets.all(8.0),
                 child: Text(
                   'Hire Date',
                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
@@ -179,12 +177,12 @@ Future<void> _getWorkInfo() async {
                     left: 8.0, right: 8.0, bottom: 8.0), // Adjust as needed
                 child: Text(
                   '$hiredate',
-                  style: TextStyle(fontSize: 18),
+                  style: const TextStyle(fontSize: 18),
                 ),
               ),
-              Divider(),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
+              const Divider(),
+              const Padding(
+                padding: EdgeInsets.all(8.0),
                 child: Text(
                   'Tenure',
                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
@@ -195,10 +193,10 @@ Future<void> _getWorkInfo() async {
                     left: 8.0, right: 8.0, bottom: 8.0), // Adjust as needed
                 child: Text(
                   '$tenure',
-                  style: TextStyle(fontSize: 18),
+                  style: const TextStyle(fontSize: 18),
                 ),
               ),
-              Divider(),
+              const Divider(),
             ],
           ),
         ),

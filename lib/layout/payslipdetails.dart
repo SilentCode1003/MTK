@@ -2,8 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:eportal/layout/drawer.dart';
 import 'package:eportal/api/payslip.dart';
 import 'dart:convert';
+import 'package:intl/intl.dart';
 import 'package:eportal/repository/helper.dart';
 import 'package:eportal/model/userinfo.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pdfLib;
+import 'dart:io';
+import 'package:flutter/services.dart' show rootBundle;
 
 class Payslipdetails extends StatefulWidget {
   final String employeeid;
@@ -16,52 +22,56 @@ class Payslipdetails extends StatefulWidget {
 }
 
 class _PayslipdetailsState extends State<Payslipdetails> {
-  dynamic employeeid ;
-  dynamic gp_payrolldate ;
-  dynamic PayrollDate ;
-  dynamic StartDate ;
-  dynamic Enddate ;
-  dynamic Salary ;
-  dynamic Allowances ;
-  dynamic Regular_Holiday_Compensation ;
-  dynamic Special_Holiday_Compensation ;
-  dynamic RegularHolidayOT ;
-  dynamic SpecialHolidayOT ;
-  dynamic EarlyOtpay ;
-  dynamic OTpay ;
-  dynamic NDpay ;
-  dynamic Overall_Net_Pay ;
-  dynamic Absent_Deductions ;
-  dynamic Late_Deductions ;
-  dynamic SSS ;
-  dynamic PhilHealth ;
-  dynamic PagIbig ;
-  dynamic TIN ;
-  dynamic Health_Card ;
-  dynamic Total_AllDeductions ;
-  dynamic Total_Netpay ;
-  dynamic EmployeeFullName ;
-  dynamic PositionName ;
-  dynamic Department ;
-  dynamic Total_Hours ;
-  dynamic EarlyOt ;
-  dynamic Late_Minutes ;
-  dynamic HolidayOvertime ;
-  dynamic Late_Hours ;
-  dynamic Regular_Hours ;
-  dynamic Per_Day ;
-  dynamic Work_Days ;
-  dynamic Rest_Day ;
-  dynamic Total_gp_status ;
-  dynamic Absent ;
-  dynamic Compensation ;
-  dynamic ApprovedOt ;
-
-
+  dynamic employeeid;
+  dynamic gp_payrolldate;
+  dynamic PayrollDate;
+  dynamic StartDate;
+  dynamic Enddate;
+  dynamic Salary;
+  dynamic Allowances;
+  dynamic Regular_Holiday_Compensation;
+  dynamic Special_Holiday_Compensation;
+  dynamic RegularHolidayOT;
+  dynamic SpecialHolidayOT;
+  dynamic EarlyOtpay;
+  dynamic OTpay;
+  dynamic NDpay;
+  dynamic Overall_Net_Pay;
+  dynamic Absent_Deductions;
+  dynamic Late_Deductions;
+  dynamic SSS;
+  dynamic PhilHealth;
+  dynamic PagIbig;
+  dynamic TIN;
+  dynamic Health_Card;
+  dynamic Total_AllDeductions;
+  dynamic Total_Netpay;
+  dynamic EmployeeFullName;
+  dynamic PositionName;
+  dynamic Department;
+  dynamic Total_Hours;
+  dynamic EarlyOt;
+  dynamic Late_Minutes;
+  dynamic HolidayOvertime;
+  dynamic Late_Hours;
+  dynamic Regular_Hours;
+  dynamic Per_Day;
+  dynamic Work_Days;
+  dynamic Rest_Day;
+  dynamic Total_gp_status;
+  dynamic Absent;
+  dynamic Compensation;
+  dynamic ApprovedOt;
 
   Helper helper = Helper();
-  
+
   List<PayslipModel> payslipinfo = [];
+
+  String _formatDate(String? date) {
+    if (date == "" || date == null) return '';
+    DateTime dateTime = DateTime.parse(date);
+    return DateFormat('MMMM dd yyyy', 'en_US').format(dateTime);
+  }
 
   @override
   void initState() {
@@ -73,13 +83,888 @@ class _PayslipdetailsState extends State<Payslipdetails> {
     _getPayslipInfo();
   }
 
+  Future<void> _generatePDF(BuildContext context) async {
+    try {
+      final pdf = pdfLib.Document();
+
+      final image = pdfLib.MemoryImage(File('assets/5L.png').readAsBytesSync(),
+      );
+
+      pdf.addPage(
+        pdfLib.Page(
+          build: (context) {
+            return pdfLib.Container(
+              child: pdfLib.Column(
+                mainAxisAlignment: pdfLib.MainAxisAlignment.start,
+                crossAxisAlignment: pdfLib.CrossAxisAlignment.center,
+                children: [
+                  pdfLib.Row(
+                    mainAxisAlignment: pdfLib.MainAxisAlignment.start,
+                    crossAxisAlignment: pdfLib.CrossAxisAlignment.center,
+                    children: [
+                      pdfLib.Container(
+                        width: 100,
+                        height: 100,
+                        child: pdfLib.Image(image),
+                      ),
+                      pdfLib.Container(
+                        padding: pdfLib.EdgeInsets.only(left: 2.0),
+                        child: pdfLib.Text(
+                          '5L Solutions Supply & Allied Services Corp',
+                          style: pdfLib.TextStyle(fontSize: 20.0),
+                        ),
+                      ),
+                    ],
+                  ),
+                  pdfLib.SizedBox(height: 1),
+                  pdfLib.Row(
+                    mainAxisAlignment: pdfLib.MainAxisAlignment.center,
+                    crossAxisAlignment: pdfLib.CrossAxisAlignment.center,
+                    children: [
+                      pdfLib.Text(
+                        'Payslip',
+                        style: pdfLib.TextStyle(fontSize: 16.0),
+                      ),
+                    ],
+                  ),
+                  pdfLib.SizedBox(height: 7),
+                  pdfLib.Row(
+                    mainAxisAlignment: pdfLib.MainAxisAlignment.center,
+                    crossAxisAlignment: pdfLib.CrossAxisAlignment.center,
+                    children: [
+                      pdfLib.Text(
+                        '$StartDate - $Enddate',
+                        style: pdfLib.TextStyle(fontSize: 14.0),
+                      ),
+                    ],
+                  ),
+                  pdfLib.SizedBox(height: 15),
+                  pdfLib.Row(
+                    mainAxisAlignment: pdfLib.MainAxisAlignment.start,
+                    crossAxisAlignment: pdfLib.CrossAxisAlignment.start,
+                    children: [
+                      pdfLib.Container(
+                        width: 250, // Adjust width as needed
+                        height: 20, // Adjust height as needed
+                        child: pdfLib.Row(
+                          mainAxisAlignment: pdfLib.MainAxisAlignment.start,
+                          crossAxisAlignment: pdfLib.CrossAxisAlignment.center,
+                          children: [
+                            pdfLib.Text(
+                              'Name: ',
+                              style: pdfLib.TextStyle(fontSize: 14.0),
+                            ),
+                            pdfLib.Text(
+                              '$EmployeeFullName',
+                              style: pdfLib.TextStyle(fontSize: 14.0),
+                            ),
+                          ],
+                        ),
+                      ),
+                      pdfLib.SizedBox(width: 5),
+                      pdfLib.Container(
+                        width: 250,
+                        height: 20,
+                        child: pdfLib.Row(
+                          mainAxisAlignment: pdfLib.MainAxisAlignment.start,
+                          crossAxisAlignment: pdfLib.CrossAxisAlignment.center,
+                          children: [
+                            pdfLib.Text(
+                              'SSS: ',
+                              style: pdfLib.TextStyle(fontSize: 14.0),
+                            ),
+                            pdfLib.Text(
+                              '1234567889',
+                              style: pdfLib.TextStyle(fontSize: 14.0),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  pdfLib.SizedBox(height: 5),
+                  pdfLib.Row(
+                    mainAxisAlignment: pdfLib.MainAxisAlignment.start,
+                    crossAxisAlignment: pdfLib.CrossAxisAlignment.start,
+                    children: [
+                      pdfLib.Container(
+                        width: 250, // Adjust width as needed
+                        height: 20, // Adjust height as needed
+                        child: pdfLib.Row(
+                          mainAxisAlignment: pdfLib.MainAxisAlignment.start,
+                          crossAxisAlignment: pdfLib.CrossAxisAlignment.center,
+                          children: [
+                            pdfLib.Text(
+                              'Employee ID: ',
+                              style: pdfLib.TextStyle(fontSize: 14.0),
+                            ),
+                            pdfLib.Text(
+                              '$employeeid',
+                              style: pdfLib.TextStyle(fontSize: 14.0),
+                            ),
+                          ],
+                        ),
+                      ),
+                      pdfLib.SizedBox(width: 5),
+                      pdfLib.Container(
+                        width: 250, // Adjust width as needed
+                        height: 20, // Adjust height as needed
+                        child: pdfLib.Row(
+                          mainAxisAlignment: pdfLib.MainAxisAlignment.start,
+                          crossAxisAlignment: pdfLib.CrossAxisAlignment.center,
+                          children: [
+                            pdfLib.Text(
+                              'TIN: ',
+                              style: pdfLib.TextStyle(fontSize: 14.0),
+                            ),
+                            pdfLib.Text(
+                              '1234567890',
+                              style: pdfLib.TextStyle(fontSize: 14.0),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  pdfLib.SizedBox(height: 5),
+                  pdfLib.Row(
+                    mainAxisAlignment: pdfLib.MainAxisAlignment.start,
+                    crossAxisAlignment: pdfLib.CrossAxisAlignment.start,
+                    children: [
+                      pdfLib.Container(
+                        width: 250, // Adjust width as needed
+                        height: 20, // Adjust height as needed
+                        child: pdfLib.Row(
+                          mainAxisAlignment: pdfLib.MainAxisAlignment.start,
+                          crossAxisAlignment: pdfLib.CrossAxisAlignment.center,
+                          children: [
+                            pdfLib.Text(
+                              'Department: ',
+                              style: pdfLib.TextStyle(fontSize: 14.0),
+                            ),
+                            pdfLib.Text(
+                              '$Department',
+                              style: pdfLib.TextStyle(fontSize: 14.0),
+                            ),
+                          ],
+                        ),
+                      ),
+                      pdfLib.SizedBox(width: 5),
+                      pdfLib.Container(
+                        width: 250, // Adjust width as needed
+                        height: 20, // Adjust height as needed
+                        child: pdfLib.Row(
+                          mainAxisAlignment: pdfLib.MainAxisAlignment.start,
+                          crossAxisAlignment: pdfLib.CrossAxisAlignment.center,
+                          children: [
+                            pdfLib.Text(
+                              'PhilHealth: ',
+                              style: pdfLib.TextStyle(fontSize: 14.0),
+                            ),
+                            pdfLib.Text(
+                              '1234567890',
+                              style: pdfLib.TextStyle(fontSize: 14.0),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  pdfLib.SizedBox(height: 5),
+                  pdfLib.Row(
+                    mainAxisAlignment: pdfLib.MainAxisAlignment.start,
+                    crossAxisAlignment: pdfLib.CrossAxisAlignment.start,
+                    children: [
+                      pdfLib.Container(
+                        width: 250, // Adjust width as needed
+                        height: 20, // Adjust height as needed
+                        child: pdfLib.Row(
+                          mainAxisAlignment: pdfLib.MainAxisAlignment.start,
+                          crossAxisAlignment: pdfLib.CrossAxisAlignment.center,
+                          children: [
+                            pdfLib.Text(
+                              'Position: ',
+                              style: pdfLib.TextStyle(fontSize: 14.0),
+                            ),
+                            pdfLib.Text(
+                              '$PositionName',
+                              style: pdfLib.TextStyle(fontSize: 14.0),
+                            ),
+                          ],
+                        ),
+                      ),
+                      pdfLib.SizedBox(width: 5),
+                      pdfLib.Container(
+                        width: 250, // Adjust width as needed
+                        height: 20, // Adjust height as needed
+                        child: pdfLib.Row(
+                          mainAxisAlignment: pdfLib.MainAxisAlignment.start,
+                          crossAxisAlignment: pdfLib.CrossAxisAlignment.center,
+                          children: [
+                            pdfLib.Text(
+                              'Pag-Ibig: ',
+                              style: pdfLib.TextStyle(fontSize: 14.0),
+                            ),
+                            pdfLib.Text(
+                              '1234567890',
+                              style: pdfLib.TextStyle(fontSize: 14.0),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  pdfLib.SizedBox(height: 20),
+                  pdfLib.Row(
+                    mainAxisAlignment: pdfLib.MainAxisAlignment.start,
+                    crossAxisAlignment: pdfLib.CrossAxisAlignment.start,
+                    children: [
+                      pdfLib.Container(
+                        width: 253, // Adjust width as needed
+                        height: 30, // Adjust height as needed
+                        decoration: pdfLib.BoxDecoration(
+                          border: pdfLib.Border.all(
+                            width: 1.0,
+                          ),
+                        ),
+                        child: pdfLib.Row(
+                          mainAxisAlignment:
+                              pdfLib.MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: pdfLib.CrossAxisAlignment.center,
+                          children: [
+                            pdfLib.Padding(
+                              padding: pdfLib.EdgeInsets.only(left: 5.0),
+                              child: pdfLib.Text(
+                                'COMPENSATION',
+                                style: pdfLib.TextStyle(
+                                    fontSize: 14.0,
+                                    fontWeight: pdfLib.FontWeight.bold),
+                              ),
+                            ),
+                            pdfLib.Padding(
+                              padding: pdfLib.EdgeInsets.only(right: 5.0),
+                              child: pdfLib.Text(
+                                'AMOUNT',
+                                style: pdfLib.TextStyle(
+                                    fontSize: 14.0,
+                                    fontWeight: pdfLib.FontWeight.bold),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      pdfLib.Container(
+                        width: 252, // Adjust width as needed
+                        height: 30, // Adjust height as needed
+                        decoration: pdfLib.BoxDecoration(
+                          border: pdfLib.Border.all(
+                            width: 1.0,
+                          ),
+                        ),
+                        child: pdfLib.Row(
+                          mainAxisAlignment:
+                              pdfLib.MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: pdfLib.CrossAxisAlignment.center,
+                          children: [
+                            pdfLib.Padding(
+                              padding: pdfLib.EdgeInsets.only(left: 5.0),
+                              child: pdfLib.Text(
+                                'DEDUCTION',
+                                style: pdfLib.TextStyle(
+                                    fontSize: 14.0,
+                                    fontWeight: pdfLib.FontWeight.bold),
+                              ),
+                            ),
+                            pdfLib.Padding(
+                              padding: pdfLib.EdgeInsets.only(right: 5.0),
+                              child: pdfLib.Text(
+                                'AMOUNT',
+                                style: pdfLib.TextStyle(
+                                    fontSize: 14.0,
+                                    fontWeight: pdfLib.FontWeight.bold),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  pdfLib.Row(
+                    mainAxisAlignment: pdfLib.MainAxisAlignment.start,
+                    crossAxisAlignment: pdfLib.CrossAxisAlignment.start,
+                    children: [
+                      pdfLib.Container(
+                        width: 253, // Adjust width as needed
+                        height: 275, // Adjust height as needed
+                        decoration: pdfLib.BoxDecoration(
+                          border: pdfLib.Border.all(
+                            width: 1.0,
+                          ),
+                        ),
+                        child: pdfLib.Column(
+                          children: [
+                            pdfLib.SizedBox(height: 10),
+                            pdfLib.Row(
+                              mainAxisAlignment:
+                                  pdfLib.MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment:
+                                  pdfLib.CrossAxisAlignment.center,
+                              children: [
+                                pdfLib.Padding(
+                                  padding: pdfLib.EdgeInsets.only(left: 5.0),
+                                  child: pdfLib.Text(
+                                    'Basic Salary:',
+                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                  ),
+                                ),
+                                pdfLib.Padding(
+                                  padding: pdfLib.EdgeInsets.only(right: 5.0),
+                                  child: pdfLib.Text(
+                                    '$Salary',
+                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            pdfLib.SizedBox(height: 5),
+                            pdfLib.Row(
+                              mainAxisAlignment:
+                                  pdfLib.MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment:
+                                  pdfLib.CrossAxisAlignment.center,
+                              children: [
+                                pdfLib.Padding(
+                                  padding: pdfLib.EdgeInsets.only(left: 5.0),
+                                  child: pdfLib.Text(
+                                    'Allowance:',
+                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                  ),
+                                ),
+                                pdfLib.Padding(
+                                  padding: pdfLib.EdgeInsets.only(right: 5.0),
+                                  child: pdfLib.Text(
+                                    '$Allowances',
+                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            pdfLib.SizedBox(height: 5),
+                            pdfLib.Row(
+                              mainAxisAlignment:
+                                  pdfLib.MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment:
+                                  pdfLib.CrossAxisAlignment.center,
+                              children: [
+                                pdfLib.Padding(
+                                  padding: pdfLib.EdgeInsets.only(left: 5.0),
+                                  child: pdfLib.Text(
+                                    'Holiday:',
+                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                  ),
+                                ),
+                                pdfLib.Padding(
+                                  padding: pdfLib.EdgeInsets.only(right: 5.0),
+                                  child: pdfLib.Text(
+                                    '$RegularHolidayOT',
+                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            pdfLib.SizedBox(height: 5),
+                            pdfLib.Row(
+                              mainAxisAlignment:
+                                  pdfLib.MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment:
+                                  pdfLib.CrossAxisAlignment.center,
+                              children: [
+                                pdfLib.Padding(
+                                  padding: pdfLib.EdgeInsets.only(left: 5.0),
+                                  child: pdfLib.Text(
+                                    'OverTime',
+                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                  ),
+                                ),
+                                pdfLib.Padding(
+                                  padding: pdfLib.EdgeInsets.only(right: 5.0),
+                                  child: pdfLib.Text(
+                                    '$ApprovedOt',
+                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            pdfLib.SizedBox(height: 5),
+                            pdfLib.Row(
+                              mainAxisAlignment:
+                                  pdfLib.MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment:
+                                  pdfLib.CrossAxisAlignment.center,
+                              children: [
+                                pdfLib.Padding(
+                                  padding: pdfLib.EdgeInsets.only(left: 5.0),
+                                  child: pdfLib.Text(
+                                    'Night Differential',
+                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                  ),
+                                ),
+                                pdfLib.Padding(
+                                  padding: pdfLib.EdgeInsets.only(right: 5.0),
+                                  child: pdfLib.Text(
+                                    '$NDpay',
+                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      pdfLib.Container(
+                        width: 253, // Adjust width as needed
+                        height: 275, // Adjust height as needed
+                        decoration: pdfLib.BoxDecoration(
+                          border: pdfLib.Border.all(
+                            width: 1.0,
+                          ),
+                        ),
+                        child: pdfLib.Column(
+                          children: [
+                            pdfLib.SizedBox(height: 10),
+                            pdfLib.Row(
+                              mainAxisAlignment:
+                                  pdfLib.MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment:
+                                  pdfLib.CrossAxisAlignment.start,
+                              children: [
+                                pdfLib.Padding(
+                                  padding: pdfLib.EdgeInsets.only(left: 5.0),
+                                  child: pdfLib.Text(
+                                    'Absences:',
+                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                  ),
+                                ),
+                                pdfLib.Padding(
+                                  padding: pdfLib.EdgeInsets.only(right: 5.0),
+                                  child: pdfLib.Text(
+                                    '$Absent_Deductions',
+                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            pdfLib.SizedBox(height: 5),
+                            pdfLib.Row(
+                              mainAxisAlignment:
+                                  pdfLib.MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment:
+                                  pdfLib.CrossAxisAlignment.start,
+                              children: [
+                                pdfLib.Padding(
+                                  padding: pdfLib.EdgeInsets.only(left: 5.0),
+                                  child: pdfLib.Text(
+                                    'Late/Undertime:',
+                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                  ),
+                                ),
+                                pdfLib.Padding(
+                                  padding: pdfLib.EdgeInsets.only(right: 5.0),
+                                  child: pdfLib.Text(
+                                    '$Late_Deductions',
+                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            pdfLib.SizedBox(height: 5),
+                            pdfLib.Row(
+                              mainAxisAlignment:
+                                  pdfLib.MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment:
+                                  pdfLib.CrossAxisAlignment.start,
+                              children: [
+                                pdfLib.Padding(
+                                  padding: pdfLib.EdgeInsets.only(left: 5.0),
+                                  child: pdfLib.Text(
+                                    'SSS:',
+                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                  ),
+                                ),
+                                pdfLib.Padding(
+                                  padding: pdfLib.EdgeInsets.only(right: 5.0),
+                                  child: pdfLib.Text(
+                                    '$SSS',
+                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            pdfLib.SizedBox(height: 5),
+                            pdfLib.Row(
+                              mainAxisAlignment:
+                                  pdfLib.MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment:
+                                  pdfLib.CrossAxisAlignment.start,
+                              children: [
+                                pdfLib.Padding(
+                                  padding: pdfLib.EdgeInsets.only(left: 5.0),
+                                  child: pdfLib.Text(
+                                    'SSS Loan:',
+                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                  ),
+                                ),
+                                pdfLib.Padding(
+                                  padding: pdfLib.EdgeInsets.only(right: 5.0),
+                                  child: pdfLib.Text(
+                                    '0',
+                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            pdfLib.SizedBox(height: 5),
+                            pdfLib.Row(
+                              mainAxisAlignment:
+                                  pdfLib.MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment:
+                                  pdfLib.CrossAxisAlignment.start,
+                              children: [
+                                pdfLib.Padding(
+                                  padding: pdfLib.EdgeInsets.only(left: 5.0),
+                                  child: pdfLib.Text(
+                                    'PhilHealth:',
+                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                  ),
+                                ),
+                                pdfLib.Padding(
+                                  padding: pdfLib.EdgeInsets.only(right: 5.0),
+                                  child: pdfLib.Text(
+                                    '$PhilHealth',
+                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            pdfLib.SizedBox(height: 5),
+                            pdfLib.Row(
+                              mainAxisAlignment:
+                                  pdfLib.MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment:
+                                  pdfLib.CrossAxisAlignment.start,
+                              children: [
+                                pdfLib.Padding(
+                                  padding: pdfLib.EdgeInsets.only(left: 5.0),
+                                  child: pdfLib.Text(
+                                    'HDMF:',
+                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                  ),
+                                ),
+                                pdfLib.Padding(
+                                  padding: pdfLib.EdgeInsets.only(right: 5.0),
+                                  child: pdfLib.Text(
+                                    '$PagIbig',
+                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            pdfLib.SizedBox(height: 5),
+                            pdfLib.Row(
+                              mainAxisAlignment:
+                                  pdfLib.MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment:
+                                  pdfLib.CrossAxisAlignment.start,
+                              children: [
+                                pdfLib.Padding(
+                                  padding: pdfLib.EdgeInsets.only(left: 5.0),
+                                  child: pdfLib.Text(
+                                    'HDMF Loan:',
+                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                  ),
+                                ),
+                                pdfLib.Padding(
+                                  padding: pdfLib.EdgeInsets.only(right: 5.0),
+                                  child: pdfLib.Text(
+                                    '$Late_Deductions',
+                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            pdfLib.SizedBox(height: 5),
+                            pdfLib.Row(
+                              mainAxisAlignment:
+                                  pdfLib.MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment:
+                                  pdfLib.CrossAxisAlignment.start,
+                              children: [
+                                pdfLib.Padding(
+                                  padding: pdfLib.EdgeInsets.only(left: 5.0),
+                                  child: pdfLib.Text(
+                                    'Tax:',
+                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                  ),
+                                ),
+                                pdfLib.Padding(
+                                  padding: pdfLib.EdgeInsets.only(right: 5.0),
+                                  child: pdfLib.Text(
+                                    '$TIN',
+                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            pdfLib.SizedBox(height: 5),
+                            pdfLib.Row(
+                              mainAxisAlignment:
+                                  pdfLib.MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment:
+                                  pdfLib.CrossAxisAlignment.start,
+                              children: [
+                                pdfLib.Padding(
+                                  padding: pdfLib.EdgeInsets.only(left: 5.0),
+                                  child: pdfLib.Text(
+                                    'Health Card:',
+                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                  ),
+                                ),
+                                pdfLib.Padding(
+                                  padding: pdfLib.EdgeInsets.only(right: 5.0),
+                                  child: pdfLib.Text(
+                                    '$Health_Card',
+                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            pdfLib.SizedBox(height: 5),
+                            pdfLib.Row(
+                              mainAxisAlignment:
+                                  pdfLib.MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment:
+                                  pdfLib.CrossAxisAlignment.start,
+                              children: [
+                                pdfLib.Padding(
+                                  padding: pdfLib.EdgeInsets.only(left: 5.0),
+                                  child: pdfLib.Text(
+                                    'Cash Advance:',
+                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                  ),
+                                ),
+                                pdfLib.Padding(
+                                  padding: pdfLib.EdgeInsets.only(right: 5.0),
+                                  child: pdfLib.Text(
+                                    '0',
+                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            pdfLib.SizedBox(height: 5),
+                            pdfLib.Row(
+                              mainAxisAlignment:
+                                  pdfLib.MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment:
+                                  pdfLib.CrossAxisAlignment.start,
+                              children: [
+                                pdfLib.Padding(
+                                  padding: pdfLib.EdgeInsets.only(left: 5.0),
+                                  child: pdfLib.Text(
+                                    'Coop Contribution:',
+                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                  ),
+                                ),
+                                pdfLib.Padding(
+                                  padding: pdfLib.EdgeInsets.only(right: 5.0),
+                                  child: pdfLib.Text(
+                                    '0',
+                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            pdfLib.SizedBox(height: 5),
+                            pdfLib.Row(
+                              mainAxisAlignment:
+                                  pdfLib.MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment:
+                                  pdfLib.CrossAxisAlignment.start,
+                              children: [
+                                pdfLib.Padding(
+                                  padding: pdfLib.EdgeInsets.only(left: 5.0),
+                                  child: pdfLib.Text(
+                                    'Coop Loan',
+                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                  ),
+                                ),
+                                pdfLib.Padding(
+                                  padding: pdfLib.EdgeInsets.only(right: 5.0),
+                                  child: pdfLib.Text(
+                                    '0',
+                                    style: pdfLib.TextStyle(fontSize: 14.0),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  pdfLib.Row(
+                    mainAxisAlignment: pdfLib.MainAxisAlignment.start,
+                    crossAxisAlignment: pdfLib.CrossAxisAlignment.start,
+                    children: [
+                      pdfLib.Container(
+                        width: 253, // Adjust width as needed
+                        height: 30, // Adjust height as needed
+                        decoration: pdfLib.BoxDecoration(
+                          border: pdfLib.Border.all(
+                            width: 1.0,
+                          ),
+                        ),
+                        child: pdfLib.Row(
+                          mainAxisAlignment:
+                              pdfLib.MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: pdfLib.CrossAxisAlignment.center,
+                          children: [
+                            pdfLib.Padding(
+                              padding: pdfLib.EdgeInsets.only(left: 5.0),
+                              child: pdfLib.Text(
+                                'TOTAL COMPENSATION:',
+                                style: pdfLib.TextStyle(
+                                    fontSize: 14.0,
+                                    fontWeight: pdfLib.FontWeight.bold),
+                              ),
+                            ),
+                            pdfLib.Padding(
+                              padding: pdfLib.EdgeInsets.only(right: 5.0),
+                              child: pdfLib.Text(
+                                '$Overall_Net_Pay',
+                                style: pdfLib.TextStyle(
+                                    fontSize: 14.0,
+                                    fontWeight: pdfLib.FontWeight.bold),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      pdfLib.Container(
+                        width: 253, // Adjust width as needed
+                        height: 30, // Adjust height as needed
+                        decoration: pdfLib.BoxDecoration(
+                          border: pdfLib.Border.all(
+                            width: 1.0,
+                          ),
+                        ),
+                        child: pdfLib.Row(
+                          mainAxisAlignment:
+                              pdfLib.MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: pdfLib.CrossAxisAlignment.center,
+                          children: [
+                            pdfLib.Padding(
+                              padding: pdfLib.EdgeInsets.only(left: 5.0),
+                              child: pdfLib.Text(
+                                'TOTAL DEDUCTION:',
+                                style: pdfLib.TextStyle(
+                                    fontSize: 14.0,
+                                    fontWeight: pdfLib.FontWeight.bold),
+                              ),
+                            ),
+                            pdfLib.Padding(
+                              padding: pdfLib.EdgeInsets.only(right: 5.0),
+                              child: pdfLib.Text(
+                                '$Total_AllDeductions',
+                                style: pdfLib.TextStyle(
+                                    fontSize: 14.0,
+                                    fontWeight: pdfLib.FontWeight.bold),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  pdfLib.Row(
+                    mainAxisAlignment: pdfLib.MainAxisAlignment.start,
+                    crossAxisAlignment: pdfLib.CrossAxisAlignment.start,
+                    children: [
+                      pdfLib.Container(
+                        width: 506,
+                        height: 30,
+                        decoration: pdfLib.BoxDecoration(
+                          border: pdfLib.Border.all(
+                            width: 1.0,
+                          ),
+                        ),
+                        child: pdfLib.Row(
+                          mainAxisAlignment:
+                              pdfLib.MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: pdfLib.CrossAxisAlignment.center,
+                          children: [
+                            pdfLib.Padding(
+                              padding: pdfLib.EdgeInsets.only(left: 5.0),
+                              child: pdfLib.Text(
+                                'TOTAL NETPAY:',
+                                style: pdfLib.TextStyle(
+                                    fontSize: 14.0,
+                                    fontWeight: pdfLib.FontWeight.bold),
+                              ),
+                            ),
+                            pdfLib.Padding(
+                              padding: pdfLib.EdgeInsets.only(right: 5.0),
+                              child: pdfLib.Text(
+                                '$Total_Netpay',
+                                style: pdfLib.TextStyle(
+                                    fontSize: 14.0,
+                                    fontWeight: pdfLib.FontWeight.bold),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      );
+
+      final String dir = (await getApplicationDocumentsDirectory()).path;
+      String path = '$dir/payslip.pdf';
+      int count = 1;
+      while (await File(path).exists()) {
+        path = '$dir/payslip($count).pdf';
+        count++;
+      }
+      final File file = File(path);
+      await file.writeAsBytes(await pdf.save());
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('PDF downloaded successfully as $path'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to download PDF: $e'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
+  }
+
   Future<void> _getPayslipInfo() async {
     final response = await Payroll().getpayslip(employeeid, PayrollDate);
     if (helper.getStatusString(APIStatus.success) == response.message) {
       final jsondata = json.encode(response.result);
       for (var payslipInfo in json.decode(jsondata)) {
-
-         print(payslipInfo['Salary']);
+        print(payslipInfo['Salary']);
         setState(() {
           PayslipModel payslipinfo = PayslipModel(
             payslipInfo['EmployeeFullName'],
@@ -89,8 +974,8 @@ class _PayslipdetailsState extends State<Payslipdetails> {
             payslipInfo['Salary'],
             payslipInfo['Allowances'],
             payslipInfo['PayrollDate'],
-            payslipInfo['StartDate'],
-            payslipInfo['Enddate'],
+            _formatDate(payslipInfo['StartDate']),
+            _formatDate(payslipInfo['Enddate']),
             payslipInfo['Total_Hours'],
             payslipInfo['Total_Minutes'],
             payslipInfo['NightDiff'],
@@ -150,8 +1035,10 @@ class _PayslipdetailsState extends State<Payslipdetails> {
           EarlyOtpay = payslipinfo.EarlyOtpay;
           Compensation = payslipinfo.Compensation;
           ApprovedOt = payslipinfo.ApprovedOt;
-          Regular_Holiday_Compensation = payslipinfo.Regular_Holiday_Compensation;
-          Special_Holiday_Compensation = payslipinfo.Special_Holiday_Compensation;
+          Regular_Holiday_Compensation =
+              payslipinfo.Regular_Holiday_Compensation;
+          Special_Holiday_Compensation =
+              payslipinfo.Special_Holiday_Compensation;
           RegularHolidayOT = payslipinfo.RegularHolidayOT;
           SpecialHolidayOT = payslipinfo.SpecialHolidayOT;
           Absent_Deductions = payslipinfo.Absent_Deductions;
@@ -166,7 +1053,7 @@ class _PayslipdetailsState extends State<Payslipdetails> {
           Total_Netpay = payslipinfo.Total_Netpay;
         });
       }
-      print(employeeid);
+      print('ito ang total $Overall_Net_Pay');
     }
   }
 
@@ -201,12 +1088,14 @@ class _PayslipdetailsState extends State<Payslipdetails> {
           ),
           actions: <Widget>[
             Padding(
-              padding:
-                  const EdgeInsets.only(right: 12.0),
+              padding: const EdgeInsets.only(right: 12.0),
               child: IconButton(
-                icon: const Icon(Icons.download, color: Colors.black,),
+                icon: const Icon(
+                  Icons.download,
+                  color: Colors.black,
+                ),
                 onPressed: () {
-                
+                  _generatePDF(context);
                 },
               ),
             ),
