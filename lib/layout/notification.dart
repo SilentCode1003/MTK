@@ -10,7 +10,6 @@ import 'package:timezone/data/latest.dart' as tz;
 import 'package:eportal/layout/announcementdetails.dart';
 import 'package:eportal/component/developer_options_checker.dart';
 
-
 class Notifications extends StatefulWidget {
   final String employeeid;
 
@@ -66,45 +65,8 @@ class _NotificationsState extends State<Notifications> {
     super.initState();
     _checkDeveloperOptions();
   }
-
-
-  void _checkDeveloperOptions() async {
+    void _checkDeveloperOptions() async {
     await DeveloperModeChecker.checkAndShowDeveloperModeDialog(context);
-  }
-
-  Future<void> _checkStatus() async {
-    final announcementResponse = await UserNotifications().postAnnouncement();
-
-    if (announcementResponse.status == 200) {
-      print('status 200');
-    } else {
-      print('status not 200');
-    }
-  }
-
-  Future<void> _scheduleLocalNotification(
-      String title, String body, int notificationId) async {
-    // Cancel the previous notification if exists
-    await flutterLocalNotificationsPlugin.cancel(notificationId);
-
-    const AndroidNotificationDetails androidPlatformChannelSpecifics =
-        AndroidNotificationDetails(
-      '123',
-      'HRMIS',
-      importance: Importance.max,
-      priority: Priority.high,
-    );
-
-    const NotificationDetails platformChannelSpecifics =
-        NotificationDetails(android: androidPlatformChannelSpecifics);
-
-    await flutterLocalNotificationsPlugin.show(
-      notificationId,
-      title,
-      body,
-      platformChannelSpecifics,
-      payload: 'notification_payload',
-    );
   }
 
   Future<void> _initializeLocalNotifications() async {
@@ -188,6 +150,7 @@ class _NotificationsState extends State<Notifications> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: '5L SOLUTION',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
             seedColor: const Color.fromARGB(255, 215, 36, 24)),

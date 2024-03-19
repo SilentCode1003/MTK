@@ -35,7 +35,6 @@ class _ScheduleStatefulWidgetState extends State<Schedule> {
   @override
   void initState() {
     super.initState();
-    employeeid = widget.employeeid;
     _checkDeveloperOptions();
     _getShiftInfo();
   }
@@ -45,7 +44,7 @@ class _ScheduleStatefulWidgetState extends State<Schedule> {
   }
 
   Future<void> _getShiftInfo() async {
-    final response = await Profileinfo().getshift(employeeid);
+    final response = await Profileinfo().getshift(widget.employeeid);
     if (helper.getStatusString(APIStatus.success) == response.message) {
       final jsondata = json.encode(response.result);
       for (var shiftinfos in json.decode(jsondata)) {
@@ -111,8 +110,10 @@ class _ScheduleStatefulWidgetState extends State<Schedule> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Padding(
-                padding:
-                    EdgeInsets.only(top: 16.0, left: 40.0,),
+                padding: EdgeInsets.only(
+                  top: 16.0,
+                  left: 40.0,
+                ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -301,12 +302,12 @@ class _ScheduleStatefulWidgetState extends State<Schedule> {
                                   ),
                                   const SizedBox(width: 160),
                                   Text(
-                                    monday.split(' ')[1],
+                                    '$monday', // Splitting and selecting the first part
                                     style: const TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.normal,
                                     ),
-                                  ),
+                                  )
                                 ],
                               ),
                               Row(
@@ -323,7 +324,7 @@ class _ScheduleStatefulWidgetState extends State<Schedule> {
                                   ),
                                   const SizedBox(width: 150),
                                   Text(
-                                    monday.split(' ')[3],
+                                    '${monday.split(' ')[6]} ${monday.split(' ')[7]}',
                                     style: const TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.normal,

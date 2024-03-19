@@ -7,6 +7,7 @@ import 'package:eportal/layout/coop.dart';
 import 'package:eportal/model/userinfo.dart';
 import 'package:eportal/repository/helper.dart';
 import 'package:eportal/layout/request.dart';
+import 'package:eportal/layout/device.dart';
 
 void main() {
   runApp(const DrawerApp());
@@ -86,38 +87,38 @@ class _DrawerPageState extends State<DrawerPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          '5L Solutions Supply & Allied Services Corp.',
-          style: TextStyle(color: Colors.black),
-        ),
-        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-        elevation: 0,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(
-              right: 16.0,
-            ),
-            child: IconButton(
-              icon: const Icon(Icons.notifications),
-              color: Colors.black,
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => Notifications(
-                      employeeid: employeeid,
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
-        iconTheme: const IconThemeData(
-          color: Colors.black,
-        ),
-      ),
+      // appBar: AppBar(
+      //   title: const Text(
+      //     '5L Solutions Supply & Allied Services Corp.',
+      //     style: TextStyle(color: Colors.black),
+      //   ),
+      //   backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+      //   elevation: 0,
+      //   actions: [
+      //     Padding(
+      //       padding: const EdgeInsets.only(
+      //         right: 16.0,
+      //       ),
+      //       child: IconButton(
+      //         icon: const Icon(Icons.notifications),
+      //         color: Colors.black,
+      //         onPressed: () {
+      //           Navigator.push(
+      //             context,
+      //             MaterialPageRoute(
+      //               builder: (context) => Notifications(
+      //                 employeeid: employeeid,
+      //               ),
+      //             ),
+      //           );
+      //         },
+      //       ),
+      //     ),
+      //   ],
+      //   iconTheme: const IconThemeData(
+      //     color: Colors.black,
+      //   ),
+      // ),
       drawer: Drawer(
         child: Container(
           color: Colors.white,
@@ -159,7 +160,7 @@ class _DrawerPageState extends State<DrawerPage> {
                 ),
               ),
                 ListTile(
-                  leading: const Icon(Icons.person),
+                  leading: const Icon(Icons.person, color: Color.fromARGB(255, 122, 24, 24)),
                   title: const Text('Profile'),
                   onTap: () {
                     Navigator.push(
@@ -173,7 +174,7 @@ class _DrawerPageState extends State<DrawerPage> {
                   },
                 ),
                 ListTile(
-                  leading: const Icon(Icons.file_copy),
+                  leading: const Icon(Icons.file_copy, color: Color.fromARGB(255, 122, 24, 24)),
                   title: const Text('Request'),
                   onTap: () {
                     Navigator.push(
@@ -188,7 +189,7 @@ class _DrawerPageState extends State<DrawerPage> {
                   },
                 ),
                 ListTile(
-                  leading: const Icon(Icons.business),
+                  leading: const Icon(Icons.business, color: Color.fromARGB(255, 122, 24, 24)),
                   title: const Text('Coop'),
                   onTap: () {
                     Navigator.push(
@@ -198,17 +199,17 @@ class _DrawerPageState extends State<DrawerPage> {
                   },
                 ),
                 ListTile(
-                  leading: const Icon(Icons.mobile_friendly),
+                  leading: const Icon(Icons.mobile_friendly, color: Color.fromARGB(255, 122, 24, 24)),
                   title: const Text('Devices'),
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const Coop()),
+                      MaterialPageRoute(builder: (context) => const Device()),
                     );
                   },
                 ),
                 ListTile(
-                  leading: const Icon(Icons.logout),
+                  leading: const Icon(Icons.logout, color: Color.fromARGB(255, 122, 24, 24)),
                   title: const Text('Logout'),
                   onTap: () {
                     showDialog(

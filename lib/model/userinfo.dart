@@ -391,19 +391,19 @@ class ProfileTraininginfo {
     this.location,
   );
 
-factory ProfileTraininginfo.fromJson(Map<String, dynamic> json) {
-  return ProfileTraininginfo(
-    json['employeeid'],
-    json['trainingid'],
-    json['name'],
-    json['startdate'],
-    json['enddate'],
-    json['location'],
-  );
-}
+  factory ProfileTraininginfo.fromJson(Map<String, dynamic> json) {
+    return ProfileTraininginfo(
+      json['employeeid'],
+      json['trainingid'],
+      json['name'],
+      json['startdate'],
+      json['enddate'],
+      json['location'],
+    );
+  }
 }
 
-class Profileshiftinfo{
+class Profileshiftinfo {
   final String employeeid;
   final String shiftid;
   final String department;
@@ -428,20 +428,20 @@ class Profileshiftinfo{
     this.sunday,
   );
 
-factory Profileshiftinfo.fromJson(Map<String, dynamic> json) {
-  return Profileshiftinfo(
-    json['employeeid'],
-    json['shiftid'],
-    json['department'],
-    json['monday'],
-    json['tuesday'],
-    json['wednesday'],
-    json['thursday'],
-    json['friday'],
-    json['saturday'],
-    json['sunday'],
-  );
-}
+  factory Profileshiftinfo.fromJson(Map<String, dynamic> json) {
+    return Profileshiftinfo(
+      json['employeeid'],
+      json['shiftid'],
+      json['department'],
+      json['monday'],
+      json['tuesday'],
+      json['wednesday'],
+      json['thursday'],
+      json['friday'],
+      json['saturday'],
+      json['sunday'],
+    );
+  }
 }
 
 class OffensesModel {
@@ -514,7 +514,6 @@ class AllModel {
   final String date;
   final String image;
   final String type;
-  
 
   AllModel(
     this.tittle,
@@ -541,7 +540,6 @@ class VersionModel {
   final String appversion;
   final String appdate;
   final String createdby;
-  
 
   VersionModel(
     this.appid,
@@ -571,7 +569,6 @@ class OvertimeModel {
   final String totalhours;
   final String payrolldate;
   final String overtimestatus;
-  
 
   OvertimeModel(
     this.approveot_id,
@@ -606,8 +603,8 @@ class PayrolldateModel {
     this.gp_payrolldate,
     this.gp_cutoff,
   );
-  
-  factory PayrolldateModel.fromJson(Map<String, dynamic> json){
+
+  factory PayrolldateModel.fromJson(Map<String, dynamic> json) {
     return PayrolldateModel(
       json['gp_payrolldate'],
       json['gp_cutoff'],
@@ -644,6 +641,9 @@ class PayslipModel {
   final dynamic EarlyOtpay;
   final dynamic Compensation;
   final dynamic ApprovedOt;
+  final dynamic ApprovedNormalOt;
+  final dynamic ApprovedNightDiffOt;
+  final dynamic ApprovedEarlyOt;
   final dynamic Regular_Holiday_Compensation;
   final dynamic Special_Holiday_Compensation;
   final dynamic RegularHolidayOT;
@@ -688,6 +688,9 @@ class PayslipModel {
     this.EarlyOtpay,
     this.Compensation,
     this.ApprovedOt,
+    this.ApprovedNormalOt,
+    this.ApprovedNightDiffOt,
+    this.ApprovedEarlyOt,
     this.Regular_Holiday_Compensation,
     this.Special_Holiday_Compensation,
     this.RegularHolidayOT,
@@ -703,8 +706,8 @@ class PayslipModel {
     this.Total_AllDeductions,
     this.Total_Netpay,
   );
-  
-  factory PayslipModel.fromJson(Map<String, dynamic> json){
+
+  factory PayslipModel.fromJson(Map<String, dynamic> json) {
     return PayslipModel(
       json['EmployeeFullName'],
       json['PositionName'],
@@ -734,6 +737,9 @@ class PayslipModel {
       json['EarlyOtpay'],
       json['Compensation'],
       json['ApprovedOt'],
+      json['ApprovedNormalOt'],
+      json['ApprovedNightDiffOt'],
+      json['ApprovedEarlyOt'],
       json['Regular_Holiday_Compensation'],
       json['Special_Holiday_Compensation'],
       json['RegularHolidayOT'],
@@ -748,8 +754,6 @@ class PayslipModel {
       json['Health_Card'],
       json['Total_AllDeductions'],
       json['Total_Netpay'],
-      
     );
   }
 }
-

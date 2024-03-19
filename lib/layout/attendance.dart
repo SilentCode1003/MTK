@@ -237,8 +237,7 @@ class _AttendanceState extends State<Attendance> {
                 child: usersattendance.isEmpty
                     ? const Center(
                         child: Text(
-                          'No Attendance',
-                          style: TextStyle(fontSize: 20),
+                          "No Attendance",
                         ),
                       )
                     : ListView.builder(

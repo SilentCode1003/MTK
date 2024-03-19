@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:eportal/layout/attendance.dart';
 import 'package:eportal/layout/index.dart';
-import 'package:eportal/layout/paysliip.dart';
+import 'package:eportal/layout/payroll.dart';
 import '../model/userinfo.dart';
 import '../repository/helper.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:eportal/api/login.dart';
+import 'package:eportal/layout/profile.dart';
 
 class HomePage extends StatefulWidget {
   final String employeeid;
@@ -176,6 +177,26 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _getBody(_selectedIndex),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            builder: (BuildContext context) {
+              return Container(
+                height: MediaQuery.of(context).size.height,
+                // Your bottom sheet content goes here
+                child: Center(
+                  child: Text('This is the full screen bottom sheet'),
+                ),
+              );
+            },
+          );
+        },
+        child: Icon(Icons.now_widgets_outlined),
+        backgroundColor: Colors.red,
+      ),
       bottomNavigationBar: MyBottomNavBar(
         currentIndex: _selectedIndex,
         onTap: _onNavBarItemTapped,
@@ -197,7 +218,13 @@ class _HomePageState extends State<HomePage> {
           employeeid: widget.employeeid,
         );
       case 2:
-        return Salary( employeeid: widget.employeeid,);
+        return Salary(
+          employeeid: widget.employeeid,
+        );
+      case 3:
+        return Profile(
+          employeeid: widget.employeeid,
+        );
       default:
         return Container();
     }
@@ -327,44 +354,121 @@ class _HomePageState extends State<HomePage> {
 class MyBottomNavBar extends StatelessWidget {
   final int currentIndex;
   final Function(int) onTap;
-  final Function() onSalaryTap; // New line
+  final Function() onSalaryTap;
   final Color activeColor;
 
   const MyBottomNavBar({
     Key? key,
     required this.currentIndex,
     required this.onTap,
-    required this.onSalaryTap, // New line
+    required this.onSalaryTap,
     required this.activeColor,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return BottomNavigationBar(
-      items: const [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: 'Home',
+    return SizedBox(
+      height: 70,
+      child: BottomAppBar(
+        notchMargin: 5.0,
+        shape: CircularNotchedRectangle(),
+        color: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      onTap(0);
+                    },
+                    icon: Icon(
+                      Icons.home_outlined,
+                      color: currentIndex == 0 ? activeColor : Colors.black,
+                    ),
+                  ),
+                  Text(
+                    'Home',
+                    style: TextStyle(
+                      color: currentIndex == 0 ? activeColor : Colors.black,
+                    ),
+                  ),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 30.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        onTap(1);
+                      },
+                      icon: Icon(
+                        Icons.access_time_outlined,
+                        color: currentIndex == 1 ? activeColor : Colors.black,
+                      ),
+                    ),
+                    Text(
+                      'Attendance',
+                      style: TextStyle(
+                        color: currentIndex == 1 ? activeColor : Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(),
+              Padding(
+                padding: const EdgeInsets.only(right: 15.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        onTap(2);
+                      },
+                      icon: Icon(
+                        Icons.attach_money_outlined,
+                        color: currentIndex == 2 ? activeColor : Colors.black,
+                      ),
+                    ),
+                    Text(
+                      'Payroll',
+                      style: TextStyle(
+                        color: currentIndex == 2 ? activeColor : Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      onTap(3);
+                    },
+                    icon: Icon(
+                      Icons.person_outline_outlined,
+                      color: currentIndex == 3 ? activeColor : Colors.black,
+                    ),
+                  ),
+                  Text(
+                    'Profile',
+                    style: TextStyle(
+                      color: currentIndex == 3 ? activeColor : Colors.black,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.access_time),
-          label: 'Attendance',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.attach_money),
-          label: 'Payslip',
-        ),
-      ],
-      currentIndex: currentIndex,
-      onTap: (index) {
-        if (index == 2) {
-          // If Salary tab is tapped, show login dialog
-          onSalaryTap();
-        } else {
-          onTap(index);
-        }
-      },
-      selectedItemColor: activeColor, // Set active color to red
+      ),
     );
   }
 }

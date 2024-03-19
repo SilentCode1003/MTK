@@ -42,7 +42,7 @@ class _RequestCashState extends State<RequestCash> {
     _checkDeveloperOptions();
   }
 
-  void _checkDeveloperOptions() async {
+   void _checkDeveloperOptions() async {
     await DeveloperModeChecker.checkAndShowDeveloperModeDialog(context);
   }
 

@@ -16,6 +16,7 @@ import 'package:eportal/component/internet_checker.dart';
 import 'dart:io';
 import 'package:eportal/component/developer_options_checker.dart';
 import 'dart:async';
+import 'package:slider_button/slider_button.dart';
 
 class Index extends StatefulWidget {
   final String employeeid;
@@ -41,8 +42,7 @@ class _IndexState extends State<Index> {
   String _formatTime(String? time) {
     if (time == "" || time == null) return '--:--';
     DateTime dateTime = DateFormat("HH:mm:ss").parse(time);
-    String formattedTime =
-        DateFormat.jm().format(dateTime);
+    String formattedTime = DateFormat.jm().format(dateTime);
     return formattedTime;
   }
 
@@ -141,7 +141,8 @@ class _IndexState extends State<Index> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Location Services Disabled'),
-          content: const Text('Please enable location services to use this app.'),
+          content:
+              const Text('Please enable location services to use this app.'),
           actions: <Widget>[
             TextButton(
               child: const Text('Cancel'),
@@ -325,7 +326,8 @@ class _IndexState extends State<Index> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           title: const Center(
             child: Text(
               'Are you sure you want to clock out?',
@@ -363,16 +365,16 @@ class _IndexState extends State<Index> {
               height: 40,
               child: TextButton(
                 onPressed: () {
-                    _clockout(
-                        widget.employeeid, _latitude, _longitude, _geofenceid, deviceout);
-                    // setState(() {
-                    //   isLoggedIn = false;
-                    //   timestatus = 'Time In';
-                    // });
+                  _clockout(widget.employeeid, _latitude, _longitude,
+                      _geofenceid, deviceout);
+                  // setState(() {
+                  //   isLoggedIn = false;
+                  //   timestatus = 'Time In';
+                  // });
 
-                    Navigator.of(context).pop();
-                    Navigator.of(context).pop();
-                  },
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                },
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -398,7 +400,8 @@ class _IndexState extends State<Index> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           title: const Center(
             child: Text(
               'Are you sure you want to exit?',
@@ -461,7 +464,8 @@ class _IndexState extends State<Index> {
     );
   }
 
-  void verifylocation() async { await _getCurrentLocation();
+  void verifylocation() async {
+    await _getCurrentLocation();
 
     LatLng activelocation = LatLng(_latitude, _longitude);
     for (GeofenceModel fence in geofence) {
@@ -477,111 +481,269 @@ class _IndexState extends State<Index> {
         });
       }
     }
-    showDialog(
+    showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: _geofencename.isNotEmpty
-              ? Center(
-                  child: Text(_geofencename, style: const TextStyle(fontSize: 20)))
-              : const Center(
-                  child: Text('Please move to your assigned location',
-                      style: TextStyle(fontSize: 15))),
-          content: SizedBox(
-            width: double.maxFinite,
-            height: 400,
-            child: FlutterMap(
-              mapController: mapController,
-              options: MapOptions(
-                center: activelocation,
-                zoom: zoomLevel.level,
-                onTap: (point, activelocation) {
-                },
-              ),
-              children: [
-                TileLayer(
-                  urlTemplate:
-                      'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                  subdomains: const ['a', 'b', 'c'],
-                ),
-                MarkerLayer(
-                  markers: [
-                    Marker(
-                      point: activelocation,
-                      child: Container(
-                        width: 40.0,
-                        height: 40.0,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.transparent,
-                          border: Border.all(
-                            color: Colors.red,
-                            width: 2.0,
-                          ),
+        Stream<String> currentTimeStream =
+            Stream.periodic(const Duration(seconds: 1), (int _) {
+          final now = DateTime.now();
+          return "${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}:${now.second.toString().padLeft(2, '0')}";
+        });
+        return Stack(
+          children: [
+            Container(
+              height: MediaQuery.of(context).size.height,
+              child: Stack(
+                children: [
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        height: MediaQuery.of(context).size.height - 190,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width,
+                              height: MediaQuery.of(context).size.height - 100,
+                              child: FlutterMap(
+                                mapController: mapController,
+                                options: MapOptions(
+                                  center: activelocation,
+                                  zoom: zoomLevel.level,
+                                  onTap: (point, activelocation) {},
+                                ),
+                                children: [
+                                  TileLayer(
+                                    urlTemplate:
+                                        'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                                    subdomains: const ['a', 'b', 'c'],
+                                  ),
+                                  MarkerLayer(
+                                    markers: [
+                                      Marker(
+                                        point: activelocation,
+                                        child: Container(
+                                          width: 40.0,
+                                          height: 40.0,
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: Colors.transparent,
+                                            border: Border.all(
+                                              color: Colors.red,
+                                              width: 2.0,
+                                            ),
+                                          ),
+                                          child: ClipOval(
+                                            child: Image.memory(
+                                              base64Decode(image),
+                                              width: 40.0,
+                                              height: 40.0,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  for (GeofenceModel fence in geofence)
+                                    CircleLayer(
+                                      circles: [
+                                        CircleMarker(
+                                          point: LatLng(
+                                              fence.latitude, fence.longitude),
+                                          color: Colors.green.withOpacity(0.5),
+                                          borderColor: Colors.red,
+                                          borderStrokeWidth: 2,
+                                          useRadiusInMeter: true,
+                                          radius: fence.radius,
+                                        ),
+                                      ],
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
-                        child: ClipOval(
-                          child: Image.memory(
-                            base64Decode(image),
-                            width: 40.0,
-                            height: 40.0,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-                for (GeofenceModel fence in geofence)
-                  CircleLayer(
-                    circles: [
-                      CircleMarker(
-                        point: LatLng(fence.latitude, fence.longitude),
-                        color: Colors.green.withOpacity(0.5),
-                        borderColor: Colors.blue,
-                        borderStrokeWidth: 2,
-                        useRadiusInMeter: true,
-                        radius: fence.radius,
                       ),
                     ],
                   ),
-              ],
-            ),
-          ),
-          actions: [
-            ElevatedButton(
-              onPressed: isStatusButtonEnabled
-                  ? () {
-                      print('isLogin $isLoggedIn');
-                      if (isLoggedIn) {
-                        showLogoutDialog();
-                      } else {
-                        _clockin(widget.employeeid, _latitude, _longitude,
-                            _geofenceid, devicein);
-                        // setState(() {
-                        //   isLoggedIn = true;
-                        //   timestatus = 'Time Out';
-                        // });
+                  Positioned(
+                    top: 40.0,
+                    left: 16.0,
+                    child: SizedBox(
+                      width: 100.0,
+                      height: 35.0,
+                      child: FloatingActionButton(
+                        onPressed: () {
                         Navigator.of(context).pop();
-                      }
-                    }
-                  : null,
-              child: const Text('Confirm', style: TextStyle(fontSize: 10)),
+                        },
+                        backgroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                        child: Row(
+                          children: [
+                            SizedBox(
+                                width:
+                                    8.0), 
+                            Icon(Icons.arrow_back, color: Colors.black),
+                            SizedBox(
+                                width:
+                                    8.0), 
+                            Text(
+                              'Back',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize:
+                                    14.0, 
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Close', style: TextStyle(fontSize: 10)),
-            )
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: Container(
+                height: 250,
+                color: Colors.white,
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Location',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                        SizedBox(height: 5),
+                        _geofencename.isNotEmpty
+                            ? Center(
+                                child: Text(
+                                  _geofencename,
+                                  style: const TextStyle(fontSize: 18),
+                                ),
+                              )
+                            : const Center(
+                                child: Text(
+                                  'Please move to your assigned location',
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                              ),
+                        const SizedBox(height: 20),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            StreamBuilder<String>(
+                              stream: currentTimeStream,
+                              builder: (context, snapshot) {
+                                String formattedTime = '';
+                                if (snapshot.hasData) {
+                                  final now = DateTime.now();
+                                  formattedTime =
+                                      DateFormat('h:mm:ss a').format(now);
+                                  return Column(
+                                    children: [
+                                      Text(
+                                        formattedTime,
+                                        style: const TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 24,
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                } else {
+                                  return formattedTime.isEmpty
+                                      ? Shimmer.fromColors(
+                                          baseColor: Colors.grey[300]!,
+                                          highlightColor: Colors.grey[100]!,
+                                          child: Container(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width -
+                                                150,
+                                            height: 32,
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                            ),
+                                          ),
+                                        )
+                                      : const SizedBox.shrink();
+                                }
+                              },
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 10),
+                        Divider(),
+                        SizedBox(height: 15),
+                        ElevatedButton(
+                          onPressed: isStatusButtonEnabled
+                              ? () {
+                                  print('isLogin $isLoggedIn');
+                                  if (isLoggedIn) {
+                                    showLogoutDialog();
+                                  } else {
+                                    _clockin(
+                                      widget.employeeid,
+                                      _latitude,
+                                      _longitude,
+                                      _geofenceid,
+                                      devicein,
+                                    );
+                                    Navigator.of(context).pop();
+                                  }
+                                }
+                              : null,
+                          child:
+                              Text(timestatus, style: TextStyle(fontSize: 20)),
+                          style: ButtonStyle(
+                            fixedSize: MaterialStateProperty.all<Size>(
+                              Size(350, 60),
+                            ),
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                Colors.red), // Set background color to red
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ],
         );
       },
     );
   }
 
-  Future<void> _clockin(employeeid, latitude, longitude, geofenceid, devicein) async {
+  Future<void> _clockin(
+      employeeid, latitude, longitude, geofenceid, devicein) async {
     try {
-      final results = await UserAttendance().clockin(employeeid,latitude.toString(), longitude.toString(), geofenceid.toString(), devicein.toString());
+      final results = await UserAttendance().clockin(
+          employeeid,
+          latitude.toString(),
+          longitude.toString(),
+          geofenceid.toString(),
+          devicein.toString());
 
       if (results.message == Helper().getStatusString(APIStatus.success)) {
         showDialog(
@@ -747,9 +909,15 @@ class _IndexState extends State<Index> {
     }
   }
 
-  Future<void> _clockout(employeeid, latitude, longitude, geofenceid, deviceout) async {
+  Future<void> _clockout(
+      employeeid, latitude, longitude, geofenceid, deviceout) async {
     try {
-      final results = await UserAttendance().clockout(employeeid,latitude.toString(), longitude.toString(), geofenceid.toString(), deviceout.toString());
+      final results = await UserAttendance().clockout(
+          employeeid,
+          latitude.toString(),
+          longitude.toString(),
+          geofenceid.toString(),
+          deviceout.toString());
 
       if (results.message == Helper().getStatusString(APIStatus.success)) {
         showDialog(
@@ -881,7 +1049,6 @@ class _IndexState extends State<Index> {
   @override
   Widget build(BuildContext context) {
     checkInternetConnection(context);
-
     Stream<String> currentTimeStream =
         Stream.periodic(const Duration(seconds: 1), (int _) {
       final now = DateTime.now();
@@ -890,13 +1057,13 @@ class _IndexState extends State<Index> {
 
     return WillPopScope(
       onWillPop: () async {
-        showExitDialog(context);
+        // showExitDialog(context);
         return false;
       },
       child: Scaffold(
         body: SingleChildScrollView(
           child: Container(
-            color: const Color.fromARGB(255, 255, 255, 255),
+            color: Colors.white,
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -1022,8 +1189,7 @@ class _IndexState extends State<Index> {
                                       ),
                                     ),
                                   )
-                                : const SizedBox
-                                    .shrink();
+                                : const SizedBox.shrink();
                           }
                         },
                       ),
@@ -1065,7 +1231,7 @@ class _IndexState extends State<Index> {
                         height: 180,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color:Colors.white,
+                          color: Colors.white,
                           border: Border.all(
                             color: isLoggedIn ? Colors.red : Colors.green,
                             width: 3,
@@ -1172,7 +1338,6 @@ class NotificationCard extends StatelessWidget {
 
 class ZoomLevel {
   double level;
-
   ZoomLevel(this.level);
 }
 

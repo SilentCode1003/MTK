@@ -90,19 +90,8 @@ class _BasicinfoStatefulWidgetState extends State<Basicinformation> {
           style: TextStyle(color: Colors.black),
         ),
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-        elevation: 0, // Set elevation to 0 to remove the shadow
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => Profile(
-                        employeeid: employeeid,
-                      )),
-            );
-          },
-        ),
+        elevation: 0,
+        centerTitle: true,
       ),
       body: Container(
         color: const Color.fromARGB(255, 255, 255, 255),
@@ -265,7 +254,7 @@ class _BasicinfoStatefulWidgetState extends State<Basicinformation> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(
-                      left: 8.0, right: 8.0, bottom: 8.0), // Adjust as needed
+                      left: 8.0, right: 8.0, bottom: 8.0),
                   child: Text(
                     email,
                     style: const TextStyle(fontSize: 18),
@@ -281,7 +270,7 @@ class _BasicinfoStatefulWidgetState extends State<Basicinformation> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(
-                      left: 8.0, right: 8.0, bottom: 8.0), // Adjust as needed
+                      left: 8.0, right: 8.0, bottom: 8.0),
                   child: Text(
                     ercontactname,
                     style: const TextStyle(fontSize: 14),
@@ -297,7 +286,7 @@ class _BasicinfoStatefulWidgetState extends State<Basicinformation> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(
-                      left: 8.0, right: 8.0, bottom: 8.0), // Adjust as needed
+                      left: 8.0, right: 8.0, bottom: 8.0),
                   child: Text(
                     ercontactphone,
                     style: const TextStyle(fontSize: 18),

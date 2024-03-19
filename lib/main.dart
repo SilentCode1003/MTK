@@ -12,6 +12,8 @@ import 'package:eportal/component/developer_options_checker.dart';
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:eportal/model/userinfo.dart';
+import 'package:eportal/layout/date.dart';
+import 'package:eportal/layout/new.dart';
 
 void main() async {
   runApp(const MyApp());
