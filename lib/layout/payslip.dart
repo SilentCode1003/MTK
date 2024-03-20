@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:eportal/layout/drawer.dart';
 import 'package:eportal/api/payslip.dart';
 import 'dart:convert';
 import 'package:intl/intl.dart';
@@ -12,6 +11,8 @@ import 'dart:io';
 import 'package:flutter/services.dart' show ByteData, Uint8List, rootBundle;
 import 'package:path/path.dart' as path;
 import 'package:image/image.dart' as img;
+import 'package:open_file/open_file.dart';
+import 'package:flutter_multi_formatter/formatters/formatter_utils.dart';
 
 class Payslipdetails extends StatefulWidget {
   final String employeeid;
@@ -47,7 +48,7 @@ class _PayslipdetailsState extends State<Payslipdetails> {
   dynamic TIN;
   dynamic Health_Card;
   dynamic Total_AllDeductions;
-  dynamic Total_Netpay;
+  double Total_Netpay = 0;
   dynamic EmployeeFullName;
   dynamic PositionName;
   dynamic Department;
@@ -64,6 +65,10 @@ class _PayslipdetailsState extends State<Payslipdetails> {
   dynamic Absent;
   dynamic Compensation;
   dynamic ApprovedOt;
+  dynamic ApprovedNormalOt;
+  dynamic ApprovedNightDiffOt;
+  dynamic ApprovedEarlyOt;
+  dynamic totalHolidayCompensation;
 
   Helper helper = Helper();
 
@@ -463,7 +468,7 @@ class _PayslipdetailsState extends State<Payslipdetails> {
                                 pw.Padding(
                                   padding: const pw.EdgeInsets.only(right: 5.0),
                                   child: pw.Text(
-                                    '$RegularHolidayOT',
+                                    '$totalHolidayCompensation',
                                     style: const pw.TextStyle(fontSize: 14.0),
                                   ),
                                 ),
@@ -507,7 +512,7 @@ class _PayslipdetailsState extends State<Payslipdetails> {
                                 pw.Padding(
                                   padding: const pw.EdgeInsets.only(right: 5.0),
                                   child: pw.Text(
-                                    '$NDpay',
+                                    '$ApprovedNightDiffOt',
                                     style: const pw.TextStyle(fontSize: 14.0),
                                   ),
                                 ),
@@ -674,7 +679,7 @@ class _PayslipdetailsState extends State<Payslipdetails> {
                                 pw.Padding(
                                   padding: const pw.EdgeInsets.only(right: 5.0),
                                   child: pw.Text(
-                                    '$Late_Deductions',
+                                    '0',
                                     style: const pw.TextStyle(fontSize: 14.0),
                                   ),
                                 ),
@@ -936,6 +941,7 @@ class _PayslipdetailsState extends State<Payslipdetails> {
           duration: const Duration(seconds: 2),
         ),
       );
+       OpenFile.open(filepath);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -982,6 +988,9 @@ class _PayslipdetailsState extends State<Payslipdetails> {
             payslipInfo['EarlyOtpay'],
             payslipInfo['Compensation'],
             payslipInfo['ApprovedOt'],
+            payslipInfo['ApprovedNormalOt'],
+            payslipInfo['ApprovedNightDiffOt'],
+            payslipInfo['ApprovedEarlyOt'],
             payslipInfo['Regular_Holiday_Compensation'],
             payslipInfo['Special_Holiday_Compensation'],
             payslipInfo['RegularHolidayOT'],
@@ -1022,6 +1031,9 @@ class _PayslipdetailsState extends State<Payslipdetails> {
           EarlyOtpay = payslipinfo.EarlyOtpay;
           Compensation = payslipinfo.Compensation;
           ApprovedOt = payslipinfo.ApprovedOt;
+          ApprovedNormalOt = payslipinfo.ApprovedNormalOt;
+          ApprovedNightDiffOt = payslipinfo.ApprovedNightDiffOt;
+          ApprovedEarlyOt = payslipinfo.ApprovedEarlyOt;
           Regular_Holiday_Compensation =
               payslipinfo.Regular_Holiday_Compensation;
           Special_Holiday_Compensation =
@@ -1038,6 +1050,10 @@ class _PayslipdetailsState extends State<Payslipdetails> {
           Health_Card = payslipinfo.Health_Card;
           Total_AllDeductions = payslipinfo.Total_AllDeductions;
           Total_Netpay = payslipinfo.Total_Netpay;
+
+          totalHolidayCompensation =
+              Regular_Holiday_Compensation + Special_Holiday_Compensation;
+          print('Total Holiday Compensation: $totalHolidayCompensation');
         });
       }
       print('ito ang total $Overall_Net_Pay');
@@ -1064,15 +1080,6 @@ class _PayslipdetailsState extends State<Payslipdetails> {
           backgroundColor: const Color.fromARGB(255, 255, 255, 255),
           elevation: 0,
           centerTitle: true,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.black),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const DrawerPage()),
-              );
-            },
-          ),
           actions: <Widget>[
             Padding(
               padding: const EdgeInsets.only(right: 12.0),
@@ -1087,6 +1094,8 @@ class _PayslipdetailsState extends State<Payslipdetails> {
               ),
             ),
           ],
+          iconTheme: IconThemeData(
+              color: Colors.black),
         ),
         body: Container(
             color: const Color.fromARGB(255, 255, 255, 255),
@@ -1099,7 +1108,7 @@ class _PayslipdetailsState extends State<Payslipdetails> {
                     const SizedBox(height: 30),
                     Center(
                       child: Text(
-                        '₱ $Total_Netpay',
+                        '₱ ${toCurrencyString(Total_Netpay.toString())}',
                         style: const TextStyle(
                             fontSize: 30, fontWeight: FontWeight.bold),
                       ),
@@ -1132,7 +1141,7 @@ class _PayslipdetailsState extends State<Payslipdetails> {
                           ),
                         ),
                         Text(
-                          '$Salary',
+                          '${toCurrencyString(Salary.toString())}',
                           style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
@@ -1146,7 +1155,7 @@ class _PayslipdetailsState extends State<Payslipdetails> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text(
-                          'Allowance: ',
+                          'Allowance:',
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
@@ -1154,7 +1163,7 @@ class _PayslipdetailsState extends State<Payslipdetails> {
                           ),
                         ),
                         Text(
-                          '$Allowances',
+                          '${toCurrencyString(Allowances.toString())}',
                           style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
@@ -1176,7 +1185,7 @@ class _PayslipdetailsState extends State<Payslipdetails> {
                           ),
                         ),
                         Text(
-                          '$RegularHolidayOT',
+                          '${toCurrencyString(totalHolidayCompensation.toString())}',
                           style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
@@ -1198,7 +1207,7 @@ class _PayslipdetailsState extends State<Payslipdetails> {
                           ),
                         ),
                         Text(
-                          '$OTpay',
+                          '${toCurrencyString(ApprovedOt.toString())}',
                           style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
@@ -1220,7 +1229,7 @@ class _PayslipdetailsState extends State<Payslipdetails> {
                           ),
                         ),
                         Text(
-                          '$NDpay',
+                          '$ApprovedNightDiffOt',
                           style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
@@ -1243,7 +1252,7 @@ class _PayslipdetailsState extends State<Payslipdetails> {
                           ),
                         ),
                         Text(
-                          '$Overall_Net_Pay',
+                          '${toCurrencyString(Overall_Net_Pay.toString())} ',
                           style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
@@ -1275,7 +1284,7 @@ class _PayslipdetailsState extends State<Payslipdetails> {
                           ),
                         ),
                         Text(
-                          '$Absent_Deductions',
+                          '${toCurrencyString(Absent_Deductions.toString())}',
                           style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
@@ -1297,7 +1306,7 @@ class _PayslipdetailsState extends State<Payslipdetails> {
                           ),
                         ),
                         Text(
-                          '$Late_Deductions',
+                          '${toCurrencyString(Late_Deductions.toString())}',
                           style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
@@ -1319,7 +1328,7 @@ class _PayslipdetailsState extends State<Payslipdetails> {
                           ),
                         ),
                         Text(
-                          '$SSS',
+                          '${toCurrencyString(SSS.toString())}',
                           style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
@@ -1363,7 +1372,7 @@ class _PayslipdetailsState extends State<Payslipdetails> {
                           ),
                         ),
                         Text(
-                          '$PhilHealth',
+                          '${toCurrencyString(PhilHealth.toString())}',
                           style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
@@ -1385,7 +1394,7 @@ class _PayslipdetailsState extends State<Payslipdetails> {
                           ),
                         ),
                         Text(
-                          '$PagIbig',
+                          '${toCurrencyString(PagIbig.toString())}',
                           style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
@@ -1429,7 +1438,7 @@ class _PayslipdetailsState extends State<Payslipdetails> {
                           ),
                         ),
                         Text(
-                          '$TIN',
+                          '${toCurrencyString(TIN.toString())}',
                           style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
@@ -1451,7 +1460,7 @@ class _PayslipdetailsState extends State<Payslipdetails> {
                           ),
                         ),
                         Text(
-                          '$Health_Card',
+                          '${toCurrencyString(Health_Card.toString())}',
                           style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
@@ -1540,7 +1549,7 @@ class _PayslipdetailsState extends State<Payslipdetails> {
                           ),
                         ),
                         Text(
-                          '$Total_AllDeductions',
+                          '${toCurrencyString(Total_AllDeductions.toString())}',
                           style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.bold,

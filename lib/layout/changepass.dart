@@ -5,7 +5,6 @@ import 'package:eportal/api/changepass.dart';
 import 'package:eportal/repository/helper.dart';
 import 'package:eportal/component/internet_checker.dart';
 import 'package:eportal/layout/profile.dart';
-import 'package:eportal/component/developer_options_checker.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   final String employeeid;
@@ -192,11 +191,6 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         });
       }
     });
-    _checkDeveloperOptions();
-  }
-
-  void _checkDeveloperOptions() async {
-    await DeveloperModeChecker.checkAndShowDeveloperModeDialog(context);
   }
 
   @override

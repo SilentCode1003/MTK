@@ -3,6 +3,8 @@ import 'package:eportal/layout/drawer.dart';
 import 'package:eportal/layout/requestleave.dart';
 import 'package:eportal/layout/overtime.dart';
 import 'package:eportal/layout/cashadvance.dart';
+import 'package:eportal/layout/coa.dart';
+import 'package:eportal/layout/undertime.dart';
 
 class Request extends StatefulWidget {
   final String employeeid;
@@ -34,6 +36,7 @@ class RequestState extends State<Request> {
           style: TextStyle(color: Colors.black),
         ),
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+        centerTitle: true,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
@@ -92,8 +95,8 @@ class RequestState extends State<Request> {
                   }
                 },
                 child: Container(
-                  width: 290.0,
                   height: 65.0,
+                  width: MediaQuery.of(context).size.width - 75,
                   decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(8.0),
@@ -102,12 +105,12 @@ class RequestState extends State<Request> {
                       width: 1.0,
                     ),
                   ),
-                  child: const Row(
+                  child: Row(
                     children: [
                       Padding(
                         padding: EdgeInsets.only(left: 20, top: 0),
                         child: Icon(
-                          Icons.calendar_today,
+                          Icons.assessment_outlined,
                           color: Colors.black,
                         ),
                       ),
@@ -138,21 +141,19 @@ class RequestState extends State<Request> {
                 ),
               ),
             ),
-
             Positioned(
               left: 35.0,
               top: 125.0,
               child: GestureDetector(
                 onTap: () {
-                  Navigator.push(
+                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              RequestLeave(employeeid: employeeid)));
+                          builder: (context) => COA(employeeid: employeeid)));
                 },
                 child: Container(
-                  width: 290.0,
                   height: 65.0,
+                  width: MediaQuery.of(context).size.width - 75,
                   decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(8.0),
@@ -161,17 +162,16 @@ class RequestState extends State<Request> {
                       width: 1.0,
                     ),
                   ),
-                  child: const Row(
+                  child: Row(
                     children: [
                       Padding(
                         padding: EdgeInsets.only(left: 20, top: 0),
                         child: Icon(
-                          Icons.calendar_today,
+                          Icons.card_giftcard_rounded,
                           color: Colors.black,
                         ),
                       ),
-                      SizedBox(
-                          width: 20), // Adding space between the icon and text
+                      SizedBox(width: 20),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -197,21 +197,21 @@ class RequestState extends State<Request> {
                   ),
                 ),
               ),
-            ),
+            ),  
             Positioned(
               left: 35.0,
               top: 200.0,
               child: GestureDetector(
                 onTap: () {
-                  Navigator.push(
+                   Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
                               Overtime(employeeid: employeeid)));
                 },
                 child: Container(
-                  width: 290.0,
                   height: 65.0,
+                  width: MediaQuery.of(context).size.width - 75,
                   decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(8.0),
@@ -220,17 +220,16 @@ class RequestState extends State<Request> {
                       width: 1.0,
                     ),
                   ),
-                  child: const Row(
+                  child: Row(
                     children: [
                       Padding(
                         padding: EdgeInsets.only(left: 20, top: 0),
                         child: Icon(
-                          Icons.calendar_today,
+                          Icons.access_time,
                           color: Colors.black,
                         ),
                       ),
-                      SizedBox(
-                          width: 20), // Adding space between the icon and text
+                      SizedBox(width: 20),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -262,7 +261,65 @@ class RequestState extends State<Request> {
               top: 275.0,
               child: GestureDetector(
                 onTap: () {
-                  if (jobstatus == 'regular') {
+                   Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              UnderTime(employeeid: employeeid)));
+                },
+                child: Container(
+                  height: 65.0,
+                  width: MediaQuery.of(context).size.width - 75,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(8.0),
+                    border: Border.all(
+                      color: Colors.grey,
+                      width: 1.0,
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(left: 20, top: 0),
+                        child: Icon(
+                          Icons.access_time,
+                          color: Colors.black,
+                        ),
+                      ),
+                      SizedBox(width: 20),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Undertime',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                          Text(
+                            'Record hours worked below your scheduled shift.',
+                            style: TextStyle(
+                              fontSize: 10,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              left: 35.0,
+              top: 350.0,
+              child: GestureDetector(
+                onTap: () {
+                   if (jobstatus == 'regular') {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -288,8 +345,8 @@ class RequestState extends State<Request> {
                   }
                 },
                 child: Container(
-                  width: 290.0,
                   height: 65.0,
+                  width: MediaQuery.of(context).size.width - 75,
                   decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(8.0),
@@ -298,12 +355,12 @@ class RequestState extends State<Request> {
                       width: 1.0,
                     ),
                   ),
-                  child: const Row(
+                  child: Row(
                     children: [
                       Padding(
                         padding: EdgeInsets.only(left: 20, top: 0),
                         child: Icon(
-                          Icons.calendar_today,
+                          Icons.thumb_up_alt_outlined,
                           color: Colors.black,
                         ),
                       ),

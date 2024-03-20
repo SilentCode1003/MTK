@@ -94,7 +94,7 @@ Future<void> _getWorkInfo() async {
         ),
       ),
       body: Container(
-      color: const Color.fromARGB(255, 255, 255, 255),
+      color: Colors.white,
       child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -204,11 +204,5 @@ Future<void> _getWorkInfo() async {
       ),
     );
   }
-  void main() {
-  runApp(MaterialApp(
-    home: Workinfo(employeeid: employeeid,),
-  ));
-}
-
 }
 

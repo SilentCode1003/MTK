@@ -108,4 +108,29 @@ class UserAttendance {
     ResponceModel data = ResponceModel(message, status, result, description);
     return data;
   }
+    Future<ResponceModel> coa(String employeeid, String attendancedate, String timein, String timeout, String reason, String file) async {
+    print(employeeid);
+    final url = Uri.parse('${Config.apiUrl}${Config.COAAPI}');
+    final response = await http.post(url, body: {
+      'employeeid': employeeid,
+      'attendancedate': attendancedate,
+      'timein': timein,
+      'timeout': timeout,
+      'reason': reason,
+      'file' : file,
+    });
+
+    print(response.body);
+
+    final responseData = json.decode(response.body);
+    final status = response.statusCode;
+    final message = responseData['message'];
+    final result = responseData['data'] ?? [];
+    final description = responseData['description'] ?? "";
+
+    print(result);
+
+    ResponceModel data = ResponceModel(message, status, result, description);
+    return data;
+  }
 }
