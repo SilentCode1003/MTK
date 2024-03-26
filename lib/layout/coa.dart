@@ -24,6 +24,14 @@ class _COAtState extends State<COA> {
   File? selectedFile;
   String _fileattachment = '';
 
+  @override
+  void initState() {
+    widget.employeeid;
+    print('ito ang id');
+    print(widget.employeeid);
+    super.initState();
+  }
+
   Future<void> _openFileExplorer() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
 

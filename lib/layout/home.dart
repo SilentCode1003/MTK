@@ -244,7 +244,7 @@ class _HomePageState extends State<HomePage> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => RequestLeave(
-                                              employeeid: employeeid)),
+                                              employeeid: widget.employeeid)),
                                     );
                                   },
                                   child: Icon(
@@ -274,11 +274,13 @@ class _HomePageState extends State<HomePage> {
                                 height: 65,
                                 child: FloatingActionButton(
                                   onPressed: () {
+                                    print(widget.employeeid);
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) =>
-                                                COA(employeeid: employeeid)));
+                                            builder: (context) => COA(
+                                                employeeid:
+                                                    widget.employeeid)));
                                   },
                                   child: Icon(
                                     Icons.card_giftcard_rounded,
@@ -311,7 +313,8 @@ class _HomePageState extends State<HomePage> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) => Overtime(
-                                                employeeid: employeeid)));
+                                                employeeid:
+                                                    widget.employeeid)));
                                   },
                                   child: Icon(
                                     Icons.access_time_outlined,
@@ -353,7 +356,8 @@ class _HomePageState extends State<HomePage> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) => UnderTime(
-                                                employeeid: employeeid)));
+                                                employeeid:
+                                                    widget.employeeid)));
                                   },
                                   child: Icon(
                                     Icons.access_time_outlined,
@@ -386,7 +390,7 @@ class _HomePageState extends State<HomePage> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => RequestCash(
-                                              employeeid: employeeid)),
+                                              employeeid: widget.employeeid)),
                                     );
                                   },
                                   child: Icon(
