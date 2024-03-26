@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:eportal/api/attendance.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:convert';
-import 'dart:io'; // Import dart:io for File
+import 'dart:io';
 
 class COA extends StatefulWidget {
   final String employeeid;
@@ -24,34 +24,25 @@ class _COAtState extends State<COA> {
   File? selectedFile;
   String _fileattachment = '';
 
-// Update the _openFileExplorer function
   Future<void> _openFileExplorer() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
 
     if (result != null) {
       setState(() {
-        selectedFile =
-            File(result.files.single.path!); // Store the selected file
-        selectedFileName = result.files.single
-            .name; // or result.files.single.path if you need the full path
+        selectedFile = File(result.files.single.path!);
+        selectedFileName = result.files.single.name;
       });
 
       if (selectedFile != null) {
-        // Safely access the readAsBytes method
         List<int> fileBytes = await selectedFile!.readAsBytes();
         String base64File = base64Encode(fileBytes);
 
         setState(() {
-      _fileattachment = base64File;
+          _fileattachment = base64File;
         });
-
-        // Now you have the file in base64 format, you can store it or perform further actions.
-        // For example, you can print it:
         print(base64File);
       }
-    } else {
-      // User canceled the picker
-    }
+    } else {}
   }
 
   void _removeSelectedFile() {
@@ -60,102 +51,23 @@ class _COAtState extends State<COA> {
     });
   }
 
-Future<void> _requestcoa() async {
-  String attendancedate = startDateController.text;
-  String timein = TimeInController.text;
-  String timeout = TimeOutController.text;
-  String reason = reasonController.text;
+  Future<void> _requestcoa() async {
+    String attendancedate = startDateController.text;
+    String timein = TimeInController.text;
+    String timeout = TimeOutController.text;
+    String reason = reasonController.text;
 
-  String In = timein + ' ' + timeout;
+    String In = timein + ' ' + timeout;
 
-  // Check if any of the text fields are empty
-  if (attendancedate.isEmpty ||
-      timein.isEmpty ||
-      timeout.isEmpty ||
-      reason.isEmpty) {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text('Error'),
-        content: Text('Please fill up all fields and select a file.'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: Text('OK'),
-          ),
-        ],
-      ),
-    );
-    return; // Exit the function early
-  }
-
-  DateTime timeIn = DateFormat('yyyy-MM-dd HH:mm').parse(timein);
-  DateTime timeOut = DateFormat('yyyy-MM-dd HH:mm').parse(timeout);
-
-  // Calculate the difference in milliseconds
-  Duration difference = timeOut.difference(timeIn);
-
-  // Convert the difference into hours and minutes
-  int hours = difference.inHours;
-  int minutes = difference.inMinutes.remainder(60);
-
-  // Check if the duration is negative
-  if (hours < 0 || minutes < 0) {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text('Error'),
-        content: Text('Invalid time range: Time Out must be after Time In'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: Text('OK'),
-          ),
-        ],
-      ),
-    );
-    return; // Exit the function early
-  }
-
-  print('Duration: $hours hours and $minutes minutes');
-  print('$attendancedate $timein $timeout $reason $selectedFileName $In');
-
-  try {
-
-    print(_fileattachment);
-   
-
-    final response = await UserAttendance().coa(
-      widget.employeeid,
-      attendancedate,
-      timein,
-      timeout,
-      reason,
-      _fileattachment,
-    );
-
-    if (response.status == 200) {
-      showDialog(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: Text('Success'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(ctx);
-                Navigator.of(context).pop();
-              },
-              child: Text('OK'),
-            ),
-          ],
-        ),
-      );
-    } else {
+    if (attendancedate.isEmpty ||
+        timein.isEmpty ||
+        timeout.isEmpty ||
+        reason.isEmpty) {
       showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
           title: Text('Error'),
-          content: Text(response.message),
+          content: Text('Please fill up all fields and select a file.'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx),
@@ -164,28 +76,98 @@ Future<void> _requestcoa() async {
           ],
         ),
       );
+      return;
     }
-  } catch (e) {
 
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text('Error'),
-        content: Text('An error occurred'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: Text('OK'),
+    DateTime timeIn = DateFormat('yyyy-MM-dd HH:mm').parse(timein);
+    DateTime timeOut = DateFormat('yyyy-MM-dd HH:mm').parse(timeout);
+
+    Duration difference = timeOut.difference(timeIn);
+
+    int hours = difference.inHours;
+    int minutes = difference.inMinutes.remainder(60);
+
+    if (hours < 0 || minutes < 0) {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: Text('Error'),
+          content: Text('Invalid time range: Time Out must be after Time In'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
+      return;
+    }
+
+    print('Duration: $hours hours and $minutes minutes');
+    print('$attendancedate $timein $timeout $reason $selectedFileName $In');
+
+    try {
+      print(_fileattachment);
+
+      final response = await UserAttendance().coa(
+        widget.employeeid,
+        attendancedate,
+        timein,
+        timeout,
+        reason,
+        _fileattachment,
+      );
+
+      if (response.status == 200) {
+        showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: Text('Success'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(ctx);
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
           ),
-        ],
-      ),
-    );
-    print(e);
-    print('Selected file name: $selectedFileName');
-
+        );
+      } else {
+        showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: Text('Error'),
+            content: Text(response.message),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(ctx),
+                child: Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+    } catch (e) {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: Text('Error'),
+          content: Text('An error occurred'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
+      print(e);
+      print('Selected file name: $selectedFileName');
+    }
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
@@ -240,10 +222,8 @@ Future<void> _requestcoa() async {
                   DateTime? pickedDate = await showDatePicker(
                     context: context,
                     initialDate: DateTime.now(),
-                    firstDate:
-                        DateTime(1900), // Set the earliest selectable date
-                    lastDate: DateTime
-                        .now(), // Set the latest selectable date to current date
+                    firstDate: DateTime(1900),
+                    lastDate: DateTime.now(),
                   );
                   if (pickedDate != null) {
                     startDateController.text =
@@ -254,15 +234,14 @@ Future<void> _requestcoa() async {
             ),
             const SizedBox(height: 15),
             Padding(
-              padding: const EdgeInsets.only(
-                  left: 30), // Adjust the left padding as needed
+              padding: const EdgeInsets.only(left: 30),
               child: Row(
                 children: [
                   Flexible(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: Container(
-                        width: 170, // Adjust the width as needed
+                        width: 170,
                         child: TextFormField(
                           controller: TimeInController,
                           decoration: const InputDecoration(
@@ -306,8 +285,7 @@ Future<void> _requestcoa() async {
                   ),
                   const SizedBox(width: 1),
                   Padding(
-                    padding: const EdgeInsets.only(
-                        top: 18), // Adjust the top padding as needed
+                    padding: const EdgeInsets.only(top: 18),
                     child: Text(
                       "-",
                     ),
@@ -317,7 +295,7 @@ Future<void> _requestcoa() async {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: Container(
-                        width: 170, // Adjust the width as needed
+                        width: 170,
                         child: TextFormField(
                           controller: TimeOutController,
                           decoration: const InputDecoration(
@@ -412,8 +390,8 @@ Future<void> _requestcoa() async {
                       ElevatedButton(
                         onPressed: _removeSelectedFile,
                         style: ElevatedButton.styleFrom(
-                          primary: Colors.red,
-                          onPrimary: Colors.white,
+                          backgroundColor: Colors.red,
+                          foregroundColor: Colors.white,
                         ),
                         child: Text('Remove File'),
                       ),
@@ -426,10 +404,13 @@ Future<void> _requestcoa() async {
                           onPressed: () {
                             _openFileExplorer();
                           },
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.white,
-                            onPrimary: Colors.black,
-                            elevation: 0,
+                          style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all<Color>(Colors.white),
+                            foregroundColor:
+                                MaterialStateProperty.all<Color>(Colors.white),
+                            overlayColor:
+                                MaterialStateProperty.all<Color>(Colors.black),
                           ),
                           child: Text(
                             'Upload File',

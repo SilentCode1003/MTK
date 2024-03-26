@@ -1,6 +1,6 @@
 class Config {
   static const String apiUrl = 'https://payroll.5lsolutions.com/';
-  //static const String apiUrl = 'http://192.168.40.32:3005/';
+  //static const String apiUrl = 'http://192.168.40.96:3005/';
 
   static const String loginAPI = 'login/login';
   static const String payslipAPI = 'eportalpayslip/viewpayslip';
@@ -20,7 +20,8 @@ class Config {
   static const String allAPI = 'announcement/getnotif';
   static const String todaystatusAPI = 'attendance/gethomestatus2';
   static const String basicinfoAPI = 'employee/getemployee';
-  static const String workinfoAPI = 'employee/getemployeeprofileforappbasicinformation';
+  static const String workinfoAPI =
+      'employee/getemployeeprofileforappbasicinformation';
   static const String govinfoAPI = 'employee/getgovid';
   static const String trainingAPI = 'employee/gettrainingforapp';
   static const String offensesAPI = 'eportaldisciplinaryaction/loadforapp';
@@ -31,7 +32,12 @@ class Config {
   static const String appversionAPI = 'appsdetails/loadforapp';
   static const String otAPI = 'otapproval/forapp';
   static const String payrolldateAPI = 'generatepayroll/getpayrolldate';
-  static const String payslipdetailsAPI = 'generatepayroll/LoadPayslipSummaryForApp';
+  static const String payslipdetailsAPI =
+      'generatepayroll/LoadPayslipSummaryForApp';
   static const String COAAPI = 'eportalrequestattendance/submit';
+  static const String NotificationAPI = 'eportalindex/loadnotif';
+  static const String reloadnotifAPI = 'eportalindex/generatenotification';
+  static const String deletenotifAPI = 'eportalindex/deleatenotif';
+  static const String readnotifAPI = 'eportalindex/readnotif';
+  static const String countunreadnotifAPI = 'eportalindex/countunreadbadge';
 }
-

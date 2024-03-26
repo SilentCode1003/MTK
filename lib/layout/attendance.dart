@@ -6,8 +6,9 @@ import 'package:eportal/api/attendance.dart';
 import 'package:eportal/component/internet_checker.dart';
 import 'package:intl/intl.dart';
 import 'package:eportal/component/developer_options_checker.dart';
-
-
+import 'package:eportal/layout/notification.dart';
+import 'package:badges/badges.dart' as badges;
+import 'package:eportal/api/notification.dart';
 
 class Attendance extends StatefulWidget {
   final String employeeid;
@@ -19,6 +20,7 @@ class Attendance extends StatefulWidget {
 }
 
 class _AttendanceState extends State<Attendance> {
+  String UnreadCount = '1';
   String _formatDate(String? date) {
     if (date == "" || date == null) return '';
     DateTime dateTime = DateTime.parse(date);
@@ -33,8 +35,14 @@ class _AttendanceState extends State<Attendance> {
     return formattedTime;
   }
 
+  String _formatDate1(DateTime? date) {
+    if (date == null) return ''; // Return an empty string if date is null
+    return DateFormat('dd MMM yyyy', 'en_US').format(date);
+  }
+
   Helper helper = Helper();
   List<AttendanceModel> usersattendance = [];
+  List<NotificationBadges> notificationbadges = [];
 
   DateTimeRange? selectedDateRange;
 
@@ -43,12 +51,13 @@ class _AttendanceState extends State<Attendance> {
     _getAttendance();
     super.initState();
     _checkDeveloperOptions();
+    _getBadges();
+    widget.employeeid;
   }
 
-      void _checkDeveloperOptions() async {
+  void _checkDeveloperOptions() async {
     await DeveloperModeChecker.checkAndShowDeveloperModeDialog(context);
   }
-
 
   Future<void> _getAttendance() async {
     final response = await UserAttendance().getattendance(widget.employeeid);
@@ -75,6 +84,22 @@ class _AttendanceState extends State<Attendance> {
     }
   }
 
+  Future<void> _getBadges() async {
+    final response =
+        await UserNotifications().getnotificationbadges(widget.employeeid);
+    if (helper.getStatusString(APIStatus.success) == response.message) {
+      final jsondata = json.encode(response.result);
+      for (var badgesinfo in json.decode(jsondata)) {
+        setState(() {
+          NotificationBadges notificationbadgesinfo = NotificationBadges(
+            badgesinfo['Unreadcount'].toString(),
+          );
+          UnreadCount = notificationbadgesinfo.Unreadcount;
+        });
+      }
+    }
+  }
+
   Future<void> _filterAttendance() async {
     final response = await UserAttendance().filterattendance(widget.employeeid);
 
@@ -88,10 +113,10 @@ class _AttendanceState extends State<Attendance> {
             DateTime.parse(attendanceinfo['attendancedatein']);
 
         if (selectedDateRange == null ||
-            (attendanceDate.isAfter(
-                    selectedDateRange!.start.subtract(const Duration(days: 1))) &&
-                attendanceDate
-                    .isBefore(selectedDateRange!.end.add(const Duration(days: 1))))) {
+            (attendanceDate.isAfter(selectedDateRange!.start
+                    .subtract(const Duration(days: 1))) &&
+                attendanceDate.isBefore(
+                    selectedDateRange!.end.add(const Duration(days: 1))))) {
           setState(() {
             AttendanceModel userattendance = AttendanceModel(
               attendanceinfo['employeeid'],
@@ -170,72 +195,64 @@ class _AttendanceState extends State<Attendance> {
   @override
   Widget build(BuildContext context) {
     checkInternetConnection(context);
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        body: Stack(
-          children: [
-            Column(
-              children: [
-                Container(
-                  decoration: BoxDecoration(
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Text('Attendance', style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.red,
+        flexibleSpace: FlexibleSpaceBar(
+          centerTitle: true,
+          titlePadding: EdgeInsets.only(right: 0.0),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              badges.Badge(
+                badgeContent: Text(
+                  UnreadCount,
+                  style: TextStyle(
                     color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 0,
-                        blurRadius: 5,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  height: MediaQuery.of(context).size.height * 0.11,
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        'My Attendance',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 22,
-                          fontWeight: FontWeight.normal,
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          _showDateRangePicker(context);
-                        },
-                        icon: const Icon(
-                          Icons.calendar_today,
-                          color: Colors.black,
-                        ),
-                      )
-                    ],
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
                   ),
                 ),
-              ],
-            ),
-            Positioned(
+                position: badges.BadgePosition.topEnd(top: 0, end: 5),
+                child: IconButton(
+                  icon: Icon(
+                    Icons.notifications,
+                    size: 25.0,
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Notifications(
+                          employeeid: widget.employeeid,
+                        ),
+                      ),
+                    );
+                  },
+                  color: Colors.white,
+                ),
+              ),
+              SizedBox(width: 15.0),
+            ],
+          ),
+        ),
+      ),
+      body: Stack(
+        children: [
+          Container(
+            child: Positioned(
               bottom: 0,
               left: 0,
               right: 0,
               child: Container(
-                height: MediaQuery.of(context).size.height * 0.68,
+                height: MediaQuery.of(context).size.height * 0.76,
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      offset: const Offset(0, -2),
-                      blurRadius: 5.0,
-                      spreadRadius: 0,
-                    ),
-                  ],
                 ),
                 child: usersattendance.isEmpty
-                    ? const Center(
+                    ? Center(
                         child: Text(
                           "No Attendance",
                         ),
@@ -245,7 +262,6 @@ class _AttendanceState extends State<Attendance> {
                         itemBuilder: (context, index) {
                           AttendanceModel userAttendance =
                               usersattendance[index];
-
                           return GestureDetector(
                             onTap: () {
                               showModalBottomSheet(
@@ -282,31 +298,36 @@ class _AttendanceState extends State<Attendance> {
                                             ),
                                           ),
                                           ListTile(
-                                            leading: const Icon(Icons.timer_off),
+                                            leading:
+                                                const Icon(Icons.timer_off),
                                             title: Text(
                                               'Clock Out:  ${usersattendance[index].clockout} ${usersattendance[index].attendancedateOut}',
                                             ),
                                           ),
                                           ListTile(
-                                            leading: const Icon(Icons.location_city),
+                                            leading:
+                                                const Icon(Icons.location_city),
                                             title: Text(
                                               'Location In:  ${usersattendance[index].geofencenameIn}',
                                             ),
                                           ),
                                           ListTile(
-                                            leading: const Icon(Icons.location_city),
+                                            leading:
+                                                const Icon(Icons.location_city),
                                             title: Text(
                                               'Location Out:  ${usersattendance[index].geofencenameOut}',
                                             ),
                                           ),
                                           ListTile(
-                                            leading: const Icon(Icons.phone_android),
+                                            leading:
+                                                const Icon(Icons.phone_android),
                                             title: Text(
                                               'Device:  ${usersattendance[index].devicein}',
                                             ),
                                           ),
                                           ListTile(
-                                            leading: const Icon(Icons.access_time),
+                                            leading:
+                                                const Icon(Icons.access_time),
                                             title: Text(
                                               'Total Hours:  ${usersattendance[index].totalhours}',
                                             ),
@@ -340,16 +361,15 @@ class _AttendanceState extends State<Attendance> {
                                         children: [
                                           Padding(
                                             padding: const EdgeInsets.fromLTRB(
-                                                8.0, 20.0, 8.0, 1.0),
+                                                8.0, 14.0, 8.0, 2.0),
                                             child: Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.center,
                                               children: [
                                                 Text(
                                                   userAttendance
-                                                          .attendancedateIn
-                                                          .split(' ')[
-                                                      0], // Extracting the day part
+                                                      .attendancedateIn
+                                                      .split(' ')[0],
                                                   style: const TextStyle(
                                                     color: Colors.white,
                                                     fontSize: 40,
@@ -358,13 +378,11 @@ class _AttendanceState extends State<Attendance> {
                                                 ),
                                                 Text(
                                                   userAttendance
-                                                          .attendancedateIn
-                                                          .split(' ')[
-                                                      1], // Extracting the month part
+                                                      .attendancedateIn
+                                                      .split(' ')[1],
                                                   style: const TextStyle(
                                                     color: Colors.white,
-                                                    fontSize:
-                                                        20, // You can adjust the font size for the month
+                                                    fontSize: 20,
                                                   ),
                                                 ),
                                               ],
@@ -450,8 +468,22 @@ class _AttendanceState extends State<Attendance> {
                       ),
               ),
             ),
-          ],
-        ),
+          ),
+          Positioned(
+            bottom: 20,
+            right: 20,
+            child: FloatingActionButton(
+              backgroundColor: Colors.red,
+              onPressed: () {
+                _showDateRangePicker(context);
+              },
+              child: Icon(
+                Icons.calendar_today_outlined,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

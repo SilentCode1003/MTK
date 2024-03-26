@@ -2,11 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:eportal/layout/attendance.dart';
 import 'package:eportal/layout/index.dart';
 import 'package:eportal/layout/payroll.dart';
+import 'package:flutter/widgets.dart';
 import '../model/userinfo.dart';
 import '../repository/helper.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:eportal/api/login.dart';
 import 'package:eportal/layout/profile.dart';
+import 'package:eportal/layout/requestleave.dart';
+import 'package:eportal/layout/overtime.dart';
+import 'package:eportal/layout/cashadvance.dart';
+import 'package:eportal/layout/coa.dart';
+import 'package:eportal/layout/undertime.dart';
+import 'package:eportal/layout/coop.dart';
 
 class HomePage extends StatefulWidget {
   final String employeeid;
@@ -180,15 +187,264 @@ class _HomePageState extends State<HomePage> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+          // setState(() {
+          //   _selectedIndex = 4;
+          // });
           showModalBottomSheet(
+            backgroundColor: Colors.transparent,
             context: context,
             isScrollControlled: true,
             builder: (BuildContext context) {
-              return Container(
-                height: MediaQuery.of(context).size.height,
-                // Your bottom sheet content goes here
-                child: Center(
-                  child: Text('This is the full screen bottom sheet'),
+              return Material(
+                color: Colors.transparent,
+                child: Stack(
+                  children: [
+                    Positioned(
+                      left: 0,
+                      right: 0,
+                      bottom: 15,
+                      child: Container(
+                        height: 100,
+                        child: Center(
+                          child: Padding(
+                            padding: EdgeInsets.only(bottom: 10.0),
+                            child: SizedBox(
+                              width: 65,
+                              height: 65,
+                              child: FloatingActionButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Icon(
+                                  Icons.close_outlined,
+                                  size: 30,
+                                ),
+                                backgroundColor: Colors.red,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      left: 0,
+                      right: 0,
+                      bottom: 300,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Column(
+                            children: [
+                              SizedBox(
+                                width: 65,
+                                height: 65,
+                                child: FloatingActionButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => RequestLeave(
+                                              employeeid: employeeid)),
+                                    );
+                                  },
+                                  child: Icon(
+                                    Icons.calendar_today_outlined,
+                                    size: 30,
+                                  ),
+                                  backgroundColor: Colors.red,
+                                  mini: false,
+                                  heroTag: null,
+                                ),
+                              ),
+                              SizedBox(height: 5),
+                              Text(
+                                "Leaves",
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                          SizedBox(width: 65),
+                          Column(
+                            children: [
+                              SizedBox(
+                                width: 65,
+                                height: 65,
+                                child: FloatingActionButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                COA(employeeid: employeeid)));
+                                  },
+                                  child: Icon(
+                                    Icons.card_giftcard_rounded,
+                                    size: 30,
+                                  ),
+                                  backgroundColor: Colors.red,
+                                  mini: false,
+                                  heroTag: null,
+                                ),
+                              ),
+                              SizedBox(height: 5),
+                              Text(
+                                "COA",
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                          SizedBox(width: 65),
+                          Column(
+                            children: [
+                              SizedBox(
+                                width: 65,
+                                height: 65,
+                                child: FloatingActionButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => Overtime(
+                                                employeeid: employeeid)));
+                                  },
+                                  child: Icon(
+                                    Icons.access_time_outlined,
+                                    size: 30,
+                                  ),
+                                  backgroundColor: Colors.red,
+                                  mini: false,
+                                  heroTag: null,
+                                ),
+                              ),
+                              SizedBox(height: 5),
+                              Text(
+                                "Overtime",
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    Positioned(
+                      left: 0,
+                      right: 0,
+                      bottom: 200,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Column(
+                            children: [
+                              SizedBox(
+                                width: 65,
+                                height: 65,
+                                child: FloatingActionButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => UnderTime(
+                                                employeeid: employeeid)));
+                                  },
+                                  child: Icon(
+                                    Icons.access_time_outlined,
+                                    size: 30,
+                                  ),
+                                  backgroundColor: Colors.red,
+                                  mini: false,
+                                  heroTag: null,
+                                ),
+                              ),
+                              SizedBox(height: 5),
+                              Text(
+                                "Undertime",
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                          SizedBox(width: 60),
+                          Column(
+                            children: [
+                              SizedBox(
+                                width: 65,
+                                height: 65,
+                                child: FloatingActionButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => RequestCash(
+                                              employeeid: employeeid)),
+                                    );
+                                  },
+                                  child: Icon(
+                                    Icons.thumb_up_alt_outlined,
+                                    size: 30,
+                                  ),
+                                  backgroundColor: Colors.red,
+                                  mini: false,
+                                  heroTag: null,
+                                ),
+                              ),
+                              SizedBox(height: 5),
+                              Text(
+                                "Cash Advance",
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                          SizedBox(width: 60),
+                          Column(
+                            children: [
+                              SizedBox(
+                                width: 65,
+                                height: 65,
+                                child: FloatingActionButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => const Coop()),
+                                    );
+                                  },
+                                  child: Icon(
+                                    Icons.business_outlined,
+                                    size: 30,
+                                  ),
+                                  backgroundColor: Colors.red,
+                                  mini: false,
+                                  heroTag: null,
+                                ),
+                              ),
+                              SizedBox(height: 5),
+                              Text(
+                                "COOP",
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               );
             },
@@ -200,7 +456,7 @@ class _HomePageState extends State<HomePage> {
       bottomNavigationBar: MyBottomNavBar(
         currentIndex: _selectedIndex,
         onTap: _onNavBarItemTapped,
-        activeColor: Colors.red, // Set active color to red
+        activeColor: Colors.red,
         onSalaryTap: _showLoginDialog,
       ),
     );
@@ -225,9 +481,438 @@ class _HomePageState extends State<HomePage> {
         return Profile(
           employeeid: widget.employeeid,
         );
+      case 4:
+        return _buildModalBottomSheet();
       default:
         return Container();
     }
+  }
+
+  Widget _buildModalBottomSheet() {
+    return Scaffold(
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        color: Colors.white.withOpacity(0.1),
+        child: SingleChildScrollView(
+          child: Stack(
+            alignment: AlignmentDirectional.topStart,
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: 90,
+                color: Colors.red,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 65.0),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 50.0),
+                child: Center(
+                  child: Text(
+                    'Services',
+                    style: TextStyle(fontSize: 24.0, color: Colors.white),
+                  ),
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                RequestLeave(employeeid: employeeid)),
+                      );
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(top: 120.0),
+                      width: MediaQuery.of(context).size.width / 2 - 20,
+                      height: 120,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.3),
+                            spreadRadius: 3,
+                            blurRadius: 4,
+                            offset: Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      child: Stack(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 65.0),
+                          ),
+                          Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.red.withOpacity(0.3),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Icon(
+                                      Icons.calendar_today_outlined,
+                                      color: Colors.red.withOpacity(0.8),
+                                      size: 35,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: 10),
+                                Text(
+                                  "Leaves",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black54,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  COA(employeeid: employeeid)));
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(top: 120.0),
+                      width: MediaQuery.of(context).size.width / 2 - 20,
+                      height: 120,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.3),
+                            spreadRadius: 3,
+                            blurRadius: 4,
+                            offset: Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      child: Stack(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 65.0),
+                          ),
+                          Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.red.withOpacity(0.1),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Icon(
+                                      Icons.card_giftcard_rounded,
+                                      color: Colors.red.withOpacity(0.8),
+                                      size: 35,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: 10),
+                                Text(
+                                  "COA",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black54,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  Overtime(employeeid: employeeid)));
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(top: 260.0),
+                      width: MediaQuery.of(context).size.width / 2 - 20,
+                      height: 120,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.3),
+                            spreadRadius: 3,
+                            blurRadius: 4,
+                            offset: Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      child: Stack(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 65.0),
+                          ),
+                          Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.red.withOpacity(0.1),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Icon(
+                                      Icons.access_time_outlined,
+                                      color: Colors.red.withOpacity(0.8),
+                                      size: 35,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: 10),
+                                Text(
+                                  "Overtime",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black54,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  UnderTime(employeeid: employeeid)));
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(top: 260.0),
+                      width: MediaQuery.of(context).size.width / 2 - 20,
+                      height: 120,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.3),
+                            spreadRadius: 3,
+                            blurRadius: 4,
+                            offset: Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      child: Stack(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 65.0),
+                          ),
+                          Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.red.withOpacity(0.1),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Icon(
+                                      Icons.access_time_filled_outlined,
+                                      color: Colors.red.withOpacity(0.8),
+                                      size: 35,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: 10),
+                                Text(
+                                  "Undertime",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black54,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                RequestCash(employeeid: employeeid)),
+                      );
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(top: 400.0),
+                      width: MediaQuery.of(context).size.width / 2 - 20,
+                      height: 120,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.3),
+                            spreadRadius: 3,
+                            blurRadius: 4,
+                            offset: Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      child: Stack(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 65.0),
+                          ),
+                          Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.red.withOpacity(0.1),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Icon(
+                                      Icons.thumb_up_alt_outlined,
+                                      color: Colors.red.withOpacity(0.8),
+                                      size: 35,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: 10),
+                                Text(
+                                  "Cash Advance",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black54,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const Coop()),
+                      );
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(top: 400.0),
+                      width: MediaQuery.of(context).size.width / 2 - 20,
+                      height: 120,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.3),
+                            spreadRadius: 3,
+                            blurRadius: 4,
+                            offset: Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      child: Stack(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 65.0),
+                          ),
+                          Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.red.withOpacity(0.1),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Icon(
+                                      Icons.business_outlined,
+                                      color: Colors.red.withOpacity(0.8),
+                                      size: 35,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: 10),
+                                Text(
+                                  "COOP",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black54,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   void _onNavBarItemTapped(int index) {

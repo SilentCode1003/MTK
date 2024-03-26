@@ -12,8 +12,6 @@ import 'package:eportal/component/developer_options_checker.dart';
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:eportal/model/userinfo.dart';
-import 'package:eportal/layout/date.dart';
-import 'package:eportal/layout/new.dart';
 
 void main() async {
   runApp(const MyApp());
@@ -177,7 +175,8 @@ class _LoginPageState extends State<LoginPage> {
                     final Uri toLaunch = Uri(
                         scheme: 'https',
                         host: 'drive.google.com',
-                        path:'drive/u/4/folders/1vcBLiuf2xJUH_p15TUJm8B5Y7B2je8Ap');
+                        path:
+                            'drive/u/4/folders/1vcBLiuf2xJUH_p15TUJm8B5Y7B2je8Ap');
                     _launchInBrowser(toLaunch);
                   },
                   child: const Text('OK'),
@@ -446,7 +445,8 @@ class _LoginPageState extends State<LoginPage> {
                           _login();
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color.fromARGB(255, 215, 36, 24),
+                          backgroundColor:
+                              const Color.fromARGB(255, 215, 36, 24),
                         ),
                         child: isLoading
                             ? const Row(

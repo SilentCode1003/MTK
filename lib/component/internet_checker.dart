@@ -11,7 +11,7 @@ Future<void> checkInternetConnection(BuildContext context) async {
         return AlertDialog(
           shape: RoundedRectangleBorder(
               borderRadius:
-                  BorderRadius.circular(20.0), // Adjust the value as needed
+                  BorderRadius.circular(20.0),
             ),
           title: const Center(child: Text('No Connection!'),),
           content: const Padding( padding: EdgeInsets.only(left: 50), 
@@ -25,7 +25,7 @@ Future<void> checkInternetConnection(BuildContext context) async {
               child: Padding(
                 padding: const EdgeInsets.only(
                   right: 40.0,
-                ), // Adjust the value as needed
+                ),
                 child: TextButton(
                   onPressed: () {
                     Navigator.pop(context);

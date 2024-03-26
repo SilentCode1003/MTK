@@ -98,8 +98,6 @@ class _PayslipdetailsState extends State<Payslipdetails> {
 
       final pdfImage = pw.MemoryImage(bytes);
 
-      // final image = pw.MemoryImage(File('assets/5L.png').readAsBytesSync());
-
       pdf.addPage(
         pw.Page(
           build: (context) {

@@ -16,7 +16,9 @@ import 'package:eportal/component/internet_checker.dart';
 import 'dart:io';
 import 'package:eportal/component/developer_options_checker.dart';
 import 'dart:async';
-import 'package:slider_button/slider_button.dart';
+import 'package:eportal/layout/notification.dart';
+import 'package:badges/badges.dart' as badges;
+import 'package:eportal/api/notification.dart';
 
 class Index extends StatefulWidget {
   final String employeeid;
@@ -32,13 +34,14 @@ class Index extends StatefulWidget {
 }
 
 class _IndexState extends State<Index> {
+  String UnreadCount = '1';
   String ma_clockin = '';
   String ma_clockout = '';
   DateTime clockOutDate = DateTime.now();
   DateTime clockOutDateTime = DateTime.now();
   DateTime clockInDateTime = DateTime.now();
   String image = '';
-
+  String fullname = '';
   String _formatTime(String? time) {
     if (time == "" || time == null) return '--:--';
     DateTime dateTime = DateFormat("HH:mm:ss").parse(time);
@@ -49,6 +52,7 @@ class _IndexState extends State<Index> {
   Helper helper = Helper();
 
   List<TodayModel> todaystatus = [];
+  List<NotificationBadges> notificationbadges = [];
 
   String currentLocation = '';
   String timestatus = 'Time In';
@@ -201,10 +205,12 @@ class _IndexState extends State<Index> {
       employeeid = user.employeeid;
       departmentid = user.departmentid;
       image = user.image;
+      fullname = user.fullname;
 
       _getGeofence();
       _getLatesLog();
       _getStatus();
+      _getBadges();
     });
   }
 
@@ -263,6 +269,22 @@ class _IndexState extends State<Index> {
     } catch (e) {
       print('Geofence $e');
       print('ito and geofence');
+    }
+  }
+
+  Future<void> _getBadges() async {
+    final response =
+        await UserNotifications().getnotificationbadges(widget.employeeid);
+    if (helper.getStatusString(APIStatus.success) == response.message) {
+      final jsondata = json.encode(response.result);
+      for (var badgesinfo in json.decode(jsondata)) {
+        setState(() {
+          NotificationBadges notificationbadgesinfo = NotificationBadges(
+            badgesinfo['Unreadcount'].toString(),
+          );
+          UnreadCount = notificationbadgesinfo.Unreadcount;
+        });
+      }
     }
   }
 
@@ -554,7 +576,7 @@ class _IndexState extends State<Index> {
                                           point: LatLng(
                                               fence.latitude, fence.longitude),
                                           color: Colors.green.withOpacity(0.5),
-                                          borderColor: Colors.red,
+                                          borderColor: Colors.green,
                                           borderStrokeWidth: 2,
                                           useRadiusInMeter: true,
                                           radius: fence.radius,
@@ -577,7 +599,7 @@ class _IndexState extends State<Index> {
                       height: 35.0,
                       child: FloatingActionButton(
                         onPressed: () {
-                        Navigator.of(context).pop();
+                          Navigator.of(context).pop();
                         },
                         backgroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
@@ -585,19 +607,14 @@ class _IndexState extends State<Index> {
                         ),
                         child: Row(
                           children: [
-                            SizedBox(
-                                width:
-                                    8.0), 
+                            SizedBox(width: 8.0),
                             Icon(Icons.arrow_back, color: Colors.black),
-                            SizedBox(
-                                width:
-                                    8.0), 
+                            SizedBox(width: 8.0),
                             Text(
                               'Back',
                               style: TextStyle(
                                 color: Colors.black,
-                                fontSize:
-                                    14.0, 
+                                fontSize: 14.0,
                               ),
                             ),
                           ],
@@ -613,7 +630,7 @@ class _IndexState extends State<Index> {
               right: 0,
               bottom: 0,
               child: Container(
-                height: 250,
+                height: 270,
                 color: Colors.white,
                 child: Align(
                   alignment: Alignment.topCenter,
@@ -630,7 +647,7 @@ class _IndexState extends State<Index> {
                             color: Colors.black,
                           ),
                         ),
-                        SizedBox(height: 5),
+                        SizedBox(height: 10),
                         _geofencename.isNotEmpty
                             ? Center(
                                 child: Text(
@@ -645,56 +662,84 @@ class _IndexState extends State<Index> {
                                 ),
                               ),
                         const SizedBox(height: 20),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            StreamBuilder<String>(
-                              stream: currentTimeStream,
-                              builder: (context, snapshot) {
-                                String formattedTime = '';
-                                if (snapshot.hasData) {
-                                  final now = DateTime.now();
-                                  formattedTime =
-                                      DateFormat('h:mm:ss a').format(now);
-                                  return Column(
+                        Align(
+                          alignment: Alignment.topCenter,
+                          child: Padding(
+                            padding: EdgeInsets.only(top: 1.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  height: 100.0,
+                                  width: 175.0,
+                                  child: Column(
                                     children: [
-                                      Text(
-                                        formattedTime,
-                                        style: const TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 24,
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                          left: 15.0,
+                                          top: 1,
+                                        ),
+                                        child: Text(
+                                          ma_clockin,
+                                          style: TextStyle(
+                                            fontSize: 25,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(height: 8),
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                          left: 15.0,
+                                        ),
+                                        child: Text(
+                                          'Time In',
+                                          style: const TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.black54),
                                         ),
                                       ),
                                     ],
-                                  );
-                                } else {
-                                  return formattedTime.isEmpty
-                                      ? Shimmer.fromColors(
-                                          baseColor: Colors.grey[300]!,
-                                          highlightColor: Colors.grey[100]!,
-                                          child: Container(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width -
-                                                150,
-                                            height: 32,
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius:
-                                                  BorderRadius.circular(5),
-                                            ),
+                                  ),
+                                ),
+                                Container(
+                                  height: 100.0,
+                                  width: 175.0,
+                                  child: Column(
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                          right: 15.0,
+                                          top: 1,
+                                        ),
+                                        child: Text(
+                                          ma_clockout,
+                                          style: TextStyle(
+                                            fontSize: 25,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black,
                                           ),
-                                        )
-                                      : const SizedBox.shrink();
-                                }
-                              },
+                                        ),
+                                      ),
+                                      SizedBox(height: 8),
+                                      Padding(
+                                        padding: EdgeInsets.only(right: 15.0),
+                                        child: Text(
+                                          'Time Out',
+                                          style: const TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.black54),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
-                        SizedBox(height: 10),
                         Divider(),
-                        SizedBox(height: 15),
                         ElevatedButton(
                           onPressed: isStatusButtonEnabled
                               ? () {
@@ -713,14 +758,38 @@ class _IndexState extends State<Index> {
                                   }
                                 }
                               : null,
-                          child:
-                              Text(timestatus, style: TextStyle(fontSize: 20)),
                           style: ButtonStyle(
-                            fixedSize: MaterialStateProperty.all<Size>(
-                              Size(350, 60),
+                            minimumSize:
+                                MaterialStateProperty.all(Size(330, 55)),
+                            backgroundColor:
+                                MaterialStateProperty.resolveWith<Color>(
+                              (Set<MaterialState> states) {
+                                if (states.contains(MaterialState.disabled)) {
+                                  return Colors.black12;
+                                }
+                                return Colors.white;
+                              },
                             ),
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                                Colors.red), // Set background color to red
+                            side: MaterialStateProperty.resolveWith<BorderSide>(
+                              (Set<MaterialState> states) {
+                                if (states.contains(MaterialState.disabled)) {
+                                  return BorderSide(color: Colors.grey);
+                                }
+                                return BorderSide(
+                                  color: isLoggedIn ? Colors.red : Colors.green,
+                                );
+                              },
+                            ),
+                          ),
+                          child: Text(
+                            timestatus,
+                            style: TextStyle(
+                                fontSize: 20,
+                                color: isStatusButtonEnabled
+                                    ? isLoggedIn
+                                        ? Colors.red
+                                        : Colors.green
+                                    : Colors.black12),
                           ),
                         ),
                       ],
@@ -1057,214 +1126,266 @@ class _IndexState extends State<Index> {
 
     return WillPopScope(
       onWillPop: () async {
-        // showExitDialog(context);
+        showExitDialog(context);
         return false;
       },
       child: Scaffold(
-        body: SingleChildScrollView(
-          child: Container(
-            color: Colors.white,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        "Today's Status",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.normal,
-                          fontFamily: 'NexaRegular',
+        body: Container(
+          height: MediaQuery.of(context).size.height,
+          color: Colors.white,
+          child: SingleChildScrollView(
+            child: Stack(
+              alignment: AlignmentDirectional.topStart,
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  color: Colors.red,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 65.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(width: 20.0),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(30.0),
+                          child: Image.memory(
+                            base64Decode(image),
+                            fit: BoxFit.cover,
+                            width: 60.0,
+                            height: 60.0,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 10),
-                      Container(
-                        height: 150,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10.0),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 5,
-                              blurRadius: 7,
-                              offset: const Offset(0, 3),
-                            ),
-                          ],
-                        ),
-                        padding: const EdgeInsets.all(14.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                        SizedBox(width: 15.0),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                const SizedBox(height: 20),
-                                const Text(
-                                  'Time In',
-                                  style: TextStyle(
-                                    fontSize: 30,
-                                    fontWeight: FontWeight.normal,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  ma_clockin,
-                                  style: const TextStyle(
-                                    fontSize: 20,
-                                    color: Colors.green,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(width: 50),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                const SizedBox(height: 20),
-                                const Text(
-                                  'Time Out',
-                                  style: TextStyle(
-                                    fontSize: 30,
-                                    fontWeight: FontWeight.normal,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  ma_clockout,
-                                  style: const TextStyle(
-                                    fontSize: 20,
-                                    color: Colors.red,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      StreamBuilder<String>(
-                        stream: currentTimeStream,
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            final now = DateTime.now();
-                            final formattedTime =
-                                DateFormat('E, MMM d • h:mm:ss a').format(now);
-                            return Column(
-                              children: [
-                                Text(
-                                  formattedTime,
-                                  style: const TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.normal,
-                                    fontSize: 18,
-                                  ),
-                                ),
-                              ],
-                            );
-                          } else {
-                            return currentLocation.isEmpty
-                                ? Shimmer.fromColors(
-                                    baseColor: Colors.grey[300]!,
-                                    highlightColor: Colors.grey[100]!,
-                                    child: Container(
-                                      width: MediaQuery.of(context).size.width -
-                                          150,
-                                      height: 22,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(5),
-                                      ),
-                                    ),
-                                  )
-                                : const SizedBox.shrink();
-                          }
-                        },
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  Center(
-                    child: currentLocation.isEmpty
-                        ? Shimmer.fromColors(
-                            baseColor: Colors.grey[300]!,
-                            highlightColor: Colors.grey[100]!,
-                            child: Container(
-                              width: MediaQuery.of(context).size.width - 32,
-                              height: 55,
-                              decoration: BoxDecoration(
+                            SizedBox(height: 5.0),
+                            Text(
+                              "Hey Good Day!",
+                              style: const TextStyle(
+                                fontSize: 15.0,
                                 color: Colors.white,
-                                borderRadius: BorderRadius.circular(5),
                               ),
                             ),
-                          )
-                        : Text(
-                            currentLocation,
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.normal,
-                              color: Colors.black,
+                            Text(
+                              fullname,
+                              style: const TextStyle(
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.normal,
+                                color: Colors.white,
+                              ),
                             ),
-                          ),
-                  ),
-                  const SizedBox(height: 15),
-                  Center(
-                    child: GestureDetector(
-                      onTap: () {
-                        verifylocation();
-                      },
-                      child: Container(
-                        width: 180,
-                        height: 180,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.white,
-                          border: Border.all(
-                            color: isLoggedIn ? Colors.red : Colors.green,
-                            width: 3,
+                            SizedBox(height: 167.0),
+                          ],
+                        ),
+                        Expanded(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              if (UnreadCount != 0)
+                                badges.Badge(
+                                  badgeContent: Text(
+                                    UnreadCount.toString(),
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                  position: badges.BadgePosition.topEnd(
+                                      top: 0, end: 5),
+                                  child: IconButton(
+                                    icon: Icon(
+                                      Icons.notifications,
+                                      size: 25.0,
+                                    ),
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => Notifications(
+                                            employeeid: employeeid,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              SizedBox(width: 15.0),
+                            ],
                           ),
                         ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.alarm,
-                              color: isLoggedIn ? Colors.red : Colors.green,
-                              size: 80,
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Center(
-                              child: Text(
+                      ],
+                    ),
+                  ),
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  margin: EdgeInsets.only(
+                    top: 150.0,
+                    left: 0,
+                    right: 0,
+                  ),
+                  height: 370,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(30.0),
+                    // boxShadow: [
+                    //   BoxShadow(
+                    //     color: Colors.grey.withOpacity(0.5),
+                    //     spreadRadius: 5,
+                    //     blurRadius: 7,
+                    //     offset: Offset(0, 3),
+                    //   ),
+                    // ],
+                  ),
+                  child: Column(
+                    children: [
+                      SizedBox(height: 25),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          StreamBuilder<String>(
+                            stream: currentTimeStream,
+                            builder: (context, snapshot) {
+                              String formattedTime = '';
+                              if (snapshot.hasData) {
+                                final now = DateTime.now();
+                                formattedTime =
+                                    DateFormat('hh:mm:ss a').format(now);
+                                return Column(
+                                  children: [
+                                    Text(
+                                      formattedTime,
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 30,
+                                      ),
+                                    ),
+                                    SizedBox(height: 10),
+                                    Text(
+                                      DateFormat('EEEE, MMM d').format(now),
+                                      style: const TextStyle(
+                                        color: Colors.black54,
+                                        fontWeight: FontWeight.normal,
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              } else {
+                                return formattedTime.isEmpty
+                                    ? Shimmer.fromColors(
+                                        baseColor: Colors.grey[300]!,
+                                        highlightColor: Colors.grey[100]!,
+                                        child: Container(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width -
+                                              225,
+                                          height: 68,
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                          ),
+                                        ),
+                                      )
+                                    : const SizedBox.shrink();
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+                      Center(
+                        child: currentLocation.isEmpty
+                            ? Shimmer.fromColors(
+                                baseColor: Colors.grey[300]!,
+                                highlightColor: Colors.grey[100]!,
+                                child: Container(
+                                  width:
+                                      MediaQuery.of(context).size.width - 250,
+                                  height: 20,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                ),
+                              )
+                            : Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.location_on,
+                                    color: Colors.black54,
+                                    size: 20,
+                                  ),
+                                  SizedBox(width: 5),
+                                  Text(
+                                    currentLocation
+                                        .split(' ')
+                                        .take(4)
+                                        .join(' '),
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.normal,
+                                      color: Colors.black54,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                      ),
+                      const SizedBox(height: 30),
+                      GestureDetector(
+                        onTap: () {
+                          verifylocation();
+                        },
+                        child: Container(
+                          width: 180,
+                          height: 180,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(30),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                                offset: Offset(0, 3),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.alarm,
+                                color: isLoggedIn ? Colors.red : Colors.green,
+                                size: 80,
+                              ),
+                              SizedBox(height: 10),
+                              Text(
                                 timestatus,
                                 style: TextStyle(
-                                  fontSize: 18,
                                   color: isLoggedIn ? Colors.red : Colors.green,
+                                  fontSize: 20,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    ),
+                      const SizedBox(height: 15),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
