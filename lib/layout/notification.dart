@@ -88,22 +88,10 @@ class _NotificationsState extends State<Notifications> {
             pushnotificationinfo['notificationid'],
           );
           print(pushnotificationinfo['notificationid']);
+          await _recievednotification(
+              pushnotificationinfo['notificationid'].toString());
         }
       }
-    }
-  }
-
-  Future<void> _deletenotification(String notificationid) async {
-    try {
-      final response =
-          await UserNotifications().deletenotication(notificationid);
-      if (response.status == 200) {
-        print('success');
-      } else {
-        print('hindi success');
-      }
-    } catch (e) {
-      print('error');
     }
   }
 
@@ -126,6 +114,33 @@ class _NotificationsState extends State<Notifications> {
       platformChannelSpecifics,
       payload: 'item x',
     );
+  }
+
+  Future<void> _recievednotification(String notificationid) async {
+    try {
+      final response =
+          await UserNotifications().recievednotication(notificationid);
+      if (response.status == 200) {
+        print('success $notificationid');
+      } else {
+        print('hindi success');
+      }
+    } catch (e) {
+      print('error $notificationid');
+    }
+  }
+
+  Future<void> _readnotification(String notificationid) async {
+    try {
+      final response = await UserNotifications().readnotication(notificationid);
+      if (response.status == 200) {
+        print('success $notificationid');
+      } else {
+        print('hindi success');
+      }
+    } catch (e) {
+      print('error $notificationid');
+    }
   }
 
   Future<void> _getnotification() async {
@@ -169,16 +184,17 @@ class _NotificationsState extends State<Notifications> {
     }
   }
 
-  Future<void> _readnotification(String notificationid) async {
+  Future<void> _deletenotification(String notificationid) async {
     try {
-      final response = await UserNotifications().readnotication(notificationid);
+      final response =
+          await UserNotifications().deletenotication(notificationid);
       if (response.status == 200) {
-        print('success $notificationid');
+        print('success');
       } else {
         print('hindi success');
       }
     } catch (e) {
-      print('error $notificationid');
+      print('error');
     }
   }
 

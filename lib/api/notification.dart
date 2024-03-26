@@ -71,6 +71,22 @@ class UserNotifications {
     return data;
   }
 
+  Future<ResponceModel> recievednotication(String notificationid) async {
+    final url = Uri.parse('${Config.apiUrl}${Config.recievednotifAPI}');
+    final response =
+        await http.post(url, body: {'notificationId': notificationid});
+
+    final responseData = json.decode(response.body);
+    final status = response.statusCode;
+    final message = responseData['msg'];
+    final result = responseData['data'] ?? [];
+    final description = responseData['description'] ?? "";
+
+    print(result);
+    ResponceModel data = ResponceModel(message, status, result, description);
+    return data;
+  }
+
   Future<ResponceModel> deletenotication(String notificationid) async {
     final url = Uri.parse('${Config.apiUrl}${Config.deletenotifAPI}');
     final response =

@@ -1,6 +1,6 @@
 class Config {
-  static const String apiUrl = 'https://payroll.5lsolutions.com/';
-  //static const String apiUrl = 'http://192.168.40.96:3005/';
+  //static const String apiUrl = 'https://payroll.5lsolutions.com/';
+  static const String apiUrl = 'http://192.168.40.96:3005/';
 
   static const String loginAPI = 'login/login';
   static const String payslipAPI = 'eportalpayslip/viewpayslip';
@@ -39,5 +39,6 @@ class Config {
   static const String reloadnotifAPI = 'eportalindex/generatenotification';
   static const String deletenotifAPI = 'eportalindex/deleatenotif';
   static const String readnotifAPI = 'eportalindex/readnotif';
+  static const String recievednotifAPI = 'eportalindex/recievednotif';
   static const String countunreadnotifAPI = 'eportalindex/countunreadbadge';
 }
