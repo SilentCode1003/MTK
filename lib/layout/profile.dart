@@ -36,13 +36,13 @@ class _ProfileStatefulWidgetState extends State<Profile> {
   void initState() {
     _getUserInfo();
     super.initState();
-    _checkDeveloperOptions();
+    // _checkDeveloperOptions();
   }
 
-  void _checkDeveloperOptions() async {
-    await DeveloperModeChecker.checkAndShowDeveloperModeDialog(context);
-    _checkDeveloperOptions();
-  }
+  // void _checkDeveloperOptions() async {
+  //   await DeveloperModeChecker.checkAndShowDeveloperModeDialog(context);
+  //   _checkDeveloperOptions();
+  // }
 
   Future<void> _getUserInfo() async {
     Map<String, dynamic> userinfo =
@@ -88,10 +88,10 @@ class _ProfileStatefulWidgetState extends State<Profile> {
                     width: MediaQuery.of(context).size.width,
                     color: Colors.red,
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        SizedBox(height: 35.0),
-                        Positioned(
-                          top: 30.0,
+                        Padding(
+                          padding: EdgeInsets.only(top: 50.0),
                           child: Text(
                             'Profile',
                             style: const TextStyle(
@@ -101,31 +101,41 @@ class _ProfileStatefulWidgetState extends State<Profile> {
                             ),
                           ),
                         ),
-                        SizedBox(height: 10.0),
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(80.0),
-                          child: Image.memory(
-                            base64Decode(image),
-                            fit: BoxFit.cover,
-                            width: 130.0,
-                            height: 130.0,
+                        Center(
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                                top: 20.0), // Add margin top to the image
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(80.0),
+                              child: Image.memory(
+                                base64Decode(image),
+                                fit: BoxFit.cover,
+                                width: 130.0,
+                                height: 130.0,
+                              ),
+                            ),
                           ),
                         ),
-                        SizedBox(height: 10.0),
-                        Text(
-                          fullname,
-                          style: const TextStyle(
-                            fontSize: 24.0,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                        Padding(
+                          padding: EdgeInsets.only(top: 10.0),
+                          child: Text(
+                            fullname,
+                            style: const TextStyle(
+                              fontSize: 24.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
-                        Text(
-                          position,
-                          style: const TextStyle(
-                            fontSize: 14.0,
-                            fontWeight: FontWeight.normal,
-                            color: Colors.white,
+                        Padding(
+                          padding: EdgeInsets.only(top: 1.0),
+                          child: Text(
+                            position,
+                            style: const TextStyle(
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                         SizedBox(height: 35.0),
@@ -134,7 +144,7 @@ class _ProfileStatefulWidgetState extends State<Profile> {
                   ),
                   Container(
                     width: MediaQuery.of(context).size.width,
-                    margin: EdgeInsets.only(top: 280.0),
+                    margin: EdgeInsets.only(top: 290.0),
                     height: 50,
                     decoration: BoxDecoration(
                       color: Colors.white,

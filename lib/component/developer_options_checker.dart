@@ -27,11 +27,15 @@ class DeveloperModeChecker {
         child: AlertDialog(
           shape: RoundedRectangleBorder(
             borderRadius:
-                BorderRadius.circular(20.0), // Adjust the value as needed
+                BorderRadius.circular(20.0),
           ),
-          title: const Center(child: Text('Warning!'),), 
-          content: const Padding( padding: EdgeInsets.only(left: 25), child: Text(
-              'Disable developer options to continue.'),) ,
+          title: const Center(
+            child: Text('Warning!'),
+          ),
+          content: const Padding(
+            padding: EdgeInsets.only(left: 25),
+            child: Text('Disable developer options to continue.'),
+          ),
           actions: [
             SizedBox(
               width: 250,
@@ -39,12 +43,12 @@ class DeveloperModeChecker {
               child: Padding(
                 padding: const EdgeInsets.only(
                   right: 20.0,
-                ), // Adjust the value as needed
+                ), 
                 child: TextButton(
                   onPressed: () {
                     Navigator.of(context).popUntil((route) => route.isFirst);
                     if (Platform.isAndroid || Platform.isIOS) {
-                      exit(0); // Close the app
+                      exit(0);
                     }
                   },
                   style: ButtonStyle(

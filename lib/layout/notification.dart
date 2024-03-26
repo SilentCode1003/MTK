@@ -25,124 +25,160 @@ class _NotificationsState extends State<Notifications> {
     DateTime dateTime = DateTime.parse(date);
     return DateFormat('MMM dd', 'en_US').format(dateTime);
   }
-  
-  String employeeid = '';
-  String disciplinaryid = '';
-  String offenseid = '';
-  String actionid = '';
-  String violation = '';
-  String date = '';
-  String offensecreatedby = '';
-  String announcementbulletinid = '';
-  String announcementtitle = '';
-  String announcementimage = '';
-  String announcementtype = '';
-  String announcementdescription = '';
-  String announcementtargetdate = '';
-  String announcementcreatedby = '';
-
-  Set<Key> dismissedAnnouncementKeys = {};
-  Set<Key> dismissedOffensesKeys = {};
-  Set<String> dismissedNotificationKeys = {};
 
   int _currentIndex = 0;
 
   Helper helper = Helper();
-
-  List<OffensesModel> offenses = [];
-  List<AnnouncementModel> announcements = [];
-  List<AllModel> allnotification = [];
+  List<AllNotifications> notification = [];
+  List<PushNotifcations> pushnotification = [];
 
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
   @override
   void initState() {
-    _initializeLocalNotifications();
-    _getannoucement();
-    _getoffenses();
-    // _scheduleLocalNotification('BAWAL TUMAE SA CR','Test', 5,);
+    initializeNotifications();
+    _getnotification();
+    _Pushnotification();
     super.initState();
     _checkDeveloperOptions();
   }
-    void _checkDeveloperOptions() async {
+
+  void _checkDeveloperOptions() async {
     await DeveloperModeChecker.checkAndShowDeveloperModeDialog(context);
   }
 
-  Future<void> _initializeLocalNotifications() async {
-    const AndroidInitializationSettings initializationSettingsAndroid =
+  Future<void> initializeNotifications() async {
+    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    final AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/ic_launcher');
-
-    const InitializationSettings initializationSettings =
-        InitializationSettings(
-      android: initializationSettingsAndroid,
-    );
-
-    await flutterLocalNotificationsPlugin.initialize(
-      initializationSettings,
-    );
-
-    tz.initializeTimeZones();
+    final InitializationSettings initializationSettings =
+        InitializationSettings(android: initializationSettingsAndroid);
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
 
-  Future<void> _getoffenses() async {
-    final response = await UserNotifications().getoffenses(widget.employeeid);
+  Future<void> _Pushnotification() async {
+    final response =
+        await UserNotifications().getnotification(widget.employeeid);
     if (helper.getStatusString(APIStatus.success) == response.message) {
       final jsondata = json.encode(response.result);
-      for (var offenseinfo in json.decode(jsondata)) {
-        setState(() {
-          OffensesModel offense = OffensesModel(
-            offenseinfo['employeeid'].toString(),
-            offenseinfo['disciplinaryid'].toString(),
-            offenseinfo['offenseid'].toString(),
-            offenseinfo['actionid'].toString(),
-            offenseinfo['violation'],
-            _formatDate(offenseinfo['date']),
-            offenseinfo['createby'].toString(),
+      int notificationId = 0;
+      for (var pushnotificationinfo in json.decode(jsondata)) {
+        if (pushnotificationinfo['isrecieved'].toString() == 'NO') {
+          setState(() {
+            PushNotifcations pushnotif = PushNotifcations(
+              pushnotificationinfo['notificationid'].toString(),
+              pushnotificationinfo['employeeid'].toString(),
+              _formatDate(pushnotificationinfo['date'].toString()),
+              pushnotificationinfo['tittle'].toString(),
+              pushnotificationinfo['description'],
+              pushnotificationinfo['subdescription'] ?? '',
+              pushnotificationinfo['image'] != null
+                  ? pushnotificationinfo['image'].toString()
+                  : '',
+              pushnotificationinfo['isrecieved'].toString(),
+              pushnotificationinfo['isread'].toString(),
+              pushnotificationinfo['isdelete'].toString(),
+            );
+            pushnotification.add(pushnotif);
+          });
+          await showNotification(
+            pushnotificationinfo['tittle'].toString(),
+            pushnotificationinfo['description'].toString(),
+            pushnotificationinfo['notificationid'],
           );
-          offenses.add(offense);
+          print(pushnotificationinfo['notificationid']);
+        }
+      }
+    }
+  }
 
-          AllModel notification = AllModel(
-            offenseinfo['actionid'].toString(),
-            offenseinfo['violation'].toString(),
-            _formatDate(offenseinfo['date'].toString()),
-            offenseinfo['actionid'].toString(),
-            offenseinfo['image'].toString(),
+  Future<void> _deletenotification(String notificationid) async {
+    try {
+      final response =
+          await UserNotifications().deletenotication(notificationid);
+      if (response.status == 200) {
+        print('success');
+      } else {
+        print('hindi success');
+      }
+    } catch (e) {
+      print('error');
+    }
+  }
+
+  Future<void> showNotification(
+      String title, String description, int id) async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+      'your channel id',
+      'your channel name',
+      importance: Importance.max,
+      priority: Priority.high,
+      ticker: 'ticker',
+    );
+    const NotificationDetails platformChannelSpecifics =
+        NotificationDetails(android: androidPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.show(
+      id,
+      title,
+      description,
+      platformChannelSpecifics,
+      payload: 'item x',
+    );
+  }
+
+  Future<void> _getnotification() async {
+    final response =
+        await UserNotifications().getnotification(widget.employeeid);
+    if (helper.getStatusString(APIStatus.success) == response.message) {
+      final jsondata = json.encode(response.result);
+      for (var notificationinfo in json.decode(jsondata)) {
+        setState(() {
+          AllNotifications notif = AllNotifications(
+            notificationinfo['notificationid'].toString(),
+            notificationinfo['employeeid'].toString(),
+            _formatDate(notificationinfo['date'].toString()),
+            notificationinfo['tittle'].toString(),
+            notificationinfo['description'],
+            notificationinfo['subdescription'] ?? '',
+            notificationinfo['image'] != null
+                ? notificationinfo['image'].toString()
+                : '',
+            notificationinfo['isrecieved'].toString(),
+            notificationinfo['isread'].toString(),
+            notificationinfo['isdelete'].toString(),
           );
-          allnotification.add(notification);
+          notification.add(notif);
         });
       }
     }
   }
 
-  Future<void> _getannoucement() async {
-    final response =
-        await UserNotifications().getannouncement(widget.employeeid);
-    if (helper.getStatusString(APIStatus.success) == response.message) {
-      final jsondata = json.encode(response.result);
-      for (var announcementinfo in json.decode(jsondata)) {
-        setState(() {
-          AnnouncementModel announcement = AnnouncementModel(
-            announcementinfo['bulletinid'].toString(),
-            announcementinfo['tittle'].toString(),
-            announcementinfo['image'].toString(),
-            announcementinfo['type'].toString(),
-            announcementinfo['description'].toString(),
-            _formatDate(announcementinfo['targetdate']),
-            announcementinfo['createby'].toString(),
-          );
-          announcements.add(announcement);
-          AllModel notification = AllModel(
-            announcementinfo['tittle'].toString(),
-            announcementinfo['description'].toString(),
-            _formatDate(announcementinfo['targetdate'].toString()),
-            announcementinfo['image'].toString(),
-            announcementinfo['type'].toString(),
-          ); 
-          allnotification.add(notification);
-        });
-         helper.writeJsonToFile(announcementinfo, 'notification.json');
+  Future<void> _reloadnotification() async {
+    try {
+      final response =
+          await UserNotifications().reloadnotification(widget.employeeid);
+      if (response.status == 200) {
+        print('success');
+      } else {
+        print('hindi success');
       }
+    } catch (e) {
+      print('error');
+    }
+  }
+
+  Future<void> _readnotification(String notificationid) async {
+    try {
+      final response = await UserNotifications().readnotication(notificationid);
+      if (response.status == 200) {
+        print('success $notificationid');
+      } else {
+        print('hindi success');
+      }
+    } catch (e) {
+      print('error $notificationid');
     }
   }
 
@@ -174,27 +210,11 @@ class _NotificationsState extends State<Notifications> {
                 );
               },
             ),
-            bottom: TabBar(
-              tabs: const [
-                Tab(text: 'All'),
-                Tab(text: 'Announcements'),
-                Tab(text: 'Offenses'),
-              ],
-              onTap: (index) {
-                setState(() {
-                  _currentIndex = index;
-                });
-              },
-            ),
           ),
           body: IndexedStack(
             index: _currentIndex,
             children: [
               _buildNotificationList(),
-              _buildAnnouncementList(),
-              _buildOffensesList(
-                employeeid: widget.employeeid,
-              ),
             ],
           ),
         ),
@@ -203,131 +223,131 @@ class _NotificationsState extends State<Notifications> {
   }
 
   Widget _buildNotificationList() {
-    if (allnotification.isEmpty) {
-      return const Center(
-        child: Text("No Announcement found."),
-      );
-    }
-    return ListView.builder(
-      itemCount: allnotification.length,
-      itemBuilder: (BuildContext context, int index) {
-        return _buildListTile(
-          title: allnotification[index].tittle,
-          subtitle: allnotification[index].content,
-          trailing: allnotification[index].date,
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => AllDetailsPage(
-                  title: allnotification[index].tittle,
-                  description: allnotification[index].content,
-                  targetDate: allnotification[index].date,
-                  image: allnotification[index].image,
-                  type: allnotification[index].type,
-                ),
-              ),
-            );
-          },
-        );
+    return RefreshIndicator(
+      onRefresh: () async {
+        setState(() {
+          _reloadnotification();
+          notification.clear();
+          _getnotification();
+        });
       },
+      child: notification.isEmpty
+          ? Center(
+              child: Text("No Announcement found."),
+            )
+          : ListView.builder(
+              itemCount: notification.length,
+              itemBuilder: (BuildContext context, int index) {
+                return Dismissible(
+                  key: Key(notification[index].notificationid),
+                  onDismissed: (direction) {
+                    setState(() {
+                      notification.removeAt(index);
+                      _deletenotification(notification[index].notificationid);
+                    });
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("Item dismissed"),
+                      ),
+                    );
+                  },
+                  background: Container(
+                    color: Colors.red,
+                    alignment: Alignment.centerRight,
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    child: Icon(Icons.delete, color: Colors.white),
+                  ),
+                  child: Stack(
+                    children: [
+                      _buildListTile(
+                        title: notification[index].tittle,
+                        subtitle: notification[index].description,
+                        trailing: notification[index].date,
+                        isRead: notification[index].isread,
+                        notificationid: notification[index].notificationid,
+                        onTap: () {
+                          _readnotification(notification[index].notificationid);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AllDetailsPage(
+                                employeeid: widget.employeeid,
+                                notificationId:
+                                    notification[index].notificationid,
+                                title: notification[index].tittle,
+                                description: notification[index].description,
+                                targetDate: notification[index].date,
+                                image: notification[index].image,
+                                type: notification[index].tittle,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      Positioned(
+                        top: 15,
+                        right: 10,
+                        child: Container(
+                          width: 15,
+                          height: 15,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: notification[index].isread.toLowerCase() ==
+                                    'yes'
+                                ? Colors.white
+                                : const Color.fromARGB(255, 206, 14, 0),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
     );
   }
+}
 
-  Widget _buildAnnouncementList() {
-    if (announcements.isEmpty) {
-      return const Center(
-        child: Text("No Announcement found."),
-      );
-    }
-
-    return ListView.builder(
-      itemCount: announcements.length,
-      itemBuilder: (BuildContext context, int index) {
-        int notificationId = DateTime.now().millisecondsSinceEpoch ~/ 1000;
-        return _buildListTile(
-          title: announcements[index].tittle,
-          subtitle: announcements[index].description,
-          trailing: announcements[index].targetdate,
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => AnnouncementDetailsPage(
-                  title: announcements[index].tittle,
-                  description: announcements[index].description,
-                  targetDate: announcements[index].targetdate,
-                  image: announcements[index].image,
-                  type: announcements[index].type,
-                ),
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
-
-  Widget _buildOffensesList({required String employeeid}) {
-    if (offenses.isEmpty) {
-      return const Center(
-        child: Text("No offenses found."),
-      );
-    }
-
-    return ListView.builder(
-      itemCount: offenses.length,
-      itemBuilder: (BuildContext context, int index) {
-        return _buildListTile(
-          title: offenses[index].actionid,
-          subtitle: offenses[index].violation,
-          trailing: offenses[index].date,
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => OffensesDetailsPage(
-                  title: offenses[index].actionid,
-                  description: offenses[index].violation,
-                  targetDate: offenses[index].date,
-                  type: offenses[index].offenseid,
-                ),
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
-
-  Widget _buildListTile({
-    required String title,
-    required String subtitle,
-    required String trailing,
-    VoidCallback? onTap,
-  }) {
-    return ListTile(
-      title: Text(
-        title,
-        style: const TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 20.0,
-          overflow: TextOverflow.ellipsis,
-        ),
+Widget _buildListTile({
+  required String title,
+  required String subtitle,
+  required String trailing,
+  required String isRead,
+  required String notificationid,
+  VoidCallback? onTap,
+}) {
+  final bool read = isRead.toLowerCase() == 'yes';
+  return ListTile(
+    title: Text(
+      title,
+      style: TextStyle(
+        fontWeight: read ? FontWeight.normal : FontWeight.bold,
+        fontSize: 20.0,
+        overflow: TextOverflow.ellipsis,
       ),
-      subtitle: Text(
-        subtitle,
-        style: const TextStyle(overflow: TextOverflow.ellipsis),
+    ),
+    subtitle: Text(
+      subtitle,
+      style: TextStyle(
+        fontWeight: read ? FontWeight.normal : FontWeight.bold,
+        fontSize: 16.0,
+        overflow: TextOverflow.ellipsis,
       ),
-      trailing: Text(
-        trailing,
-        style: const TextStyle(
-          fontWeight: FontWeight.normal,
-          fontSize: 14.0,
-        ),
+    ),
+    trailing: Text(
+      trailing,
+      style: TextStyle(
+        fontWeight: read ? FontWeight.normal : FontWeight.bold,
+        fontSize: 14.0,
+        overflow: TextOverflow.ellipsis,
       ),
-      contentPadding: const EdgeInsets.all(9.0),
-      onTap: onTap,
-    );
-  }
+    ),
+    contentPadding: const EdgeInsets.all(9.0),
+    onTap: () {
+      print('Notification ID: $notificationid');
+      if (onTap != null) {
+        onTap();
+      }
+    },
+  );
 }

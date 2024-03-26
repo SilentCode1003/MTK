@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:eportal/layout/drawer.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class Coop extends StatefulWidget {
   const Coop({Key? key}) : super(key: key);
@@ -10,6 +11,44 @@ class Coop extends StatefulWidget {
 
 class _CoopState extends State<Coop> {
   DateTime? _selectedDate = DateTime.now();
+  late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+
+  @override
+  void initState() {
+    super.initState();
+    initializeNotifications();
+    // Show initial notification
+    showNotification();
+  }
+
+  Future<void> initializeNotifications() async {
+    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    final AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+    final InitializationSettings initializationSettings =
+        InitializationSettings(android: initializationSettingsAndroid);
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  }
+
+  Future<void> showNotification() async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+      'your channel id',
+      'your channel name',
+      importance: Importance.max,
+      priority: Priority.high,
+      ticker: 'ticker',
+    );
+    const NotificationDetails platformChannelSpecifics =
+        NotificationDetails(android: androidPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      'Title',
+      'Body',
+      platformChannelSpecifics,
+      payload: 'item x',
+    );
+  }
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(

@@ -444,92 +444,98 @@ class Profileshiftinfo {
   }
 }
 
-class OffensesModel {
+class AllNotifications {
+  final String notificationid;
   final String employeeid;
-  final String disciplinaryid;
-  final String offenseid;
-  final String actionid;
-  final String violation;
   final String date;
-  final String createby;
-
-  OffensesModel(
-    this.employeeid,
-    this.disciplinaryid,
-    this.offenseid,
-    this.actionid,
-    this.violation,
-    this.date,
-    this.createby,
-  );
-
-  factory OffensesModel.fromJson(Map<String, dynamic> json) {
-    return OffensesModel(
-      json['employeeid'],
-      json['disciplinaryid'],
-      json['offenseid'],
-      json['actionid'],
-      json['violation'],
-      json['date'],
-      json['createby'],
-    );
-  }
-}
-
-class AnnouncementModel {
-  final String bulletinid;
   final String tittle;
-  final String image;
-  final String type;
   final String description;
-  final String targetdate;
-  final String createby;
+  final String subdescription;
+  final String image;
+  final String isrecieved;
+  final String isread;
+  final String isdelete;
 
-  AnnouncementModel(
-    this.bulletinid,
+  AllNotifications(
+    this.notificationid,
+    this.employeeid,
+    this.date,
     this.tittle,
-    this.image,
-    this.type,
     this.description,
-    this.targetdate,
-    this.createby,
+    this.subdescription,
+    this.image,
+    this.isrecieved,
+    this.isread,
+    this.isdelete,
   );
 
-  factory AnnouncementModel.fromJson(Map<String, dynamic> json) {
-    return AnnouncementModel(
-      json['bulletinid'],
+  factory AllNotifications.fromJson(Map<String, dynamic> json) {
+    return AllNotifications(
+      json['notificationid'],
+      json['employeeid'],
+      json['date'],
       json['tittle'],
-      json['image'],
-      json['type'],
       json['description'],
-      json['targetdate'],
-      json['createby'],
+      json['subdescription'],
+      json['image'],
+      json['isrecieved'],
+      json['isread'],
+      json['isdelete'],
     );
   }
 }
 
-class AllModel {
-  final String tittle;
-  final String content;
+class PushNotifcations {
+  final String notificationid;
+  final String employeeid;
   final String date;
+  final String tittle;
+  final String description;
+  final String subdescription;
   final String image;
-  final String type;
+  final String isrecieved;
+  final String isread;
+  final String isdelete;
 
-  AllModel(
-    this.tittle,
-    this.content,
+  PushNotifcations(
+    this.notificationid,
+    this.employeeid,
     this.date,
+    this.tittle,
+    this.description,
+    this.subdescription,
     this.image,
-    this.type,
+    this.isrecieved,
+    this.isread,
+    this.isdelete,
   );
 
-  factory AllModel.fromJson(Map<String, dynamic> json) {
-    return AllModel(
-      json['tittle'],
-      json['content'],
+  factory PushNotifcations.fromJson(Map<String, dynamic> json) {
+    return PushNotifcations(
+      json['notificationid'],
+      json['employeeid'],
       json['date'],
+      json['tittle'],
+      json['description'],
+      json['subdescription'],
       json['image'],
-      json['type'],
+      json['isrecieved'],
+      json['isread'],
+      json['isdelete'],
+    );
+  }
+}
+
+class NotificationBadges {
+  final String Unreadcount;
+
+  NotificationBadges(
+    this.Unreadcount,
+  );
+
+  factory NotificationBadges.fromJson(Map<String, dynamic> json) {
+    return NotificationBadges(
+      json['Unreadcount'],
     );
   }
 }
@@ -598,16 +604,19 @@ class OvertimeModel {
 class PayrolldateModel {
   final String gp_payrolldate;
   final String gp_cutoff;
+  final String DateRange;
 
   PayrolldateModel(
     this.gp_payrolldate,
     this.gp_cutoff,
+    this.DateRange,
   );
 
   factory PayrolldateModel.fromJson(Map<String, dynamic> json) {
     return PayrolldateModel(
       json['gp_payrolldate'],
       json['gp_cutoff'],
+      json['DateRange'],
     );
   }
 }
