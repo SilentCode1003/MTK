@@ -114,13 +114,15 @@ class _IndexState extends State<Index> {
 
     checkLocationService();
     _checkDeveloperOptions();
+    _getBadges();
     _getUserInfo();
-    // Timer.periodic(Duration(seconds: 60), (timer) {
-    //   print('timers');
-    //   _reloadnotification();
-    //   pushNotificationHandler(widget.employeeid, pushnotification,
-    //       showNotification, receivedNotification);
-    // });
+    Timer.periodic(Duration(seconds: 60), (timer) {
+      print('timers');
+      _getBadges();
+      _reloadnotification();
+      pushNotificationHandler(widget.employeeid, pushnotification,
+          showNotification, receivedNotification);
+    });
     super.initState();
   }
 
@@ -222,7 +224,6 @@ class _IndexState extends State<Index> {
       _getGeofence();
       _getLatesLog();
       _getStatus();
-      _getBadges();
     });
   }
 
