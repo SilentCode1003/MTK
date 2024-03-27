@@ -89,18 +89,9 @@ class _ScheduleStatefulWidgetState extends State<Schedule> {
         ),
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => Profile(
-                  employeeid: employeeid,
-                ),
-              ),
-            );
-          },
+        centerTitle: true,
+        iconTheme: IconThemeData(
+          color: Colors.black,
         ),
       ),
       body: Container(

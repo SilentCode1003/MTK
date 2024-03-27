@@ -92,6 +92,9 @@ class _BasicinfoStatefulWidgetState extends State<Basicinformation> {
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         elevation: 0,
         centerTitle: true,
+        iconTheme: IconThemeData(
+          color: Colors.black,
+        ),
       ),
       body: Container(
         color: const Color.fromARGB(255, 255, 255, 255),
@@ -109,8 +112,8 @@ class _BasicinfoStatefulWidgetState extends State<Basicinformation> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(
-                      left: 8.0, right: 8.0, bottom: 8.0), // Adjust as needed
+                  padding:
+                      const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
                   child: Text(
                     employeeid,
                     style: const TextStyle(fontSize: 18),
@@ -253,8 +256,8 @@ class _BasicinfoStatefulWidgetState extends State<Basicinformation> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(
-                      left: 8.0, right: 8.0, bottom: 8.0),
+                  padding:
+                      const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
                   child: Text(
                     email,
                     style: const TextStyle(fontSize: 18),
@@ -269,8 +272,8 @@ class _BasicinfoStatefulWidgetState extends State<Basicinformation> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(
-                      left: 8.0, right: 8.0, bottom: 8.0),
+                  padding:
+                      const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
                   child: Text(
                     ercontactname,
                     style: const TextStyle(fontSize: 14),
@@ -285,8 +288,8 @@ class _BasicinfoStatefulWidgetState extends State<Basicinformation> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(
-                      left: 8.0, right: 8.0, bottom: 8.0),
+                  padding:
+                      const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
                   child: Text(
                     ercontactphone,
                     style: const TextStyle(fontSize: 18),

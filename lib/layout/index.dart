@@ -19,6 +19,7 @@ import 'dart:async';
 import 'package:eportal/layout/notification.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:eportal/api/notification.dart';
+import 'package:eportal/component/notification.dart';
 
 class Index extends StatefulWidget {
   final String employeeid;
@@ -76,6 +77,7 @@ class _IndexState extends State<Index> {
   List<GeofenceModel> geofence = [];
   List<Widget> geofencemarker = [];
   List<AttendanceLog> attendancelogs = [];
+  List<PushNotifcations> pushnotification = [];
 
   String employeeid = '';
   int departmentid = 0;
@@ -113,7 +115,17 @@ class _IndexState extends State<Index> {
     checkLocationService();
     _checkDeveloperOptions();
     _getUserInfo();
+    // Timer.periodic(Duration(seconds: 60), (timer) {
+    //   print('timers');
+    //   _reloadnotification();
+    //   pushNotificationHandler(widget.employeeid, pushnotification,
+    //       showNotification, receivedNotification);
+    // });
     super.initState();
+  }
+
+  Future<void> _reloadnotification() async {
+    await reloadNotification(widget.employeeid);
   }
 
   Future<void> checkLocationService() async {
@@ -1228,7 +1240,7 @@ class _IndexState extends State<Index> {
                     left: 0,
                     right: 0,
                   ),
-                  height: 370,
+                  height: 400,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(30.0),

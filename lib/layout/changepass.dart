@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:eportal/main.dart';
 import 'package:eportal/api/changepass.dart';
@@ -204,17 +203,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         ),
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => Profile(
-                        employeeid: employeeid,
-                      )),
-            );
-          },
+        centerTitle: true,
+        iconTheme: IconThemeData(
+          color: Colors.black,
         ),
       ),
       backgroundColor: Colors.white,

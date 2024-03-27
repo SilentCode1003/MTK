@@ -1,6 +1,6 @@
 class Config {
-  //static const String apiUrl = 'https://payroll.5lsolutions.com/';
-  static const String apiUrl = 'http://192.168.40.96:3005/';
+  static const String apiUrl = 'http://172.16.2.200:3005/';
+  //static const String apiUrl = 'http://192.168.40.96:3005/';
 
   static const String loginAPI = 'login/login';
   static const String payslipAPI = 'eportalpayslip/viewpayslip';

@@ -33,7 +33,7 @@ class _GovinfoStatefulWidgetState extends State<Govinfo> {
     _checkDeveloperOptions();
   }
 
-      void _checkDeveloperOptions() async {
+  void _checkDeveloperOptions() async {
     await DeveloperModeChecker.checkAndShowDeveloperModeDialog(context);
   }
 
@@ -43,10 +43,8 @@ class _GovinfoStatefulWidgetState extends State<Govinfo> {
       final jsondata = json.encode(response.result);
       for (var govinfoid in json.decode(jsondata)) {
         setState(() {
-          ProfileGovinfo govinfo = ProfileGovinfo(
-            govinfoid['employeeid'],
-            govinfoid['idtype'], 
-            govinfoid['idnumber']);
+          ProfileGovinfo govinfo = ProfileGovinfo(govinfoid['employeeid'],
+              govinfoid['idtype'], govinfoid['idnumber']);
           govinfos.add(govinfo);
         });
       }
@@ -58,78 +56,71 @@ class _GovinfoStatefulWidgetState extends State<Govinfo> {
   Widget build(BuildContext context) {
     checkInternetConnection(context);
     return Scaffold(
-        appBar: AppBar(
-          title: const Text(
-            'Goverment Information',
-            style: TextStyle(color: Colors.black),
-          ),
-          backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-          elevation: 0,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.black),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => Profile(
-                          employeeid: employeeid,
-                        )),
-              );
-            },
-          ),
+      appBar: AppBar(
+        title: const Text(
+          'Goverment Information',
+          style: TextStyle(color: Colors.black),
         ),
-        body: Container(
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+        elevation: 0,
+        centerTitle: true,
+        iconTheme: IconThemeData(
+          color: Colors.black,
+        ),
+      ),
+      body: Container(
           color: const Color.fromARGB(255, 255, 255, 255),
-        child: Column(
-          children: <Widget>[
-            Expanded(
-            child: govinfos.isEmpty
-                ? const Center(
-                    child: Text(
-                      'No government information available.',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                  )
-                : ListView.builder(
-                    itemCount: govinfos.length,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (BuildContext context, int index) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                govinfos[index].idtype,
-                                style: const TextStyle(
-                                    fontSize: 14, fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 8.0,
-                                  right: 8.0,
-                                  bottom: 8.0), // Adjust as needed
-                              child: Text(
-                                govinfos[index].idnumber,
-                                style: const TextStyle(fontSize: 18),
-                              ),
-                            ),
-                            const Divider(),
-                          ],
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                child: govinfos.isEmpty
+                    ? const Center(
+                        child: Text(
+                          'No government information available.',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
                         ),
-                      );
-                    },
-                  ),
-            )
-          ],
-        )
-        ),
-        );
+                      )
+                    : ListView.builder(
+                        itemCount: govinfos.length,
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemBuilder: (BuildContext context, int index) {
+                          return Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    govinfos[index].idtype,
+                                    style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 8.0,
+                                      right: 8.0,
+                                      bottom: 8.0), // Adjust as needed
+                                  child: Text(
+                                    govinfos[index].idnumber,
+                                    style: const TextStyle(fontSize: 18),
+                                  ),
+                                ),
+                                const Divider(),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+              )
+            ],
+          )),
+    );
   }
 
   void main() {
