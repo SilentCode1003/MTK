@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:eportal/layout/drawer.dart';
 import 'package:eportal/repository/helper.dart';
@@ -9,6 +10,8 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:eportal/layout/announcementdetails.dart';
 import 'package:eportal/component/developer_options_checker.dart';
+import 'package:eportal/layout/notification.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Notifications extends StatefulWidget {
   final String employeeid;
@@ -20,6 +23,17 @@ class Notifications extends StatefulWidget {
 }
 
 class _NotificationsState extends State<Notifications> {
+  String notificationid = '';
+  String employeeid = '';
+  String date = '';
+  String tittle = '';
+  String description = '';
+  String subdescription = '';
+  String image = '';
+  String isrecieved = '';
+  String isread = '';
+  String isdelete = '';
+
   String _formatDate(String? date) {
     if (date == "" || date == null) return '';
     DateTime dateTime = DateTime.parse(date);
@@ -31,6 +45,7 @@ class _NotificationsState extends State<Notifications> {
   Helper helper = Helper();
   List<AllNotifications> notification = [];
   List<PushNotifcations> pushnotification = [];
+  Map<String, dynamic> savenotification = {};
 
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
@@ -38,8 +53,16 @@ class _NotificationsState extends State<Notifications> {
   @override
   void initState() {
     initializeNotifications();
+    // _getloadnotif();
+    _loadCachedNotifications();
     _getnotification();
-    _Pushnotification();
+    // Timer.periodic(Duration(seconds: 60), (timer) {
+    //   print('start');
+    //   _reloadnotification();
+    //   print('reload');
+    //   _Pushnotification();
+    //   print('push');
+    // });
     super.initState();
     _checkDeveloperOptions();
   }
@@ -144,6 +167,7 @@ class _NotificationsState extends State<Notifications> {
   }
 
   Future<void> _getnotification() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     final response =
         await UserNotifications().getnotification(widget.employeeid);
     if (helper.getStatusString(APIStatus.success) == response.message) {
@@ -167,6 +191,20 @@ class _NotificationsState extends State<Notifications> {
           notification.add(notif);
         });
       }
+      await prefs.setString('notificationData', json.encode(notification));
+    }
+  }
+
+  Future<void> _loadCachedNotifications() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? cachedData = prefs.getString('notificationData');
+    if (cachedData != null) {
+      List<dynamic> decodedData = json.decode(cachedData);
+      List<AllNotifications> cachedNotifications =
+          decodedData.map((data) => AllNotifications.fromJson(data)).toList();
+      setState(() {
+        notification.addAll(cachedNotifications);
+      });
     }
   }
 
@@ -244,7 +282,8 @@ class _NotificationsState extends State<Notifications> {
         setState(() {
           _reloadnotification();
           notification.clear();
-          _getnotification();
+          // _loadnotification();
+          _Pushnotification();
         });
       },
       child: notification.isEmpty
