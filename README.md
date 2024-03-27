@@ -40,3 +40,8 @@ Overall, mobile timekeeping streamlines time management processes, improves accu
 ### 1.4.2
 
 - Revise to download pdf and save to Downlod folder in android
+
+### 1.5.3
+- added notification
+- added COA
+- fix bug notification & coa
