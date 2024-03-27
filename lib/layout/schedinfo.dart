@@ -293,7 +293,7 @@ class _ScheduleStatefulWidgetState extends State<Schedule> {
                                   ),
                                   const SizedBox(width: 160),
                                   Text(
-                                    '$monday', // Splitting and selecting the first part
+                                    '$monday',
                                     style: const TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.normal,
@@ -315,7 +315,7 @@ class _ScheduleStatefulWidgetState extends State<Schedule> {
                                   ),
                                   const SizedBox(width: 150),
                                   Text(
-                                    '${monday.split(' ')[6]} ${monday.split(' ')[7]}',
+                                    monday,
                                     style: const TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.normal,
