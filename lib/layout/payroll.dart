@@ -65,8 +65,7 @@ class _SalaryState extends State<Salary> {
       final jsondata = json.encode(response.result);
       for (var payrolldateinfo in json.decode(jsondata)) {
         setState(() {
-          String formattedDate =
-              _formatDate(payrolldateinfo['gp_payrolldate'].toString());
+          String formattedDate = payrolldateinfo['gp_payrolldate'].toString();
           String gpCutoff = payrolldateinfo['gp_cutoff'].toString();
           String DateRange = payrolldateinfo['DateRange'].toString();
 

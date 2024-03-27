@@ -11,7 +11,6 @@ import 'package:timezone/data/latest.dart' as tz;
 import 'package:eportal/layout/announcementdetails.dart';
 import 'package:eportal/component/developer_options_checker.dart';
 import 'package:eportal/layout/notification.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class Notifications extends StatefulWidget {
   final String employeeid;
@@ -54,15 +53,15 @@ class _NotificationsState extends State<Notifications> {
   void initState() {
     initializeNotifications();
     // _getloadnotif();
-    _loadCachedNotifications();
+    // _loadnotification();
     _getnotification();
-    // Timer.periodic(Duration(seconds: 60), (timer) {
-    //   print('start');
-    //   _reloadnotification();
-    //   print('reload');
-    //   _Pushnotification();
-    //   print('push');
-    // });
+    Timer.periodic(Duration(seconds: 60), (timer) {
+      print('start');
+      _reloadnotification();
+      print('reload');
+      _Pushnotification();
+      print('push');
+    });
     super.initState();
     _checkDeveloperOptions();
   }
@@ -167,7 +166,6 @@ class _NotificationsState extends State<Notifications> {
   }
 
   Future<void> _getnotification() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
     final response =
         await UserNotifications().getnotification(widget.employeeid);
     if (helper.getStatusString(APIStatus.success) == response.message) {
@@ -189,22 +187,9 @@ class _NotificationsState extends State<Notifications> {
             notificationinfo['isdelete'].toString(),
           );
           notification.add(notif);
+          helper.writeJsonToFile(notificationinfo, 'notification.json');
         });
       }
-      await prefs.setString('notificationData', json.encode(notification));
-    }
-  }
-
-  Future<void> _loadCachedNotifications() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? cachedData = prefs.getString('notificationData');
-    if (cachedData != null) {
-      List<dynamic> decodedData = json.decode(cachedData);
-      List<AllNotifications> cachedNotifications =
-          decodedData.map((data) => AllNotifications.fromJson(data)).toList();
-      setState(() {
-        notification.addAll(cachedNotifications);
-      });
     }
   }
 
@@ -282,7 +267,7 @@ class _NotificationsState extends State<Notifications> {
         setState(() {
           _reloadnotification();
           notification.clear();
-          // _loadnotification();
+          _getnotification();
           _Pushnotification();
         });
       },
