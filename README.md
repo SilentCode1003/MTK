@@ -45,3 +45,8 @@ Overall, mobile timekeeping streamlines time management processes, improves accu
 - added notification
 - added COA
 - fix bug notification & coa
+
+### 1.5.4
+- fixed bug payroll date
+- add login in payroll
+
